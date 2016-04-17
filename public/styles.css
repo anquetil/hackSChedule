@@ -1,0 +1,280 @@
+/* HTML5 Boilerplate */
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; word-wrap: break-word; word-break: hyphenate; }
+
+ul, li { list-style: none; list-style-type: none; display: block; }
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; word-wrap: break-word; }
+
+img { border: none; max-width: 100%; vertical-align: middle; margin: 0 auto; padding: 0; display: block; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+
+body { font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, Avenir, Verdana, Sans-serif; font-size: 14px; line-height: 1.4em; font-weight: 400; color: #000; background-color: #FFF; background-attachment: fixed; background-size: cover; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; -webkit-text-size-adjust: 100%; position: absolute; left: 0; right: 0; top: 0; bottom: 0; max-width: 2000px; margin: 0 auto; overflow:hidden;}
+
+p { padding-bottom: 1em; display: block; line-height: 1.4em; }
+
+a { text-decoration: underline; color: inherit; cursor: pointer; }
+
+h1, h2, h3, h4, h5, h6 { font-weight: bold; line-height: 1.1em; display: block; padding-bottom: 0.3em; }
+h1.nopad, h2.nopad, h3.nopad, h4.nopad, h5.nopad, h6.nopad { padding-bottom: 0; }
+h1 span, h2 span, h3 span, h4 span, h5 span, h6 span { white-space: nowrap; }
+
+h1 { font-size: 64px; }
+
+h2 { font-size: 56px; }
+
+h3 { font-size: 45px; }
+
+h4 { font-size: 34px; }
+
+h5 { font-size: 24px; }
+
+h6 { font-size: 20px; }
+
+hr { display: block; padding: 0; border: 0; height: 1px; background-color: rgba(0, 0, 0, 0.3); max-width: 100%; margin: 10px auto; }
+
+input, textarea { font-family: Avenir, HelveticaNeue, "Helvetica Neue", Helvetica, Arial, Avenir, Verdana, Sans-serif; font-size: 14px; line-height: 1.4em; font-weight: 300; color: #000; -webkit-appearance: none; background-color: #FFF; -webkit-border-radius: 0px; -moz-border-radius: 0px; border-radius: 0px; border: 0px; outline: none; padding: 5px 10px; height: 20px; border: 1px solid rgba(0, 0, 0, 0.3); resize: none; }
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { color: rgba(0, 0, 0, 0.3); }
+
+input:-moz-placeholder, textarea:-moz-placeholder { color: rgba(0, 0, 0, 0.3); }
+
+.s { text-decoration: line-through; }
+
+.clear { clear: both; display: block; }
+
+
+
+main {
+	margin:0 auto;
+}
+
+#coursecontainer {
+	text-align:center;
+	position:fixed;
+	left:0;
+	top:0;
+	bottom:0;
+	width:250px;
+	color:#FFF;
+	overflow:auto;
+	-webkit-overflow-scrolling: touch;
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e93432+0,ce1a1a+100 */
+	background: #e93432; /* Old browsers */
+	background: -moz-linear-gradient(left, #e93432 0%, #ce1a1a 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(left, #e93432 0%,#ce1a1a 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to right, #e93432 0%,#ce1a1a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e93432', endColorstr='#ce1a1a',GradientType=1 ); /* IE6-9 */
+}
+
+ul#dynamicInput > li {
+	padding-bottom:8px;
+}
+
+#calendar {
+	position:fixed;
+	top:0;
+	bottom:0;
+	left:250px;
+	right:100px;
+	overflow:auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+#filtercontainer {
+	text-align:center;
+	position:fixed;
+	top:0;
+	bottom:0;
+	right:0;
+	width:100px;
+	background-color:#EEE;
+	color:#FFF;
+	overflow:auto;
+	-webkit-overflow-scrolling: touch;
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e93432+0,ce1a1a+100 */
+	background: #e93432; /* Old browsers */
+	background: -moz-linear-gradient(left, #e93432 0%, #ce1a1a 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(left, #e93432 0%,#ce1a1a 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to right, #e93432 0%,#ce1a1a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e93432', endColorstr='#ce1a1a',GradientType=1 ); /* IE6-9 */
+}
+
+
+.tt-menu {
+	background-color:#FFF;
+	font-size:13px;
+	border-radius:5px;
+	box-shadow:0 2px 3px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(0,0,0,0.3);
+	text-align:left;
+	width:100%;
+	margin-top:2px;
+}
+
+.tt-suggestion {
+	cursor:pointer;
+}
+
+.tt-suggestion, .empty-message {
+	padding:5px;
+}
+
+.tt-cursor {
+	background-color:#CCC;
+}
+
+
+#calendar:after {
+	content:'';
+	display:block;
+	clear:both;
+}
+
+#calwrap {
+	padding:0px;
+	position:relative;
+	padding-left:30px;
+	margin-right:1px;
+}
+
+#time {
+	float:left;
+	margin-left:-30px;
+	padding-right:4px;
+	width:24px;
+	font-size:11px;
+	text-align:right;
+	color:#AAA;
+	font-weight:bold;
+	margin-top:-10px;
+}
+
+#time > li {
+	height:50px;
+}
+
+.cal-col {
+	width:12.5%;
+	float:left;
+	position:relative;
+}
+
+.cal-col > li:not(.event) {
+	height:49px;
+	border:1px solid #EAEAEA;
+	border-top:0px;
+	margin-right:-1px;
+}
+
+#U, #S {
+	background-color:#F8F8F8;
+}
+
+#calwrap > ul > li.day {
+	padding:8px;
+}
+
+.cal-col > li:not(.event):not(.day):before {
+	content:'';
+	display:block;
+	height:24px;
+	border-bottom:1px dashed rgba(0,0,0,0.05);
+}
+
+.cal-col > li.event {
+	position:absolute;
+	left:0;right:0;
+	margin-left:3px;
+	margin-right:2px;
+	min-height:42px;
+	margin-top:-1px;
+	border:1px solid rgba(0,0,0,0.2);
+	box-shadow:0 1px 3px rgba(0,0,0,0.3);
+	border-radius:3px;
+	background-color:#E08B8B;
+	color:#FFF;
+	text-shadow:0 1px 1px rgba(0,0,0,0.3);
+	cursor:pointer;
+	text-overflow: ellipsis;
+    transition: all 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+    -webkit-transition: all 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+    -moz-transition: all 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+	animation-fill-mode:both;
+	-webkit-animation-fill-mode:both;
+	-moz-animation-fill-mode:both;
+	z-index:1;
+	opacity:0.9;
+	user-select:none;
+	-webkit-user-select:none;
+}
+
+.cal-col > li.event:hover, .cal-col > li.event.hover {
+	transform:scale(1.05,1.05);-webkit-transform:scale(1.05,1.05);
+	box-shadow:0 1px 2px rgba(0,0,0,0.2), 0 2px 10px rgba(0,0,0,0.2);
+	z-index:2;
+}
+
+.cal-col > li.event:hover { z-index:3; }
+
+.cal-col > li.event.superhover {
+	transform:scale(1.2,1.2);-webkit-transform:scale(1.2,1.2);
+}
+
+.cal-col > li.event > p { 
+	display:none;
+	border-top:1px dashed #FFF;
+	padding:4px;
+	text-align:center;
+	text-transform:uppercase;
+	font-size:10px;
+	padding-bottom:8px;
+}
+.cal-col > li.event.superhover > p { display:block; }
+
+.cal-col#A > li.event {
+	position:relative;
+	margin-left:2px;
+	top:0;
+	margin-top:2px;
+	height:auto;
+}
+
+.cal-col > li.event > span {
+	padding:2px;
+	display:block;
+	text-align:center;
+}
+
+.cal-col > li.event > span > i {
+	font-style:normal;
+	font-size:10px;
+	text-transform:uppercase;
+}
+
+#coursetable {
+	padding:60px;
+}
+
+#coursetable > table {
+	width:100%;
+	border:1px solid #CCC;
+}
+
+#coursetable > table tr {
+	border:1px solid #CCC;
+}
+
+#coursetable > table tr:not():nth-child(2n+3){
+	background-color:#EEE;
+}
+
+#coursetable > table tr > * {
+	padding:4px 8px;
+}
+
+#coursetable > table th {
+	font-size:10px;
+	text-transform: uppercase;
+	font-weight:bold;
+	text-align:left;
+}
