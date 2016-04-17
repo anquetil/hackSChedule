@@ -1,0 +1,26 @@
+{
+  "name": "hackschedule",
+  "version": "1.0.0",
+  "description": "A webapp for USC students to design their course schedule with less frustration.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ninjiangstar/hackSChedule.git"
+  },
+  "author": "Andrew Jiang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ninjiangstar/hackSChedule/issues"
+  },
+  "homepage": "https://github.com/ninjiangstar/hackSChedule#readme",
+  "dependencies": {
+    "async": "^1.5.2",
+    "express": "^4.13.4",
+    "express-promise": "^0.4.0",
+    "firebase": "^2.4.2",
+    "path": "^0.12.7"
+  }
+}
