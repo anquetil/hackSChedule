@@ -1,3 +1,18 @@
+/* ***** GLOBAL VARIABLES ***** */
+
+var MASTERCourseHeap = {};
+var MASTERCombinationHeap = [];
+var APP = {}; // look for certain triggers.
+
+/* ***** GENERIC COMPONENTS ***** */
+
+var Button = React.createClass({
+  render: function(){
+    return <div className="button" id={this.props.id} onClick={this.props.action}>{this.props.value}</div>
+  }
+});
+
+
 /* ***** COURSE LIST APP ***** */
 
 var CourseListItem = React.createClass({
@@ -5,7 +20,8 @@ var CourseListItem = React.createClass({
     var count = (this.props.courses.length > 2) ? this.props.courses.length : 2;
     var rgb = 'rgb(' + colorFade([233,52,50],[233,167,30], index, count) + ')';
     return (
-      <li key={item.id} style={{backgroundColor:rgb}}>
+      <li key={item.id} data-course={item.text} style={{backgroundColor:rgb}}>
+        <span className="close" onClick={this.props.removeCourse.bind(null, index)}>×</span>
         <span className="course tag">{item.text}</span>
         <span className="unit tag">{this.props.courseHeap[item.text].units} units</span>
         <span className="courseTitle">{this.props.courseHeap[item.text].title}</span>
@@ -35,7 +51,7 @@ var CourseListApp = React.createClass({
     getCourse(prop.state.text, function(courseData){
       // Check if course actually exists
       if(courseData == false) return;
-      var courseHeap = prop.state.courseHeap;
+      var nextCourseHeap = prop.state.courseHeap;
       var nextItems = prop.state.courses;
       // Combine courseHeap
       for (var courseKey in courseData) {
@@ -44,9 +60,30 @@ var CourseListApp = React.createClass({
           return prop.text === courseKey;
         })  === 'undefined')) return;
         nextItems = nextItems.concat([{text: courseKey, id: Date.now()}]);
-        courseHeap[courseKey] = courseData[courseKey]; 
+        nextCourseHeap[courseKey] = courseData[courseKey]; 
       }
-      prop.setState({courses: nextItems, courseHeap:courseHeap, text: ''});
+      MASTERCourseHeap = nextCourseHeap;
+      // set state
+      prop.setState({courses: nextItems, courseHeap:nextCourseHeap, text: ''});
+    });
+  },
+  removeCourse: function(index){
+    var rCourses = this.state.courses,
+        rCourseHeap = this.state.courseHeap;
+    delete rCourses[index];
+    delete rCourseHeap[index];
+    rCourses.length--;
+    rCourseHeap.length--;
+    MASTERCourseHeap = rCourseHeap;
+    // set state
+    this.setState({courses:rCourses, courseHeap:rCourseHeap, text:this.state.text});
+  },
+  generate: function(){
+    // var convertedCourseArr = [];
+    // for(var key in this.state.courses) convertedCourseArr.push(this.state.courses[key].text);
+    generateCourses(this.state.courseHeap, function(data){
+      MASTERCombinationHeap = data;
+      $(APP).trigger('update');
     });
   },
   render: function(){
@@ -62,7 +99,13 @@ var CourseListApp = React.createClass({
             <div></div><p>(Hit enter to add a new class.)</p>
           </li>
         </ul>
-        <CourseListItem courses={this.state.courses} courseHeap={this.state.courseHeap} />
+        <CourseListItem 
+          courses={this.state.courses} 
+          courseHeap={this.state.courseHeap} 
+          removeCourse={this.removeCourse} />
+          <div style={{padding:"16px 16px"}}>
+            <Button value="Generate" id="generate" action={this.generate} />
+          </div>
       </div>
     );
   }
@@ -82,3 +125,25 @@ var CalendarApp = React.createClass({
 });
 
 ReactDOM.render(<CalendarApp />, document.getElementById('calendar'));
+
+/* ***** FILTERS APP ***** */
+
+var FilterApp = React.createClass({
+  componentDidMount: function(){
+    var props = this;
+    $(APP).on('update',function(){
+      props.forceUpdate();
+    });
+  },
+  updateCal: function(data, index){
+    updateCalendar(data.data, MASTERCourseHeap);
+  },
+  createItem: function(data, index){
+    return <li key={index} data-key={index} onClick={this.updateCal.bind(null, data, index)}>{index+1}</li>;
+  },
+  render: function(){
+    return <ul id="ranks">{MASTERCombinationHeap.map(this.createItem)}</ul>
+  }
+})
+
+ReactDOM.render(<FilterApp />, document.getElementById('filtercontainer'));

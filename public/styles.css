@@ -1,9 +1,12 @@
 /* HTML5 Boilerplate */
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; word-wrap: break-word; word-break: hyphenate; -moz-box-sizing: border-box; box-sizing: border-box; }
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video 
+{ margin: 0; padding: 0; border: 0; word-wrap: break-word; word-break: hyphenate; -moz-box-sizing: border-box; box-sizing: border-box; }
 
-ul, li { list-style: none; list-style-type: none; display: block; }
+ul, li 
+{ list-style: none; list-style-type: none; display: block; }
 
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; word-wrap: break-word; }
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section 
+{ display: block; word-wrap: break-word; }
 
 img { border: none; max-width: 100%; vertical-align: middle; margin: 0 auto; padding: 0; display: block; }
 
@@ -44,121 +47,145 @@ input:-moz-placeholder, textarea:-moz-placeholder { color: rgba(0, 0, 0, 0.3); }
 .clear { clear: both; display: block; }
 
 * {
-	line-height:1.4em;
-	transition-property: margin, padding, opacity, background-color, border-radius, border;
-	-webkit-transition-property: margin, padding, opacity, background-color, border-radius, border;
-	-moz-transition-property: margin, padding, opacity, background-color, border-radius, border;
-	transition-duration: 0.35s;
-	-webkit-transition-duration: 0.35s;
-	-moz-transition-duration: 0.35s;
-	transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-	-webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-	-moz-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-	animation-fill-mode:both;
-	-webkit-animation-fill-mode:both;
-	-moz-animation-fill-mode:both;
+  line-height:1.4em;
+  transition-property: margin, padding, opacity, background-color, border-radius, border, transform;
+  -webkit-transition-property: margin, padding, opacity, background-color, border-radius, border, -webkit-transform;
+  -moz-transition-property: margin, padding, opacity, background-color, border-radius, border, -moz-transform;
+  transition-duration: 0.35s;
+  -webkit-transition-duration: 0.35s;
+  -moz-transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  -webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  -moz-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  animation-fill-mode:both;
+  -webkit-animation-fill-mode:both;
+  -moz-animation-fill-mode:both;
 }
 
 main {
-	margin:0 auto;
+  margin:0 auto;
 }
 
 main > section {
-	position:fixed;
-	top:0;
-	bottom:0;
-	overflow:auto;
-	-webkit-overflow-scrolling: touch;
+  position:fixed;
+  top:0;
+  bottom:0;
+  overflow:auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 #coursecontainer, #filtercontainer {
-	color:#FFF;
-	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e93432+0,ce1a1a+100 */
-	background: #e93432; /* Old browsers */
-	background: -moz-linear-gradient(top,  #e93432 0%, #ce1a1a 100%); /* FF3.6-15 */
-	background: -webkit-linear-gradient(top,  #e93432 0%,#ce1a1a 100%); /* Chrome10-25,Safari5.1-6 */
-	background: linear-gradient(to bottom,  #e93432 0%,#ce1a1a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e93432', endColorstr='#ce1a1a',GradientType=0 ); /* IE6-9 */
+  color:#FFF;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e93432+0,ce1a1a+100 */
+  background: #e93432; /* Old browsers */
+  background: -moz-linear-gradient(top,  #e93432 0%, #ce1a1a 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  #e93432 0%,#ce1a1a 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom,  #e93432 0%,#ce1a1a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e93432', endColorstr='#ce1a1a',GradientType=0 ); /* IE6-9 */
+}
+
+/* ***** GENERIC COMPONENTS ***** */
+
+.button {
+  border-radius:3px;
+  text-align:center;
+  background-color:rgba(255,255,255,0.15);
+  padding:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.button:hover {
+  background-color:rgba(255,255,255,0.3);
 }
 
 /* ***** COURSE CONTAINER ***** */
 
 #coursecontainer {
-	left:0;
-	width:250px;
-	padding: 16px 0;
+  left:0;
+  width:250px;
+  padding: 16px 0;
 }
 
 #hackschedule { 
-	background-image:url('/hackschedule.png');
-	background-position:center;
-	background-size:cover;
-	background-repeat:no-repeat;
-	width:160px;
-	height:27.2px;
-	margin:0 auto;
-	margin:0 auto 16px auto;
+  background-image:url('/hackschedule.png');
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  width:160px;
+  height:27.2px;
+  margin:0 auto;
+  margin:0 auto 16px auto;
 }
 
 ul#dynamicInput {
-	margin:0 16px;
+  margin:0 16px;
 }
 
 ul#dynamicInput > li {
-	padding-bottom:8px;
-	font-size:10px;
-	color:rgba(255,255,255,0.7);
-	text-align:center;
+  padding-bottom:8px;
+  font-size:10px;
+  color:rgba(255,255,255,0.7);
+  text-align:center;
 }
 
 ul#dynamicInput > .search > input {
-	width:100%;
-	border:0;
-	background-color:rgba(0,0,0,0.1);
-	color:#FFF;
-	padding:8px 0;
-	height:16px;
-	font-size:16px;
-	text-align:center;
-	border-radius:3px;
-	margin-bottom:1px;
-	box-shadow:0 0 0 1px rgba(0,0,0,0.2);
-	font-weight:bold;
+  width:100%;
+  border:0;
+  background-color:rgba(0,0,0,0.1);
+  color:#FFF;
+  padding:8px 0;
+  height:16px;
+  font-size:16px;
+  text-align:center;
+  border-radius:3px;
+  margin-bottom:1px;
+  box-shadow:0 0 0 1px rgba(0,0,0,0.2);
+  font-weight:bold;
 }
 
 ul#dynamicInput > .search > input:focus {
-	background-color:transparent;
-	background-color:rgba(0,0,0,0.2);
-	box-shadow:0 0 0 1px rgba(0,0,0,0.3);
+  background-color:transparent;
+  background-color:rgba(0,0,0,0.2);
+  box-shadow:0 0 0 1px rgba(0,0,0,0.3);
 }
 
 ul#dynamicInput > .search > input + div {
-	height:2px;
-	display:block;
-	margin:0 auto;
-	width:0%;
-	opacity:0;
-	background-color:#FFF;
-	-webkit-transition-property:width, opacity;
-	-moz-transition-property:width, opacity;
-	transition-property:width, opacity;
+  height:2px;
+  display:block;
+  margin:0 auto;
+  width:0%;
+  opacity:0;
+  background-color:#FFF;
+  -webkit-transition-property:width, opacity;
+  -moz-transition-property:width, opacity;
+  transition-property:width, opacity;
 }
 
 ul#dynamicInput > .search > input:focus + div {
-	background-color:#FFF;
-	width:100%;
-	opacity:1;
+  background-color:#FFF;
+  width:100%;
+  opacity:1;
 }
 
 #courseListApp {
-	margin:16px 0;
+  margin:16px 0;
 }
 
 #courselist > li {
-	background-color:#CCC;
-	padding: 8px 16px;
-	font-size:13px;
-	cursor:pointer;
+  background-color:#CCC;
+  padding: 8px 16px;
+  font-size:13px;
+  cursor:default;
+  position:relative;
+  z-index:1;
+}
+
+#courselist > li:hover {
+  transform:scale(1.05,1.05);
+  -webkit-transform:scale(1.05,1.05);
+  z-index:2;
+  box-shadow:0 1px 3px rgba(0,0,0,0.2);
 }
 
 #courselist > li > .tag {
@@ -173,193 +200,217 @@ ul#dynamicInput > .search > input:focus + div {
 #courselist > li > .tag.course { font-weight:bold; }
 #courselist > li > .tag.unit { font-style:italic; }
 #courselist > li > .courseTitle { 
-	font-size:16px;
-	display:block;
-	padding:4px 0;
+  font-size:16px;
+  display:block;
+  padding:4px 0;
+}
+#courselist > li > .close { 
+  float:right;
+  font-weight:bold;
+  padding:4px;
+  border-radius:3px;
+  width:22px;height:22px;
+  line-height:12px;
+  font-size:14px;
+  text-align:center;
+  cursor:pointer;
+  opacity:0;
+  margin-right:-2px;
+}
+#courselist > li:hover > .close {
+  opacity:1;
+}
+#courselist > li > .close:hover { 
+  background-color:rgba(0,0,0,0.3);
 }
 
 #credits {
-	font-size:12px;
-	text-align:center;
-	color:rgba(0,0,0,0.5);
+  font-size:12px;
+  text-align:center;
+  color:rgba(0,0,0,0.5);
 }
 
 /* ***** CALENDAR ***** */
 
 #calendar {
-	left:250px;
-	right:100px;
+  left:250px;
+  right:100px;
 }
 
 
 .tt-menu {
-	background-color:#FFF;
-	font-size:13px;
-	border-radius:5px;
-	box-shadow:0 2px 3px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(0,0,0,0.3);
-	text-align:left;
-	width:100%;
-	margin-top:2px;
+  background-color:#FFF;
+  font-size:13px;
+  border-radius:5px;
+  box-shadow:0 2px 3px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(0,0,0,0.3);
+  text-align:left;
+  width:100%;
+  margin-top:2px;
 }
 
 .tt-suggestion {
-	cursor:pointer;
+  cursor:pointer;
 }
 
 .tt-suggestion, .empty-message {
-	padding:5px;
+  padding:5px;
 }
 
 .tt-cursor {
-	background-color:#CCC;
+  background-color:#CCC;
 }
 
 #calwrap {
-	padding:0px;
-	position:relative;
-	padding-left:30px;
-	margin-left:1px;
+  padding:0px;
+  position:relative;
+  padding-left:30px;
+  margin-left:1px;
 }
 
 #calwrap:after {
-	content: '';
-	display:block;
-	clear:both;
+  content: '';
+  display:block;
+  clear:both;
 }
 
 #time {
-	float:left;
-	margin-left:-30px;
-	padding-right:0px;
-	width:24px;
-	font-size:11px;
-	text-align:right;
-	color:#AAA;
-	font-weight:bold;
-	margin-top:-10px;
+  float:left;
+  margin-left:-30px;
+  padding-right:0px;
+  width:24px;
+  font-size:11px;
+  text-align:right;
+  color:#AAA;
+  font-weight:bold;
+  margin-top:-10px;
 }
 
 #time > li {
-	height:49px;
+  height:49px;
 }
 
 .cal-col {
-	width:12.5%;
-	float:left;
-	position:relative;
-	margin-bottom:-1px;
-	height:843px;
+  width:12.5%;
+  float:left;
+  position:relative;
+  margin-bottom:-1px;
+  height:843px;
 }
 
 .cal-col > li:not(.event) {
-	height:49px;
-	border:1px solid #EAEAEA;
-	border-top:0px;
-	margin-left:-1px;
+  height:50px;
+  border:1px solid #EAEAEA;
+  border-top:0px;
+  margin-left:-1px;
 }
 
 #U, #S, #A {
-	background-color:#F8F8F8;
+  background-color:#F8F8F8;
 }
 
 #calwrap > ul > li.day {
-	padding:8px;
-	height:59px;
+  padding:8px;
+  height:60px;
 }
 
 .cal-col:not(#A) > li:not(.event):not(.day):before {
-	content:'';
-	display:block;
-	height:24px;
-	border-bottom:1px dashed rgba(0,0,0,0.05);
+  content:'';
+  display:block;
+  height:24px;
+  border-bottom:1px dashed rgba(0,0,0,0.05);
 }
 
 .cal-col > li.event {
-	position:absolute;
-	left:0;right:0;
-	margin-left:2px;
-	margin-right:3px;
-	min-height:42px;
-	margin-top:-1px;
-	border:1px solid rgba(0,0,0,0.2);
-	box-shadow:0 1px 3px rgba(0,0,0,0.3);
-	border-radius:3px;
-	background-color:#E08B8B;
-	color:#FFF;
-	text-shadow:0 1px 1px rgba(0,0,0,0.3);
-	cursor:pointer;
-	text-overflow: ellipsis;
+  position:absolute;
+  left:0;right:0;
+  margin-left:2px;
+  margin-right:3px;
+  min-height:44px;
+  margin-top:-1px;
+  border:1px solid rgba(0,0,0,0.2);
+  box-shadow:0 1px 3px rgba(0,0,0,0.3);
+  border-radius:3px;
+  background-color:#E08B8B;
+  color:#FFF;
+  text-shadow:0 1px 1px rgba(0,0,0,0.3);
+  cursor:pointer;
+  text-overflow: ellipsis;
     transition: all 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
     -webkit-transition: all 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
     -moz-transition: all 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
-	animation-fill-mode:both;
-	-webkit-animation-fill-mode:both;
-	-moz-animation-fill-mode:both;
-	z-index:1;
-	opacity:0.9;
-	user-select:none;
-	-webkit-user-select:none;
+  animation-fill-mode:both;
+  -webkit-animation-fill-mode:both;
+  -moz-animation-fill-mode:both;
+  z-index:1;
+  opacity:0.9;
+  user-select:none;
+  -webkit-user-select:none;
 }
 
 .cal-col > li.event:hover, .cal-col > li.event.hover {
-	transform:scale(1.05,1.05);-webkit-transform:scale(1.05,1.05);
-	box-shadow:0 1px 2px rgba(0,0,0,0.2), 0 2px 10px rgba(0,0,0,0.2);
-	z-index:2;
+  transform:scale(1.05,1.05);-webkit-transform:scale(1.05,1.05);
+  box-shadow:0 1px 2px rgba(0,0,0,0.2), 0 2px 10px rgba(0,0,0,0.2);
+  z-index:2;
 }
 
 .cal-col > li.event:hover { z-index:3; }
 
 .cal-col > li.event.superhover {
-	transform:scale(1.2,1.2);-webkit-transform:scale(1.2,1.2);
+  transform:scale(1.2,1.2);-webkit-transform:scale(1.2,1.2);
 }
 
 .cal-col > li.event > p { 
-	display:none;
-	border-top:1px dashed #FFF;
-	padding:4px;
-	text-align:center;
-	text-transform:uppercase;
-	font-size:10px;
-	padding-bottom:8px;
+  display:none;
+  border-top:1px dashed #FFF;
+  padding:4px;
+  text-align:center;
+  text-transform:uppercase;
+  font-size:10px;
+  padding-bottom:8px;
 }
 .cal-col > li.event.superhover > p { display:block; }
 
 .cal-col#A > li.event {
-	position:relative;
-	margin-left:2px;
-	top:0;
-	margin-top:2px;
-	height:auto;
+  position:relative;
+  margin-left:2px;
+  top:0;
+  margin-top:2px;
+  height:auto;
 }
 
 .cal-col > li.event > span {
-	padding:2px;
-	display:block;
-	text-align:center;
+  padding:2px;
+  display:block;
+  text-align:center;
 }
 
 .cal-col > li.event > span > i {
-	font-style:normal;
-	font-size:10px;
-	text-transform:uppercase;
+  font-style:normal;
+  font-size:10px;
+  text-transform:uppercase;
 }
 
 /* ***** FILTER CONTAINER ***** */
 
 #filtercontainer {
-	right:0;
-	width:100px;
-	padding:16px 8px;
+  right:0;
+  width:100px;
+  padding:16px 8px;
 }
 
 #ranks > li {
-	width:84px;height:40px;
-	background-color:rgba(0,0,0,0.2);
-	border-radius:3px;
-	border:1px solid rgba(0,0,0,0.1);
-	margin-bottom:8px;
-	cursor:pointer;
-	padding:4px 8px;
+  min-height:40px;
+  background-color:rgba(0,0,0,0.2);
+  border-radius:3px;
+  border:1px solid rgba(0,0,0,0.1);
+  margin-bottom:8px;
+  cursor:pointer;
+  padding:4px 8px;
+}
+
+#ranks > li.active {
+  background-color:rgba(255,255,255,0.2);
+  border:1px solid rgba(255,255,255,0.1);
 }
 
 #ranks > li:hover {
