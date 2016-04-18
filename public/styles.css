@@ -176,7 +176,7 @@ ul#dynamicInput > .search > input:focus + div {
   background-color:#CCC;
   padding: 8px 16px;
   font-size:13px;
-  cursor:default;
+  cursor:pointer;
   position:relative;
   z-index:1;
 }
@@ -402,17 +402,17 @@ ul#dynamicInput > .search > input:focus + div {
   min-height:40px;
   background-color:rgba(0,0,0,0.2);
   border-radius:3px;
-  border:1px solid rgba(0,0,0,0.1);
-  margin-bottom:8px;
+  margin-bottom:4px;
   cursor:pointer;
   padding:4px 8px;
 }
 
 #ranks > li.active {
-  background-color:rgba(255,255,255,0.2);
-  border:1px solid rgba(255,255,255,0.1);
+  background-color:rgba(255,255,255,0.3);
+  transform:scale(1.05,1.05);-webkit-transform:scale(1.05,1.05);
 }
 
-#ranks > li:hover {
-
+#ranks > li:not(.active):hover {
+  background-color:rgba(0,0,0,0.3);
+  transform:scale(1.05,1.05);-webkit-transform:scale(1.05,1.05);
 }

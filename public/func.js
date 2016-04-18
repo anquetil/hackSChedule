@@ -70,7 +70,7 @@ function establishFilters(data){
   }
 }
 
-function updateCalendar(data, courseHeap){
+function updateCalendar(data, courseHeap, index, score){
   var calendar = document.getElementById("calwrap");
   generateCalendar(); // reset calendar
 
@@ -86,6 +86,17 @@ function updateCalendar(data, courseHeap){
       }
     }
     count++;
+  }
+
+  var ranks = document.getElementById("ranks");
+  var rankli = ranks.getElementsByTagName("li");
+  for(var elem in rankli){
+    if(rankli[elem].getAttribute('data-key') == index){
+      rankli[elem].className = 'active';
+    }
+    else {
+      rankli[elem].className = '';
+    }
   }
 
   function createEvent(day, start, end, courseID, sectionID, color){

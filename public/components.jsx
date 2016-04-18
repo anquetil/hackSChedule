@@ -65,6 +65,7 @@ var CourseListApp = React.createClass({
       MASTERCourseHeap = nextCourseHeap;
       // set state
       prop.setState({courses: nextItems, courseHeap:nextCourseHeap, text: ''});
+      prop.generate();
     });
   },
   removeCourse: function(index){
@@ -77,6 +78,7 @@ var CourseListApp = React.createClass({
     MASTERCourseHeap = rCourseHeap;
     // set state
     this.setState({courses:rCourses, courseHeap:rCourseHeap, text:this.state.text});
+    this.generate();
   },
   generate: function(){
     // var convertedCourseArr = [];
@@ -103,9 +105,6 @@ var CourseListApp = React.createClass({
           courses={this.state.courses} 
           courseHeap={this.state.courseHeap} 
           removeCourse={this.removeCourse} />
-          <div style={{padding:"16px 16px"}}>
-            <Button value="Generate" id="generate" action={this.generate} />
-          </div>
       </div>
     );
   }
@@ -136,10 +135,10 @@ var FilterApp = React.createClass({
     });
   },
   updateCal: function(data, index){
-    updateCalendar(data.data, MASTERCourseHeap);
+    updateCalendar(data.data, MASTERCourseHeap, index, data.score);
   },
   createItem: function(data, index){
-    return <li key={index} data-key={index} onClick={this.updateCal.bind(null, data, index)}>{index+1}</li>;
+    return <li key={index} data-key={index} onClick={this.updateCal.bind(null, data, index)}>{index+1}, {data.score}</li>;
   },
   render: function(){
     return <ul id="ranks">{MASTERCombinationHeap.map(this.createItem)}</ul>
