@@ -1,5 +1,5 @@
 /* HTML5 Boilerplate */
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; word-wrap: break-word; word-break: hyphenate; }
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; word-wrap: break-word; word-break: hyphenate; -moz-box-sizing: border-box; box-sizing: border-box; }
 
 ul, li { list-style: none; list-style-type: none; display: block; }
 
@@ -33,7 +33,7 @@ h6 { font-size: 20px; }
 
 hr { display: block; padding: 0; border: 0; height: 1px; background-color: rgba(0, 0, 0, 0.3); max-width: 100%; margin: 10px auto; }
 
-input, textarea { font-family: Avenir, HelveticaNeue, "Helvetica Neue", Helvetica, Arial, Avenir, Verdana, Sans-serif; font-size: 14px; line-height: 1.4em; font-weight: 300; color: #000; -webkit-appearance: none; background-color: #FFF; -webkit-border-radius: 0px; -moz-border-radius: 0px; border-radius: 0px; border: 0px; outline: none; padding: 5px 10px; height: 20px; border: 1px solid rgba(0, 0, 0, 0.3); resize: none; }
+input, textarea { font-family:HelveticaNeue, "Helvetica Neue", Helvetica, Arial, Avenir, Verdana, Sans-serif; font-size: 14px; line-height: 1.4em; font-weight: 300; color: #000; -webkit-appearance: none; background-color: #FFF; -webkit-border-radius: 0px; -moz-border-radius: 0px; border-radius: 0px; border: 0px; outline: none; padding: 5px 10px; height: 20px; border: 1px solid rgba(0, 0, 0, 0.3); resize: none;}
 
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { color: rgba(0, 0, 0, 0.3); }
 
@@ -43,61 +43,152 @@ input:-moz-placeholder, textarea:-moz-placeholder { color: rgba(0, 0, 0, 0.3); }
 
 .clear { clear: both; display: block; }
 
-
+* {
+	line-height:1.4em;
+	transition-property: margin, padding, opacity, background-color, border-radius, border;
+	-webkit-transition-property: margin, padding, opacity, background-color, border-radius, border;
+	-moz-transition-property: margin, padding, opacity, background-color, border-radius, border;
+	transition-duration: 0.35s;
+	-webkit-transition-duration: 0.35s;
+	-moz-transition-duration: 0.35s;
+	transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+	-webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+	-moz-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+	animation-fill-mode:both;
+	-webkit-animation-fill-mode:both;
+	-moz-animation-fill-mode:both;
+}
 
 main {
 	margin:0 auto;
 }
 
-#coursecontainer {
-	text-align:center;
+main > section {
 	position:fixed;
-	left:0;
 	top:0;
 	bottom:0;
-	width:250px;
-	color:#FFF;
 	overflow:auto;
 	-webkit-overflow-scrolling: touch;
+}
+
+#coursecontainer, #filtercontainer {
+	color:#FFF;
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e93432+0,ce1a1a+100 */
 	background: #e93432; /* Old browsers */
-	background: -moz-linear-gradient(left, #e93432 0%, #ce1a1a 100%); /* FF3.6-15 */
-	background: -webkit-linear-gradient(left, #e93432 0%,#ce1a1a 100%); /* Chrome10-25,Safari5.1-6 */
-	background: linear-gradient(to right, #e93432 0%,#ce1a1a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e93432', endColorstr='#ce1a1a',GradientType=1 ); /* IE6-9 */
+	background: -moz-linear-gradient(top,  #e93432 0%, #ce1a1a 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  #e93432 0%,#ce1a1a 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  #e93432 0%,#ce1a1a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e93432', endColorstr='#ce1a1a',GradientType=0 ); /* IE6-9 */
+}
+
+/* ***** COURSE CONTAINER ***** */
+
+#coursecontainer {
+	left:0;
+	width:250px;
+	padding: 16px 0;
+}
+
+#hackschedule { 
+	background-image:url('/hackschedule.png');
+	background-position:center;
+	background-size:cover;
+	background-repeat:no-repeat;
+	width:160px;
+	height:27.2px;
+	margin:0 auto;
+	margin:0 auto 16px auto;
+}
+
+ul#dynamicInput {
+	margin:0 16px;
 }
 
 ul#dynamicInput > li {
 	padding-bottom:8px;
+	font-size:10px;
+	color:rgba(255,255,255,0.7);
+	text-align:center;
 }
+
+ul#dynamicInput > .search > input {
+	width:100%;
+	border:0;
+	background-color:rgba(0,0,0,0.1);
+	color:#FFF;
+	padding:8px 0;
+	height:16px;
+	font-size:16px;
+	text-align:center;
+	border-radius:3px;
+	margin-bottom:1px;
+	box-shadow:0 0 0 1px rgba(0,0,0,0.2);
+	font-weight:bold;
+}
+
+ul#dynamicInput > .search > input:focus {
+	background-color:transparent;
+	background-color:rgba(0,0,0,0.2);
+	box-shadow:0 0 0 1px rgba(0,0,0,0.3);
+}
+
+ul#dynamicInput > .search > input + div {
+	height:2px;
+	display:block;
+	margin:0 auto;
+	width:0%;
+	opacity:0;
+	background-color:#FFF;
+	-webkit-transition-property:width, opacity;
+	-moz-transition-property:width, opacity;
+	transition-property:width, opacity;
+}
+
+ul#dynamicInput > .search > input:focus + div {
+	background-color:#FFF;
+	width:100%;
+	opacity:1;
+}
+
+#courseListApp {
+	margin:16px 0;
+}
+
+#courselist > li {
+	background-color:#CCC;
+	padding: 8px 16px;
+	font-size:13px;
+	cursor:pointer;
+}
+
+#courselist > li > .tag {
+    display: inline-block;
+    padding: 2px 4px;
+    margin-right: 4px;
+    background-color: rgba(255,255,255,0.3);
+    color: inherit;
+    border-radius: 3px;
+}
+
+#courselist > li > .tag.course { font-weight:bold; }
+#courselist > li > .tag.unit { font-style:italic; }
+#courselist > li > .courseTitle { 
+	font-size:16px;
+	display:block;
+	padding:4px 0;
+}
+
+#credits {
+	font-size:12px;
+	text-align:center;
+	color:rgba(0,0,0,0.5);
+}
+
+/* ***** CALENDAR ***** */
 
 #calendar {
-	position:fixed;
-	top:0;
-	bottom:0;
 	left:250px;
 	right:100px;
-	overflow:auto;
-	-webkit-overflow-scrolling: touch;
-}
-
-#filtercontainer {
-	text-align:center;
-	position:fixed;
-	top:0;
-	bottom:0;
-	right:0;
-	width:100px;
-	background-color:#EEE;
-	color:#FFF;
-	overflow:auto;
-	-webkit-overflow-scrolling: touch;
-	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e93432+0,ce1a1a+100 */
-	background: #e93432; /* Old browsers */
-	background: -moz-linear-gradient(left, #e93432 0%, #ce1a1a 100%); /* FF3.6-15 */
-	background: -webkit-linear-gradient(left, #e93432 0%,#ce1a1a 100%); /* Chrome10-25,Safari5.1-6 */
-	background: linear-gradient(to right, #e93432 0%,#ce1a1a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e93432', endColorstr='#ce1a1a',GradientType=1 ); /* IE6-9 */
 }
 
 
@@ -123,24 +214,23 @@ ul#dynamicInput > li {
 	background-color:#CCC;
 }
 
-
-#calendar:after {
-	content:'';
-	display:block;
-	clear:both;
-}
-
 #calwrap {
 	padding:0px;
 	position:relative;
 	padding-left:30px;
-	margin-right:1px;
+	margin-left:1px;
+}
+
+#calwrap:after {
+	content: '';
+	display:block;
+	clear:both;
 }
 
 #time {
 	float:left;
 	margin-left:-30px;
-	padding-right:4px;
+	padding-right:0px;
 	width:24px;
 	font-size:11px;
 	text-align:right;
@@ -150,31 +240,34 @@ ul#dynamicInput > li {
 }
 
 #time > li {
-	height:50px;
+	height:49px;
 }
 
 .cal-col {
 	width:12.5%;
 	float:left;
 	position:relative;
+	margin-bottom:-1px;
+	height:843px;
 }
 
 .cal-col > li:not(.event) {
 	height:49px;
 	border:1px solid #EAEAEA;
 	border-top:0px;
-	margin-right:-1px;
+	margin-left:-1px;
 }
 
-#U, #S {
+#U, #S, #A {
 	background-color:#F8F8F8;
 }
 
 #calwrap > ul > li.day {
 	padding:8px;
+	height:59px;
 }
 
-.cal-col > li:not(.event):not(.day):before {
+.cal-col:not(#A) > li:not(.event):not(.day):before {
 	content:'';
 	display:block;
 	height:24px;
@@ -184,8 +277,8 @@ ul#dynamicInput > li {
 .cal-col > li.event {
 	position:absolute;
 	left:0;right:0;
-	margin-left:3px;
-	margin-right:2px;
+	margin-left:2px;
+	margin-right:3px;
 	min-height:42px;
 	margin-top:-1px;
 	border:1px solid rgba(0,0,0,0.2);
@@ -251,30 +344,24 @@ ul#dynamicInput > li {
 	text-transform:uppercase;
 }
 
-#coursetable {
-	padding:60px;
+/* ***** FILTER CONTAINER ***** */
+
+#filtercontainer {
+	right:0;
+	width:100px;
+	padding:16px 8px;
 }
 
-#coursetable > table {
-	width:100%;
-	border:1px solid #CCC;
-}
-
-#coursetable > table tr {
-	border:1px solid #CCC;
-}
-
-#coursetable > table tr:not():nth-child(2n+3){
-	background-color:#EEE;
-}
-
-#coursetable > table tr > * {
+#ranks > li {
+	width:84px;height:40px;
+	background-color:rgba(0,0,0,0.2);
+	border-radius:3px;
+	border:1px solid rgba(0,0,0,0.1);
+	margin-bottom:8px;
+	cursor:pointer;
 	padding:4px 8px;
 }
 
-#coursetable > table th {
-	font-size:10px;
-	text-transform: uppercase;
-	font-weight:bold;
-	text-align:left;
+#ranks > li:hover {
+
 }

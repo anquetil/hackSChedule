@@ -5,71 +5,36 @@
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>HackSChedule</title>
+	<script src="https://fb.me/react-0.14.0.js"></script>
+	<script src="https://fb.me/react-dom-0.14.0.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="func.js"></script>
 </head>
 <body>
 
 <main>
 
 <section id="coursecontainer">
-	<h4>Classes</h4>
-	<ul id="dynamicInput" class="typeahead">
-		<li><input type="text" id="classInput" name="class-1" placeholder="Enter a class"/><p>Hit enter to add a new class.</p></li>
-	</ul>
+	<div id="hackschedule"></div>
+	<div id="courseListApp"></div>
+	<div id="credits">Created by <a href="http://andrewjiang.com/" target="_blank">Andrew</a> for USC students.</div>
 </section>
 
-<section id="calendar">
-	<div id="calwrap">
-		<ul id="time">
-			<li class="day"></li>
-			<li>6<span>a</span></li>
-			<li>7<span>a</span></li>
-			<li>8<span>a</span></li>
-			<li>9<span>a</span></li>
-			<li>10<span>a</span></li>
-			<li>11<span>a</span></li>
-			<li>12<span>p</span></li>
-			<li>1<span>p</span></li>
-			<li>2<span>p</span></li>
-			<li>3<span>p</span></li>
-			<li>4<span>p</span></li>
-			<li>5<span>p</span></li>
-			<li>6<span>p</span></li>
-			<li>7<span>p</span></li>
-			<li>8<span>p</span></li>
-			<li>9<span>p</span></li>
-		</ul>
-		<ul id="U" class="cal-col"><li class="day">Sun</li></ul>
-		<ul id="M" class="cal-col"><li class="day"><b>Mon</b></li></ul>
-		<ul id="T" class="cal-col"><li class="day"><b>Tue</b></li></ul>
-		<ul id="W" class="cal-col"><li class="day"><b>Wed</b></li></ul>
-		<ul id="H" class="cal-col"><li class="day"><b>Thu</b></li></ul>
-		<ul id="F" class="cal-col"><li class="day"><b>Fri</b></li></ul>
-		<ul id="S" class="cal-col"><li class="day">Sat</li></ul>
-		<ul id="A" class="cal-col"><li class="day">TBA</li></ul>
-	</div>
-</section>
+<section id="calendar"></section>
 
 <section id="filtercontainer">
-	Combination Rank
+	<ul id="ranks">
+		<li>1</li>
+		<li>2</li>
+		<li>3</li>
+	</ul>
 </section>
 
 
 </main>
 
-<script>
-
-var calendar = document.getElementById("calwrap");
-var calSections = calendar.getElementsByTagName("ul");
-
-for(var elem in calSections){
-	if('UMTWHFS'.indexOf(elem) > -1){
-		for(var i=0; i<16; i++)
-			calSections[elem].innerHTML = calSections[elem].innerHTML + '<li></li>';
-	}
-}
-
-</script>
-
+<script src="components.jsx" type="text/babel"></script>
 
 </body>
 </html>
