@@ -119,7 +119,23 @@ function updateCalendar(data, courseHeap, index, score){
       elemStyle += 'opacity:0.5;'
     }
 
-    var newElem = '<li class="event" style="'+ elemStyle +'"><span>'+ courseID + ',' + sectionID+'</span></li>';
+    var data = courseHeap[courseID].SectionData[sectionID];
+    console.log(data)
+    var content = '<span><b>'+courseID+'</b>, '+sectionID+', '+data.type+', '+data.location+', '+data.start_time+'—'+data.end_time+', '+(data.spaces_available-data.number_registered)+'</span>';
+
+    var newElem = '<li class="event" onmouseenter="makeHover(\''+courseID+'\')" onmouseleave="removeHover(\''+courseID+'\')" data-course="'+courseID+'" style="'+ elemStyle +'"><span>'+ content +'</span></li>';
     elem.innerHTML = elem.innerHTML + newElem;
   }
+}
+
+function makeHover(courseId){
+  $('*[data-course='+courseId+']').addClass("hover").on("click",function(e){
+    $(this).toggleClass("superhover");
+  });
+}
+
+function removeHover(courseId){
+  $('*[data-course='+courseId+']').removeClass("hover").removeClass("superhover").on("click",function(e){
+    $(this).toggleClass("superhover");
+  });
 }

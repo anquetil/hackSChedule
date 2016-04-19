@@ -16,11 +16,32 @@ var Button = React.createClass({
 /* ***** COURSE LIST APP ***** */
 
 var CourseListItem = React.createClass({
+  itemShow: function(courseid){
+    var calwrap = document.getElementById("calwrap");
+    var elems = calwrap.getElementsByTagName("li");
+    for(var item in elems){
+      if(elems.item(item).getAttribute("data-course") === courseid){
+        console.log(elems.item(item))
+        elems.item(item).className = "event hover";
+      }
+    }
+  },
+  itemLeave: function(courseid){
+    var calwrap = document.getElementById("calwrap");
+    var elems = calwrap.getElementsByTagName("li");
+    for(var item in elems){
+      if(elems.item(item).getAttribute("data-course") === courseid){
+        console.log(elems.item(item))
+        elems.item(item).className = "event";
+      }
+    }
+
+  },
   createItem: function(item, index){
     var count = (this.props.courses.length > 2) ? this.props.courses.length : 2;
     var rgb = 'rgb(' + colorFade([233,52,50],[233,167,30], index, count) + ')';
     return (
-      <li key={item.id} data-course={item.text} style={{backgroundColor:rgb}}>
+      <li key={item.id} data-course={item.text} onMouseEnter={this.itemShow.bind(null, item.text)} onMouseLeave={this.itemLeave.bind(null, item.text)} style={{backgroundColor:rgb}}>
         <span className="close" onClick={this.props.removeCourse.bind(null, index)}>×</span>
         <span className="course tag">{item.text}</span>
         <span className="unit tag">{this.props.courseHeap[item.text].units} units</span>
