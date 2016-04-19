@@ -7,6 +7,7 @@ var db = new Firebase("https://hackschedule.firebaseio.com/schedules");
 
 //var TROJAN = require('./lib/TROJAN');
 var api = require('./lib/api');
+var port = process.env.PORT || 8080;
 
 app.use(require('express-promise')());
 app.use('/', express.static(path.join(__dirname, 'public')));
@@ -14,6 +15,6 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 app.get('/api/:method.:action', api);
 app.get('/api/:method', api);
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+app.listen(port, function () {
+  console.log('Example app listening on port '+port+'!');
 });
