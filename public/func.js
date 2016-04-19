@@ -35,7 +35,7 @@ function getCourse(courseid, callback, err) {
   $.getJSON('/api/method.course',{course: courseid},function(data){
     if(typeof data.error === 'undefined'){
       var obj = {};
-      obj[data.prefix + '-' + data.number] = data;
+      obj[data.prefix + '-' + data.number + data.sequence] = data;
       callback(obj);
     }
     else{
@@ -74,38 +74,49 @@ function updateCalendar(data, courseHeap, index, score){
   var calendar = document.getElementById("calwrap");
   generateCalendar(); // reset calendar
 
-  var colorarr = ["EF5350","AB47BC","5C6BC0","039BE5","009688","689F38","EF6C00","795548","EC407A"];
+  //var colorarr = ["EF5350","AB47BC","5C6BC0","039BE5","009688","689F38","EF6C00","795548","EC407A"];
 
-  var count = 0;
+  var courseList = document.getElementById('courselist');
+  courseList = courseList.getElementsByTagName('li');
+
   for(var course in data){
+    var color = '';
+    for(var li in courseList){
+      if(courseList.item(li).getAttribute('data-course') == course){
+        color = window.getComputedStyle(courseList.item(li)).getPropertyValue('background-color');
+        break;
+      }
+    }
     for(var section in data[course]){
       for(var key in data[course][section]){
         for(var subKey in data[course][section][key].day){
-          createEvent(data[course][section][key].day[subKey], data[course][section][key].start, data[course][section][key].end, course, section, colorarr[count]);
+          createEvent(data[course][section][key].day[subKey], data[course][section][key].start, data[course][section][key].end, course, section, color, data[course][section][key].closed);
         }
       }
     }
-    count++;
   }
 
   var ranks = document.getElementById("ranks");
   var rankli = ranks.getElementsByTagName("li");
   for(var elem in rankli){
-    if(rankli[elem].getAttribute('data-key') == index){
-      rankli[elem].className = 'active';
+    if(rankli.item(elem).getAttribute('data-key') == index){
+      rankli.item(elem).className = 'active';
     }
     else {
       rankli[elem].className = '';
     }
   }
 
-  function createEvent(day, start, end, courseID, sectionID, color){
+  function createEvent(day, start, end, courseID, sectionID, color, closed){
     var elem = document.getElementById(day);
-    var elemStyle = 'background-color:#'+color+';';
+    var elemStyle = 'background-color:'+color+';';
     if(day != 'A'){
       var top = Math.round(((start - 360) / 60) * 50 + 60);
       var height = Math.round((end - start) * 50 / 60);
       elemStyle += 'top:'+top+'px;height:'+height+'px;';
+    }
+    if(closed){
+      elemStyle += 'opacity:0.5;'
     }
 
     var newElem = '<li class="event" style="'+ elemStyle +'"><span>'+ courseID + ',' + sectionID+'</span></li>';
