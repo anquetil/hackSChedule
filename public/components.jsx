@@ -71,11 +71,9 @@ var CourseListApp = React.createClass({
   removeCourse: function(index){
     var rCourses = this.state.courses,
         rCourseHeap = this.state.courseHeap;
+    delete rCourseHeap[rCourses[index].text];
     delete rCourses[index];
-    delete rCourseHeap[index];
-    rCourses.length--;
-    rCourseHeap.length--;
-    MASTERCourseHeap = rCourseHeap;
+    console.log(MASTERCourseHeap)
     // set state
     this.setState({courses:rCourses, courseHeap:rCourseHeap, text:this.state.text});
     this.generate();
@@ -83,9 +81,10 @@ var CourseListApp = React.createClass({
   generate: function(){
     // var convertedCourseArr = [];
     // for(var key in this.state.courses) convertedCourseArr.push(this.state.courses[key].text);
-    generateCourses(this.state.courseHeap, function(data){
+    generateCourses(MASTERCourseHeap, function(data){
       MASTERCombinationHeap = data;
       $(APP).trigger('update');
+      updateCalendar(data[0].data, MASTERCourseHeap, 0, data[0].score);
     });
   },
   render: function(){
@@ -138,7 +137,7 @@ var FilterApp = React.createClass({
     updateCalendar(data.data, MASTERCourseHeap, index, data.score);
   },
   createItem: function(data, index){
-    return <li key={index} data-key={index} onClick={this.updateCal.bind(null, data, index)}>{index+1}, {data.score}</li>;
+    return <li key={index} data-key={index} onClick={this.updateCal.bind(null, data, index)}><b>{index+1}</b><br /> <i>{data.score}</i></li>;
   },
   render: function(){
     return <ul id="ranks">{MASTERCombinationHeap.map(this.createItem)}</ul>

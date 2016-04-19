@@ -396,6 +396,7 @@ ul#dynamicInput > .search > input:focus + div {
   right:0;
   width:100px;
   padding:16px 8px;
+  font-size:11px;
 }
 
 #ranks > li {
@@ -405,6 +406,11 @@ ul#dynamicInput > .search > input:focus + div {
   margin-bottom:4px;
   cursor:pointer;
   padding:4px 8px;
+  text-align:center;
+}
+
+#ranks > li > i {
+  opacity:0.6;
 }
 
 #ranks > li.active {
