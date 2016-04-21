@@ -47,7 +47,7 @@ var HackSChedule = React.createClass({
         <section id="coursecontainer">
           <div id="hackschedule"></div>
           <div id="courseListApp"><CourseListApp courseIdArr={this.state.courseIdArr} courseHeap={this.state.courseHeap} APP={this.state.APP} /></div>
-          <div id="credits">Created by <a href="http://andrewjiang.com/" target="_blank">Andrew</a> for USC students.</div>
+          <div id="credits"><a href="http://github.com/ninjiangstar/hackSChedule">Github</a></div>
         </section>
 
         <section id="calendar"><CalendarApp /></section>
