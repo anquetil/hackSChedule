@@ -2,31 +2,20 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="styles.css">
+  <link rel="stylesheet" type="text/css" href="/res/styles.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HackSChedule</title>
-  <script src="https://fb.me/react-0.14.0.js"></script>
-  <script src="https://fb.me/react-dom-0.14.0.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script src="func.js"></script>
+  <script src="/res/react-0.14.0.js"></script>
+  <script src="/res/react-dom-0.14.0.js"></script>
+  <script src="/res/babel-browser-5.8.23.min.js"></script>
+  <script src="/res/jquery-2.1.1.min.js"></script>
 </head>
 <body>
 
-<main>
-  <section id="coursecontainer">
-    <div id="hackschedule"></div>
-    <div id="courseListApp"></div>
-    <div id="credits">Created by <a href="http://andrewjiang.com/" target="_blank">Andrew</a> for USC students.</div>
-  </section>
+<div id="HackSChedule"></div>
 
-  <section id="calendar"></section>
-
-  <section id="filtercontainer">
-    <ul id="ranks"></ul>
-  </section>
-</main>
-
-<script src="components.jsx" type="text/babel"></script>
+<script src="/socket.io/socket.io.js"></script>
+  <script src="/res/func.js"></script>
+<script src="/res/components.jsx" type="text/babel"></script>
 </body>
 </html>

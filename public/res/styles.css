@@ -108,7 +108,7 @@ main > section {
 }
 
 #hackschedule { 
-  background-image:url('/hackschedule.png');
+  background-image:url('./hackschedule.png');
   background-position:center;
   background-size:cover;
   background-repeat:no-repeat;
@@ -286,7 +286,7 @@ ul#dynamicInput > .search > input:focus + div {
 }
 
 #time > li {
-  height:49px;
+  height:50px;
 }
 
 .cal-col {
