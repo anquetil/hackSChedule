@@ -39,7 +39,6 @@ var HackSChedule = React.createClass({
       prop.setState({
         courseCombinations: newCourseCombinations
       });
-      updateCalendar(data.data, prop.state.courseHeap, 0, data.score);
     });
   },
   render: function(){
