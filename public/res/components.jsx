@@ -18,6 +18,7 @@ var HackSChedule = React.createClass({
       courseIdArr: [], 
       courseHeap: {},
       courseCombinations: [],
+      tempCombinations: [],
       APP: {}
     };
   },
@@ -29,16 +30,25 @@ var HackSChedule = React.createClass({
       prop.setState({
         courseIdArr: data.courseIdArr,
         courseHeap: data.courseHeap,
-        courseCombinations: []
+        courseCombinations: [],
+        tempCombinations: []
       });
     });
 
     socket.on('add schedule', function(data){
-      var newCourseCombinations = prop.state.courseCombinations.concat([data]);
-      newCourseCombinations.sort(compareScore);
+      var newCourseCombinations = prop.state.tempCombinations.concat([data]);
+      //newCourseCombinations.sort(compareScore);
       prop.setState({
-        courseCombinations: newCourseCombinations
+        tempCombinations: newCourseCombinations
       });
+    });
+
+    socket.on('end generation', function(){
+      prop.setState({
+        courseCombinations: prop.state.tempCombinations.sort(compareScore),
+        tempCombinations: []
+      });
+      updateCalendar(prop.state.courseCombinations[0].data, prop.state.courseHeap, 0);
     });
   },
   render: function(){
@@ -151,7 +161,7 @@ var CalendarApp = React.createClass({
 
 var FilterApp = React.createClass({
   updateCal: function(data, index){
-    updateCalendar(data.data, this.props.courseHeap, index, data.score);
+    updateCalendar(data.data, this.props.courseHeap, index);
   },
   createItem: function(data, index){
     return <li key={index} data-key={index} onClick={this.updateCal.bind(null, data, index)}><b>{index+1}</b><br /> <i>{data.score}</i></li>;

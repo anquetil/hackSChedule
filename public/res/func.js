@@ -35,7 +35,7 @@ function colorFade(startColor, endColor, index, count){
   return [diffR, diffG, diffB];
 }
 
-function updateCalendar(data, courseHeap, index, score){
+function updateCalendar(data, courseHeap, index){
   var calendar = document.getElementById("calwrap");
   generateCalendar(); // reset calendar
 
