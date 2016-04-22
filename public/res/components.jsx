@@ -24,6 +24,7 @@ var HackSChedule = React.createClass({
   },
   componentDidMount: function(){
     var prop = this;
+    var time = 0;
 
     socket.on('update courses', function(data){
       if(data.add) $(prop.state.APP).trigger('clearText');
@@ -33,6 +34,7 @@ var HackSChedule = React.createClass({
         courseCombinations: [],
         tempCombinations: []
       });
+      time = Date.now();
     });
 
     socket.on('add schedule', function(data){
@@ -49,7 +51,22 @@ var HackSChedule = React.createClass({
         tempCombinations: []
       });
       updateCalendar(prop.state.courseCombinations[0].data, prop.state.courseHeap, 0);
+      console.log(Date.now() - time);
     });
+
+    $(document.body).on('keydown',function(e){
+      if([37,38,39,40].indexOf(e.keyCode) > -1){
+        e.preventDefault();
+        //console.log(e.keyCode);
+        if(e.keyCode == 37 || e.keyCode == 38)
+          $(prop.state.APP).trigger('goPrev');
+        else $(prop.state.APP).trigger('goNext');
+      }
+    }).on('keydown','input',function(e){
+      if([37,38,39,40].indexOf(e.keyCode) > -1)
+        e.stopPropagation();
+    });
+
   },
   render: function(){
     return (
@@ -63,7 +80,7 @@ var HackSChedule = React.createClass({
         <section id="calendar"><CalendarApp /></section>
 
         <section id="filtercontainer">
-          <FilterApp courseCombinations={this.state.courseCombinations} courseHeap={this.state.courseHeap} />
+          <FilterApp courseCombinations={this.state.courseCombinations} courseHeap={this.state.courseHeap} APP={this.state.APP} />
         </section>
       </main>
     );
@@ -160,7 +177,27 @@ var CalendarApp = React.createClass({
 /* ***** FILTERS APP ***** */
 
 var FilterApp = React.createClass({
+  getInitialState: function(){
+    return {index:0};
+  },
+  componentDidMount: function(){
+    var prop = this;
+    $(this.props.APP).on('goPrev',function(){
+      var data = prop.props.courseCombinations;
+      if(prop.state.index > 0){
+        prop.setState({index: prop.state.index-1});
+        updateCalendar(data[prop.state.index].data, prop.props.courseHeap, prop.state.index);
+      }
+    }).on('goNext',function(){
+      var data = prop.props.courseCombinations;
+      if(prop.state.index < prop.props.courseCombinations.length){
+        prop.setState({index: prop.state.index+1});
+        updateCalendar(data[prop.state.index].data, prop.props.courseHeap, prop.state.index);
+      }
+    });
+  },
   updateCal: function(data, index){
+    this.setState({index: index});
     updateCalendar(data.data, this.props.courseHeap, index);
   },
   createItem: function(data, index){

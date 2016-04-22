@@ -70,7 +70,8 @@ main > section {
   position:fixed;
   top:0;
   bottom:0;
-  overflow:auto;
+  overflow-y:auto;
+  overflow-x:hidden;
   -webkit-overflow-scrolling: touch;
 }
 

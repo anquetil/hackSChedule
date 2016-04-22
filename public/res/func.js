@@ -83,7 +83,7 @@ function updateCalendar(data, courseHeap, index){
     }
 
     var data = courseHeap[courseID].SectionData[sectionID];
-    console.log(data)
+    //console.log(data)
     var content = '<span><b>'+courseID+'</b> ('+data.type+')<br>'+sectionID+', '+data.location+'<br>'+data.start_time+'-'+data.end_time+', '+(data.spaces_available-data.number_registered)+'</span>';
 
     var newElem = '<li class="event" onmouseenter="makeHover(\''+courseID+'\')" onmouseleave="removeHover(\''+courseID+'\')" data-course="'+courseID+'" style="'+ elemStyle +'"><span>'+ content +'</span></li>';
