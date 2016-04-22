@@ -10,6 +10,17 @@ var Button = React.createClass({
   }
 });
 
+function colorFade(startColor, endColor, index, count){
+  var diffR = endColor[0] - startColor[0],
+      diffG = endColor[1] - startColor[1],
+      diffB = endColor[2] - startColor[2],
+      percentFade = (index + 1) / count;
+  diffR = Math.round((diffR * percentFade) + startColor[0]);
+  diffG = Math.round((diffG * percentFade) + startColor[1]);
+  diffB = Math.round((diffB * percentFade) + startColor[2]);
+  return [diffR, diffG, diffB];
+}
+
 /* ***** MASTER APP ***** */
 
 var HackSChedule = React.createClass({
@@ -50,9 +61,19 @@ var HackSChedule = React.createClass({
         courseCombinations: prop.state.tempCombinations.sort(compareScore),
         tempCombinations: []
       });
-      updateCalendar(prop.state.courseCombinations[0].data, prop.state.courseHeap, 0);
+
+      $(prop.state.APP).trigger('updateCalendar', 0);
       $(prop.state.APP).trigger('resetFilter');
       console.log(Date.now() - time);
+
+      function compareScore(a, b){
+        if (a.score < b.score)
+          return -1;
+        else if (a.score > b.score)
+          return 1;
+        else 
+          return 0;
+      }
     });
 
     $(document.body).on('keydown',function(e){
@@ -78,7 +99,7 @@ var HackSChedule = React.createClass({
           <div id="credits"><a href="http://github.com/ninjiangstar/hackSChedule">Github</a></div>
         </section>
 
-        <section id="calendar"><CalendarApp /></section>
+        <section id="calendar"><CalendarApp courseIdArr={this.state.courseIdArr} courseCombinations={this.state.courseCombinations} courseHeap={this.state.courseHeap} APP={this.state.APP}/></section>
 
         <section id="filtercontainer">
           <FilterApp courseCombinations={this.state.courseCombinations} courseHeap={this.state.courseHeap} APP={this.state.APP} />
@@ -189,15 +210,103 @@ var CourseListApp = React.createClass({
 /* ***** CALENDAR APP ***** */
 
 var CalendarApp = React.createClass({
+  getInitialState: function(){
+    return {index:0};
+  },
   componentDidMount: function(){
-    generateCalendar();
+    var prop = this;
+
+    $(".day").width($(".cal-col").width()-17);
     $(window).resize(function(){
       $(".day").width($(".cal-col").width()-17);
-    })
+    });
+
+    $(this.props.APP).on('updateCalendar', function(e, index){
+      prop.setState({index:index});
+      console.log(index)
+    });
+  },
+  makeHover: function(courseId){
+    $('*[data-course='+courseId+']').addClass("hover").on("click",function(e){
+      $(this).addClass("superhover");
+      var sectionID = $(this).attr("data-section");
+      $('*[data-section='+sectionID+']').addClass("anchor");
+    });
+  }, 
+  removeHover: function(courseId){
+    $('*[data-course='+courseId+']').removeClass("hover").removeClass("superhover").on("click",function(e){
+      $(this).removeClass("superhover");
+    });
+  },
+  createEvent: function(day, start, end, courseID, sectionID, color, closed, key){
+    var style = {}
+    style.backgroundColor = color;
+    if(day != 'A'){
+      style.top = Math.round(((start - 420) / 60) * 50 + 60) + 'px';
+      style.height = Math.round((end - start) * 50 / 60) + 'px';
+    }
+    if(closed) style.opacity = '0.5';
+
+    var data = this.props.courseHeap[courseID].SectionData[sectionID];
+
+    return (
+      <li onMouseEnter={this.makeHover.bind(null, courseID)} onMouseLeave={this.removeHover.bind(null, courseID)} className="event" key={sectionID} data-course={courseID} data-section={sectionID} style={style}>
+        <span>
+          <span>
+          <b>{courseID}</b> ({data.type})<br />
+          {sectionID}, {data.location[key]}<br />
+          {data.start_time[key]}-{data.end_time[key]}, {data.spaces_available-data.number_registered}
+          </span>
+        </span>
+      </li>
+    );
+  },
+  generateEvents: function(day){
+
+    var daysLegend = {U:'Sun' , M:<b>Mon</b>, T:<b>Tue</b>, W:<b>Wed</b>, H:<b>Thu</b>, F:<b>Fri</b>, S:'Sat', A:<i>TBA</i>};
+    var emptyCols = []; for(var i=0; i<16; i++) emptyCols.push(<li key={i}></li>);
+
+    var generatedEvents = [];
+    var data = this.props.courseCombinations[this.state.index];
+    var courseList = this.props.courseIdArr;
+    if(!(typeof data === 'undefined')){
+      data = data.data;
+
+      for(var course in data){
+        var index = courseList.indexOf(course);
+        var count = (this.props.courseIdArr.length > 2) ? courseList.length : 2;
+        var color = 'rgb(' + colorFade([233,52,50],[233,167,30], index, count) + ')';
+
+        for(var section in data[course]){
+          for(var key in data[course][section])
+            if((data[course][section][key].day).indexOf(day) > -1)
+              generatedEvents.push(this.createEvent(day, data[course][section][key].start, data[course][section][key].end, course, section, color, data[course][section][key].closed, key));
+        }
+      }
+    }
+
+    return (
+      <ul key={day} id={day} className="cal-col">
+        <li className="day" key={0}>{daysLegend[day]}</li>
+        {emptyCols}
+        {generatedEvents.map(function(item){return item})}
+      </ul>
+    );
   },
   render: function(){
+
+    var prop = this;
+    var timeArr = ['7a','8a','9a','10a','11a','12p','1p','2p','3p','4p','5p','6p','7p','8p','9p', '10p'];
+    var days = ['U', 'M', 'T', 'W', 'H', 'F', 'S', 'A'];
+
     return (
-      <div id="calwrap"></div>
+      <div id="calwrap">
+        <ul id="time">
+          <li className="day"></li>
+          {timeArr.map(function(time){ return <li key={time}>{time}</li>; })}
+        </ul>
+        {days.map(this.generateEvents)}
+      </div>
     );
   }
 });
@@ -214,13 +323,13 @@ var FilterApp = React.createClass({
       var data = prop.props.courseCombinations;
       if(prop.state.index > 0){
         prop.setState({index: prop.state.index-1});
-        updateCalendar(data[prop.state.index].data, prop.props.courseHeap, prop.state.index);
+        $(prop.props.APP).trigger('updateCalendar', prop.state.index);
       }
     }).on('goNext',function(){
       var data = prop.props.courseCombinations;
-      if(prop.state.index < prop.props.courseCombinations.length){
+      if(prop.state.index < prop.props.courseCombinations.length - 1){
         prop.setState({index: prop.state.index+1});
-        updateCalendar(data[prop.state.index].data, prop.props.courseHeap, prop.state.index);
+        $(prop.props.APP).trigger('updateCalendar', prop.state.index);
       }
     }).on('resetFilter',function(){
       prop.setState({index: 0});
@@ -228,10 +337,11 @@ var FilterApp = React.createClass({
   },
   updateCal: function(data, index){
     this.setState({index: index});
-    updateCalendar(data.data, this.props.courseHeap, index);
+    $(this.props.APP).trigger('updateCalendar', index);
   },
   createItem: function(data, index){
-    return <li key={index} data-key={index} onClick={this.updateCal.bind(null, data, index)}><b>{index+1}</b><br /> <i>{data.score}</i></li>;
+    var active = (this.state.index == index) ? 'active' : '';
+    return <li className={active} key={index} data-key={index} onClick={this.updateCal.bind(null, data, index)}><b>{index+1}</b><br /> <i>{data.score}</i></li>;
   },
   render: function(){
     return <ul id="ranks">{this.props.courseCombinations.map(this.createItem)}</ul>

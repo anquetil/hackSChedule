@@ -112,6 +112,7 @@ main > section {
   left:0;
   width:250px;
   padding: 16px 0;
+  z-index:10;
 }
 
 #hackschedule { 
@@ -272,6 +273,7 @@ ul#dynamicInput > .search input:focus + div {
   color:#000;
   border-radius:3px;
   box-shadow:0 2px 4px rgba(0,0,0,0.3);
+  z-index:20;
 }
 
 #calwrap {
@@ -391,6 +393,10 @@ ul#dynamicInput > .search input:focus + div {
   z-index:10;
 }
 
+.cal-col > li.event.anchor {
+  border:2px solid #FF0000;
+}
+
 .cal-col > li.event > p { 
   display:none;
   border-top:1px dashed #FFF;
@@ -429,6 +435,7 @@ ul#dynamicInput > .search input:focus + div {
   width:100px;
   padding:16px 8px;
   font-size:12px;
+  z-index:10;
 }
 
 #ranks > li {
