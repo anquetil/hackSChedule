@@ -310,7 +310,7 @@ ul#dynamicInput > .search input:focus + div {
   float:left;
   position:relative;
   margin-bottom:-1px;
-  height:843px;
+  height:859px;
   background-color:#FFF;
 }
 
@@ -333,6 +333,7 @@ ul#dynamicInput > .search input:focus + div {
   top:8px;
   border-right-color:transparent;
   border-bottom-width:2px;
+  z-index:100;
 }
 
 .cal-col:before, #time:before {
