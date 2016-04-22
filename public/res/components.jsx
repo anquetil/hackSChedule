@@ -149,7 +149,7 @@ var CourseListApp = React.createClass({
     var courses = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('tokens'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: '/res/courselistcache.json'
+      prefetch: '/api/courselistcache.json'
     });
 
     $('#dynamicInput input[type=text]').typeahead({highlight:true}, {
