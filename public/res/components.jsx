@@ -122,7 +122,29 @@ var CourseListApp = React.createClass({
     var prop = this;
     $(this.props.APP).on('clearText', function(){
       prop.setState({text: ''});
+      $('#dynamicInput input[type=text]').typeahead('close');
     });
+
+    var courses = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('tokens'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: '/res/courselistcache.json'
+    });
+
+    $('#dynamicInput input[type=text]').typeahead({highlight:true}, {
+      name: 'course-code',
+      display: 'course',
+      limit: 5,
+      source: courses,
+      templates: {
+        empty: [
+          '<div class="empty-message">',
+            'unable to find any courses that match the current query',
+          '</div>'
+        ].join('\n'),
+        suggestion: Handlebars.compile('<div><strong>{{course}}</strong><br><i>{{title}}</i></div>')
+      }
+    }).after("<div></div>");
   },
   onChange: function(e){
     this.setState({text: e.target.value});
@@ -152,7 +174,7 @@ var CourseListApp = React.createClass({
               value={this.state.text} 
               onKeyDown={this.checkSubmit}
               type="text" id="classInput" placeholder="Enter a class"/>
-            <div></div><p>(Hit enter to add a new class.)</p>
+            <p>(Hit enter to add a new class.)</p>
           </li>
         </ul>
         <CourseListItem 
@@ -167,7 +189,12 @@ var CourseListApp = React.createClass({
 /* ***** CALENDAR APP ***** */
 
 var CalendarApp = React.createClass({
-  componentDidMount: generateCalendar,
+  componentDidMount: function(){
+    generateCalendar();
+    $(window).resize(function(){
+      $(".day").width($(".cal-col").width()-17);
+    })
+  },
   render: function(){
     return (
       <div id="calwrap"></div>

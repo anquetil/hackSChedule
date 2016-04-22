@@ -36,7 +36,7 @@ h6 { font-size: 20px; }
 
 hr { display: block; padding: 0; border: 0; height: 1px; background-color: rgba(0, 0, 0, 0.3); max-width: 100%; margin: 10px auto; }
 
-input, textarea { font-family:HelveticaNeue, "Helvetica Neue", Helvetica, Arial, Avenir, Verdana, Sans-serif; font-size: 14px; line-height: 1.4em; font-weight: 300; color: #000; -webkit-appearance: none; background-color: #FFF; -webkit-border-radius: 0px; -moz-border-radius: 0px; border-radius: 0px; border: 0px; outline: none; padding: 5px 10px; height: 20px; border: 1px solid rgba(0, 0, 0, 0.3); resize: none;}
+input, textarea { font-family:HelveticaNeue, "Helvetica Neue", Helvetica, Arial, Avenir, Verdana, Sans-serif; font-size: 14px; line-height: 1.4em; font-weight: 300; color: #000; -webkit-appearance: none; background-color: #FFF; -webkit-border-radius: 0px; -moz-border-radius: 0px; border-radius: 0px; border: 0px; outline: none; padding: 5px 10px; height: 20px; border: 1px solid rgba(0, 0, 0, 0.3); resize: none;  -moz-box-sizing: border-box; box-sizing: border-box;}
 
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { color: rgba(0, 0, 0, 0.3); }
 
@@ -75,7 +75,7 @@ main > section {
   -webkit-overflow-scrolling: touch;
 }
 
-#coursecontainer, #filtercontainer {
+#HackSChedule, #coursecontainer, #filtercontainer {
   color:#FFF;
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e93432+0,ce1a1a+100 */
   background: #e93432; /* Old browsers */
@@ -83,6 +83,12 @@ main > section {
   background: -webkit-linear-gradient(top,  #e93432 0%,#ce1a1a 100%); /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(to bottom,  #e93432 0%,#ce1a1a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e93432', endColorstr='#ce1a1a',GradientType=0 ); /* IE6-9 */
+}
+
+#HackSChedule {
+  position:absolute;
+  left:0;right:0;top:0;bottom:0;
+  overflow:hidden;
 }
 
 /* ***** GENERIC COMPONENTS ***** */
@@ -127,34 +133,35 @@ ul#dynamicInput > li {
   padding-bottom:8px;
   font-size:10px;
   color:rgba(255,255,255,0.7);
-  text-align:center;
+  text-align:left;
 }
 
-ul#dynamicInput > .search > input {
+.twitter-typeahead { width: 100%; }
+
+ul#dynamicInput > .search input {
   width:100%;
   border:0;
   background-color:rgba(0,0,0,0.1);
   color:#FFF;
-  padding:8px 0;
-  height:16px;
+  padding:8px;
+  height:34px;
   font-size:16px;
-  text-align:center;
+  text-align:left;
   border-radius:3px;
   margin-bottom:1px;
   box-shadow:0 0 0 1px rgba(0,0,0,0.2);
   font-weight:bold;
 }
 
-ul#dynamicInput > .search > input:focus {
-  background-color:transparent;
-  background-color:rgba(0,0,0,0.2);
-  box-shadow:0 0 0 1px rgba(0,0,0,0.3);
+ul#dynamicInput > .search input:focus {
+  background-color:rgba(0,0,0,0.1) !important;
+  box-shadow:0 0 0 1px rgba(0,0,0,0.3) !important;
 }
 
-ul#dynamicInput > .search > input + div {
+ul#dynamicInput > .search input + div {
   height:2px;
   display:block;
-  margin:0 auto;
+  margin:0;
   width:0%;
   opacity:0;
   background-color:#FFF;
@@ -163,10 +170,33 @@ ul#dynamicInput > .search > input + div {
   transition-property:width, opacity;
 }
 
-ul#dynamicInput > .search > input:focus + div {
+ul#dynamicInput > .search input:focus + div {
   background-color:#FFF;
   width:100%;
   opacity:1;
+}
+
+.tt-menu {
+  background-color:#FFF;
+  font-size:13px;
+  border-radius:5px;
+  text-align:left;
+  width:100%;
+  margin-top:2px;
+  color:#000;
+  box-shadow:0 1px 3px rgba(0,0,0,0.2);
+}
+
+.tt-suggestion {
+  cursor:pointer;
+}
+
+.tt-suggestion, .empty-message {
+  padding:5px;
+}
+
+.tt-cursor {
+  background-color:#CCC;
 }
 
 #courseListApp {
@@ -236,29 +266,12 @@ ul#dynamicInput > .search > input:focus + div {
 #calendar {
   left:250px;
   right:100px;
-}
-
-
-.tt-menu {
+  top:8px;
+  bottom:8px;
   background-color:#FFF;
-  font-size:13px;
-  border-radius:5px;
-  box-shadow:0 2px 3px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(0,0,0,0.3);
-  text-align:left;
-  width:100%;
-  margin-top:2px;
-}
-
-.tt-suggestion {
-  cursor:pointer;
-}
-
-.tt-suggestion, .empty-message {
-  padding:5px;
-}
-
-.tt-cursor {
-  background-color:#CCC;
+  color:#000;
+  border-radius:3px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.3);
 }
 
 #calwrap {
@@ -296,6 +309,7 @@ ul#dynamicInput > .search > input:focus + div {
   position:relative;
   margin-bottom:-1px;
   height:843px;
+  background-color:#FFF;
 }
 
 .cal-col > li:not(.event) {
@@ -305,13 +319,28 @@ ul#dynamicInput > .search > input:focus + div {
   margin-left:-1px;
 }
 
-#U, #S, #A {
+#U, #S, #A { /* MURICA!!!! */
   background-color:#F8F8F8;
 }
 
 #calwrap > ul > li.day {
   padding:8px;
   height:60px;
+  position:fixed;
+  background-color:inherit;
+  top:8px;
+  border-right-color:transparent;
+  border-bottom-width:2px;
+}
+
+.cal-col:before, #time:before {
+  content:'';
+  display:block;
+  height:60px;
+}
+
+#A .day {
+  border-top-right-radius:3px;
 }
 
 .cal-col:not(#A) > li:not(.event):not(.day):before {

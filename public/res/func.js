@@ -22,6 +22,8 @@ function generateCalendar(){
         calendar[elem].innerHTML = calendar[elem].innerHTML + '<li>' + timeArr[time] + '</li>';
   }
 
+  $(".day").width($(".cal-col").width()-17);
+
 }
 
 function colorFade(startColor, endColor, index, count){
