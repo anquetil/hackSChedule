@@ -51,6 +51,7 @@ var HackSChedule = React.createClass({
         tempCombinations: []
       });
       updateCalendar(prop.state.courseCombinations[0].data, prop.state.courseHeap, 0);
+      $(prop.state.APP).trigger('resetFilter');
       console.log(Date.now() - time);
     });
 
@@ -100,7 +101,7 @@ var CourseListItem = React.createClass({
     var count = (this.props.courseIdArr.length > 2) ? this.props.courseIdArr.length : 2;
     var rgb = 'rgb(' + colorFade([233,52,50],[233,167,30], index, count) + ')';
     return (
-      <li key={item} data-course={item} onMouseEnter={this.itemShow.bind(null, item)} onMouseLeave={this.itemLeave.bind(null, item.text)} style={{backgroundColor:rgb}}>
+      <li key={item} data-course={item} onMouseEnter={this.itemShow.bind(null, item)} onMouseLeave={this.itemLeave.bind(null, item)} style={{backgroundColor:rgb}}>
         <span className="close" onClick={this.props.removeClass.bind(null, item)}>×</span>
         <span className="course tag">{item}</span>
         <span className="unit tag">{this.props.courseHeap[item].units} units</span>
@@ -194,6 +195,8 @@ var FilterApp = React.createClass({
         prop.setState({index: prop.state.index+1});
         updateCalendar(data[prop.state.index].data, prop.props.courseHeap, prop.state.index);
       }
+    }).on('resetFilter',function(){
+      prop.setState({index: 0});
     });
   },
   updateCal: function(data, index){

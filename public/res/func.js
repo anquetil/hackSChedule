@@ -5,7 +5,7 @@ function generateCalendar(){
 
   var days = ['U', 'M', 'T', 'W', 'H', 'F', 'S', 'A'];
   var daysLegend = {time: "", U:'Sun', M:'<b>Mon</b>', T:'<b>Tue</b>', W:'<b>Wed</b>', H:'<b>Thu</b>', F:'<b>Fri</b>', S:'Sat', A:'<i>TBA</i>'};
-  var timeArr = ['6a','7a','8a','9a','10a','11a','12p','1p','2p','3p','4p','5p','6p','7p','8p','9p'];
+  var timeArr = ['7a','8a','9a','10a','11a','12p','1p','2p','3p','4p','5p','6p','7p','8p','9p', '10p'];
   
   for(var key in days) 
     calendar.innerHTML = calendar.innerHTML + '<ul id="'+ days[key] +'" class="cal-col"></ul>';
@@ -53,7 +53,7 @@ function updateCalendar(data, courseHeap, index){
     for(var section in data[course]){
       for(var key in data[course][section]){
         for(var subKey in data[course][section][key].day){
-          createEvent(data[course][section][key].day[subKey], data[course][section][key].start, data[course][section][key].end, course, section, color, data[course][section][key].closed);
+          createEvent(data[course][section][key].day[subKey], data[course][section][key].start, data[course][section][key].end, course, section, color, data[course][section][key].closed, key);
         }
       }
     }
@@ -70,11 +70,11 @@ function updateCalendar(data, courseHeap, index){
     }
   }
 
-  function createEvent(day, start, end, courseID, sectionID, color, closed){
+  function createEvent(day, start, end, courseID, sectionID, color, closed, key){
     var elem = document.getElementById(day);
     var elemStyle = 'background-color:'+color+';';
     if(day != 'A'){
-      var top = Math.round(((start - 360) / 60) * 50 + 60);
+      var top = Math.round(((start - 420) / 60) * 50 + 60);
       var height = Math.round((end - start) * 50 / 60);
       elemStyle += 'top:'+top+'px;height:'+height+'px;';
     }
@@ -83,8 +83,9 @@ function updateCalendar(data, courseHeap, index){
     }
 
     var data = courseHeap[courseID].SectionData[sectionID];
-    //console.log(data)
-    var content = '<span><b>'+courseID+'</b> ('+data.type+')<br>'+sectionID+', '+data.location+'<br>'+data.start_time+'-'+data.end_time+', '+(data.spaces_available-data.number_registered)+'</span>';
+    if(typeof data.location === 'object')
+      var content = '<span><b>'+courseID+'</b> ('+data.type+')<br>'+sectionID+', '+data.location[key]+'<br>'+data.start_time[key]+'-'+data.end_time[key]+', '+(data.spaces_available-data.number_registered)+'</span>';
+    else var content = '<span><b>'+courseID+'</b> ('+data.type+')<br>'+sectionID+', '+data.location+'<br>'+data.start_time+'-'+data.end_time+', '+(data.spaces_available-data.number_registered)+'</span>';
 
     var newElem = '<li class="event" onmouseenter="makeHover(\''+courseID+'\')" onmouseleave="removeHover(\''+courseID+'\')" data-course="'+courseID+'" style="'+ elemStyle +'"><span>'+ content +'</span></li>';
     elem.innerHTML = elem.innerHTML + newElem;
