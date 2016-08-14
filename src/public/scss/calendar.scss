@@ -1,0 +1,100 @@
+#calendar {
+
+  $hour: 64px;
+  $full: 100%;
+  $days: 8;
+
+  #calwrap {
+    position: absolute;
+    top: $space-md;
+    bottom: $space-xs;
+    width: 100%;
+    background-color:#FFF;
+    border-radius: 3px;
+    box-shadow:0 2px 4px rgba(0,0,0,0.3);
+    color: #000;
+    overflow-y: auto;
+    padding-left: $space-lg;
+  }
+
+  ul#days {
+    list-style: none;
+    font-size: $font-sm - 2;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding-left: $space-lg;
+    margin: $unit 0;
+
+    & > li {
+      float: left;
+      width: $full/$days;
+      position: relative;
+      text-align: center;
+    }
+  }
+
+  .time {
+    float:left;
+    margin-left:-$space-lg;
+    padding-right:0px;
+    width:24px;
+    font-size:11px;
+    text-align:right;
+    color:#AAA;
+    font-weight:bold;
+    margin-top:-10px;
+
+    li {
+      height: $hour;
+    }
+  }
+
+  .col {
+    width: $full/$days;
+    float: left;
+    position: relative;
+    margin-bottom: -1px;
+
+    &#U, &#S { // MURICA!
+      background-color:#F8F8F8;
+    }
+
+    & > li.day {
+      padding:8px;
+      position:sticky;
+      background-color:inherit;
+      top:8px;
+      border-right-color:transparent;
+      border-bottom-width:2px;
+      z-index:100;
+    }
+
+    & > li:not(.event) {
+      height: $hour;
+      border:1px solid #EAEAEA;
+      border-top:0px;
+      margin-right: -1px;
+    }
+
+    & > li.event {
+      position: absolute;
+      font-size: $font-sm;
+      left: 0; right: 0;
+      margin: -1px 1px 0 2px;
+      background-color:#E08B8B;
+      box-shadow:0 1px 3px rgba(0,0,0,0.3);
+      border-radius: 2px;
+      z-index: 1;
+      opacity: 0.9;
+      user-select:none;
+      -webkit-user-select:none;
+      padding: $unit;
+      line-height: 1.2em;
+      text-align: center;
+      overflow: hidden;
+      cursor: pointer;
+      color: $white;
+    }
+  }
+
+}

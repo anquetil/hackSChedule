@@ -1,14 +1,22 @@
 {
   "name": "hackschedule",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A webapp for USC students to design their course schedule with less frustration.",
-  "main": "app.js",
+  "main": "src/server/app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "gulp"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ninjiangstar/hackSChedule.git"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
   },
   "author": "Andrew Jiang",
   "license": "MIT",
@@ -18,13 +26,32 @@
   "homepage": "https://github.com/ninjiangstar/hackSChedule#readme",
   "dependencies": {
     "async": "^1.5.2",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "bluebird": "^3.4.1",
     "deepcopy": "^0.6.1",
-    "express": "^4.13.4",
+    "express": "^4.14.0",
     "express-promise": "^0.4.0",
     "firebase": "^2.4.2",
     "path": "^0.12.7",
-    "react": "^15.0.1",
-    "react-dom": "^15.0.1",
-    "socket.io": "^1.4.5"
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "react-router": "^2.6.1",
+    "reqwest": "^2.0.5",
+    "scheduler-api": "^0.1.7",
+    "socket.io": "^1.4.5",
+    "trojan-course-api": "^2.0.9"
+  },
+  "devDependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.12",
+    "gulp-nodemon": "^2.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
