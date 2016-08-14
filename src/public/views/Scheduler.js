@@ -15,6 +15,7 @@ class Scheduler extends Component {
       courses: [],
       courseData: {},
       combinations: [],
+      index: 0,
     };
   }
 
@@ -44,8 +45,8 @@ class Scheduler extends Component {
   }
 
   generateSchedules() {
-    api.generateSchedules(this.state.courses).then(({ courseData, entities }) => {
-      this.setState({ courseData, combinations: entities });
+    api.generateSchedules(this.state.courses).then(({ courseData, results }) => {
+      this.setState({ courseData, combinations: results, index: 0 });
     });
   }
 
@@ -68,13 +69,15 @@ class Scheduler extends Component {
           <Calendar
             courses={this.state.courses}
             courseData={this.state.courseData}
-            combinations={this.state.combinations} />
+            combinations={this.state.combinations}
+            index={this.state.index} />
         </section>
         <section id='selector'>
           <Selector
             courses={this.state.courses}
             courseData={this.state.courseData}
-            combinations={this.state.combinations} />
+            combinations={this.state.combinations}
+            index={this.state.index} />
         </section>
       </main>
     );
