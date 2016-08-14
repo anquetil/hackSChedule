@@ -1,0 +1,46 @@
+#app > main {
+
+  $courses: 250px;
+  $selector: 100px;
+
+  &,
+  #courses,
+  #calendar,
+  #selector {
+    position: absolute;
+    top: 0; bottom: 0;
+    color: $white;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e93432+0,ce1a1a+100 */
+    background: #e93432; /* Old browsers */
+    background: -moz-linear-gradient(top, $red1 0%, $red2 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, $red1 0%, $red2 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, $red1 0%, $red2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$red1', endColorstr='$red2',GradientType=0 ); /* IE6-9 */
+  }
+
+  & {
+    left: 0; right: 0;
+    overflow: hidden;
+  }
+
+  #courses {
+    left: 0;
+    width: $courses;
+    padding: $space-sm 0;
+    z-index: 1;
+  }
+
+  #calendar {
+    left: $courses;
+    right: $selector;
+    top: 0; bottom: 0;
+    z-index: 2;
+  }
+
+  #selector {
+    right: 0;
+    width: $selector;
+    padding: $space-sm $space-xs;
+    z-index: 1;
+  }
+}

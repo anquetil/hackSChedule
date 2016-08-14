@@ -1,70 +1,43 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
+
+import Search from '../components/Search';
+import Course from '../components/Course';
 
 class CourseList extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      searchText: '',
-    };
   }
 
   render() {
     return (
-      <div>
-        <div id='search'>
-          <input type='text'
-            onChange={this.onChange.bind(this)}
-            value={this.state.searchText}
-            onKeyDown={this.checkSubmit.bind(this)}
-            placeholder='Enter a class ID' />
-        </div>
+      <section id='courses'>
+        <div id="logo" />
+        <Search
+          courses={this.props.courses}
+          submit={this.addClass.bind(this)} />
         <ul id='courselist'>
-          {this.props.courses.map(this.createCourseItem.bind(this))}
+          {this.props.courses.map((courseId, i) => (
+            <Course key={courseId}
+              removeClass={this.props.removeClass.bind(this)}
+              courseId={courseId}
+              courseData={this.props.courseData[courseId]}
+              color={this.props.colors[i]} />
+          ))}
         </ul>
-      </div>
+        <div id='credits'>
+          <a href='http://github.com/ninjiangstar/hackSChedule'>Github</a>
+        </div>
+      </section>
     );
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (nextProps.courses.length > this.props.courses.length) {
-      this.setState({ searchText: '' });
-    }
-  }
-
-  onChange(e) {
-    this.setState({ searchText: e.target.value });
-  }
-
-  checkSubmit(e) {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      this.props.addClass(this.state.searchText.toUpperCase().replace(' ', '-'));
-    }
+  addClass(courseId) {
+    this.props.addClass(courseId);
   }
 
   removeClass(courseId) {
     this.props.removeClass(courseId);
-  }
-
-  createCourseItem(courseId) {
-    if (_.isUndefined(this.props.courseData[courseId])) {
-      return (
-        <li key={courseId}>
-          Loading {courseId}...
-        </li>
-      );
-    } else {
-      return (
-        <li key={courseId}>
-          <a className='close' onClick={this.props.removeClass.bind(this, courseId)}>×</a>
-          <span className='course tag'>{courseId}</span>
-          <span className='unit tag'>{this.props.courseData[courseId].units} units</span>
-          <span className='courseTitle'>{this.props.courseData[courseId].title}</span>
-        </li>
-      );
-    }
   }
 
 };

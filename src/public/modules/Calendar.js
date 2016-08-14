@@ -8,9 +8,10 @@ class Calendar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      times: [ '7a', '8a', '9a', '10a', '11a', '12p', '1p', '2p', '3p', '4p', '5p', '6p', '7p', '8p', '9p', '10p' ],
+      times: [ '', '8a', '9a', '10a', '11a', '12p', '1p', '2p', '3p', '4p', '5p', '6p', '7p', '8p', '9p', '10p' ],
       days: { U: 'Sun', M: 'Mon', T: 'Tue', W: 'Wed', H: 'Thu', F: 'Fri', S: 'Sat', A: 'TBA' },
-      events: {},
+      events: { A: []},
+      hour: 64,
     };
   }
 
@@ -18,25 +19,38 @@ class Calendar extends Component {
 
     let blank = [];
     for (var i in this.state.times) {
-      blank.push(<li key={i} />);
+      blank.push(<li key={i} style={{ height: this.state.hour }}/>);
     }
 
+    let width = (this.state.events.A.length > 0) ? 100 / 8 + '%' : 100 / 7 + '%';
+
     return (
-      <div id='calwrap'>
-        <ul className='time'>
-          <li className='day' />
-          {this.state.times.map(time => (<li key={time}>{time}</li>))}
+      <section id='calendar'>
+        <ul id='days'>
+          {Object.keys(this.state.days).map(day => {
+            if (day !== 'A' || (day === 'A' && this.state.events.A.length > 0)) {
+              return (
+                <li key={day} style={{width}}>{this.state.days[day]}</li>
+              );
+            }
+          })}
         </ul>
-        {Object.keys(this.state.days).map(day => {
-          return (
-            <ul key={day} id={day} className='col'>
-              <li className='day'>{this.state.days[day]}</li>
-              {(() => { if (day !== 'A') return blank })()}
-              {this.state.events[day]}
-            </ul>
-          );
-        })}
-      </div>
+        <div id='calwrap'>
+          <ul className='time'>
+            {this.state.times.map(time => (<li key={time}>{time}</li>))}
+          </ul>
+          {Object.keys(this.state.days).map(day => {
+            if (day !== 'A' || (day === 'A' && this.state.events.A.length > 0)) {
+              return (
+                <ul key={day} id={day} className='col' style={{width}}>
+                  {(() => { if (day !== 'A') return blank })()}
+                  {this.state.events[day]}
+                </ul>
+              );
+            }
+          })}
+        </div>
+      </section>
     );
   }
 
@@ -68,15 +82,19 @@ class Calendar extends Component {
       let sections = courseData[courseId].sections;
       for (let sectionId of combinations[courseId]) {
         for (let block of sections[sectionId].blocks) {
+          console.log(block);
           let newBlock = (<Block
             key={courseId+'.'+sectionId}
+            height={this.state.hour}
+            color={this.props.colors[this.props.courses.indexOf(courseId)]}
             courseId={courseId}
             sectionId={sectionId}
             type={sections[sectionId].type}
+            start={block.start}
+            end={block.end}
             location={block.location}
             spaces_available={sections[sectionId].spaces_available}
             number_registered={sections[sectionId].number_registered} />);
-          console.log(block.day);
           if (block.day === null) events['A'].push(newBlock);
           else events[block.day].push(newBlock);
         }

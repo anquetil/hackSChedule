@@ -1,0 +1,19 @@
+$unit: 4px;
+$space-xs: $unit * 2; // 8
+$space-sm: $space-xs * 2; // 16
+$space-md: $space-xs * 3; // 24
+$space-lg: $space-sm * 2; // 32
+
+$font-sm: 12px;
+$font-md: 14px;
+$font-lg: 16px;
+
+$white: #FFF;
+$red1: #e93432;
+$red2: #ce1a1a;
+
+@import 'boilerplate';
+@import 'app';
+@import 'courses';
+@import 'calendar';
+@import 'selector';
