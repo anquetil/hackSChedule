@@ -91,10 +91,10 @@ class Calendar extends Component {
 
   generateEvents(courseData, combinations, numberOfCourses, index, hoverIndex) {
     let events = _.mapValues(this.state.days, () => ([]));
-    for (let courseId in combinations) {
+    for (let courseId in combinations.combination) {
       let courseIndex = this.props.courses.indexOf(courseId);
       let sections = courseData[courseId].sections;
-      for (let sectionId of combinations[courseId]) {
+      for (let sectionId of combinations.combination[courseId]) {
         for (let key in sections[sectionId].blocks) {
           let block = sections[sectionId].blocks[key];
           let newBlock = (<Block

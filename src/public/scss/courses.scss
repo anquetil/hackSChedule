@@ -78,6 +78,11 @@
         cursor: pointer;
         margin-right: -$space-xs;
         text-decoration: none;
+        opacity: 0;
+      }
+
+      &:hover .close {
+        display:1;
       }
 
     }

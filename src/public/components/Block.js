@@ -11,22 +11,17 @@ export default (props) => {
     ...other
   } = props;
 
-  function convertToMin(time) {
-    // ex: convert '13:50' to '830'
-    if (time === null) return null;
-    var time = time.split(':');
-    return Math.round(time[0]) * 60 + Math.round(time[1]);
+  function convertToTime(mins) {
+    if (mins === null) return null;
+    return Math.round(mins/60) + ':' + ('0' + (mins % 60)).slice(-2);
   }
-
-  let startMin = convertToMin(start);
-  let endMin = convertToMin(end);
 
   let mins = 60;
   let lowerHrLim = 7;
 
   let css = {
-    top: Math.round(((startMin / mins) - lowerHrLim) * height),
-    height: Math.round((endMin - startMin) / mins * height),
+    top: Math.round(((start / mins) - lowerHrLim) * height),
+    height: Math.round((end - start) / mins * height),
     backgroundColor: 'rgb(' + color + ')',
   };
 
@@ -34,7 +29,7 @@ export default (props) => {
     <li {...other} className={'event' + ((hovers) ? ' hover' : '')} style={Object.assign(css, style)}>
       <b>{courseId}</b> ({type})<br />
       {sectionId}, {location}<br />
-      {start}-{end}, {number_registered}/{spaces_available}
+      {convertToTime(start)}-{convertToTime(end)}, {number_registered}/{spaces_available}
     </li>
   );
 

@@ -10,7 +10,15 @@ module.exports = function (req, res) {
     case 'method':
       switch (action) {
         case 'generateSchedules':
-          generateSchedules(q.courses.split(','), res.json);
+          generateSchedules(q.courses.split(','), function (data) {
+            data.results.sort(function (a, b) {
+              if (a.score < b.score) return -1;
+              else if(a.score > b.score) return 1;
+              else return 0;
+            });
+            console.log(data.results);
+            res.json(data);
+          });
           break;
         default:
           res.json({ error: 'NO_ACTION' });

@@ -39,6 +39,7 @@ class CourseList extends Component {
 
   removeClass(courseId) {
     this.props.removeClass(courseId);
+    this.props.setHover(null)
   }
 
 };

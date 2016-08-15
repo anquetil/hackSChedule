@@ -1,8 +1,7 @@
 var TROJAN = require('trojan-course-api');
 var scheduler = require('scheduler-api');
 var _ = require('lodash');
-
-var courses = ['CSCI-201', 'CSCI-270', 'EE-109'];
+var heuristic = require('./heuristic');
 
 module.exports = function (courses, cb) {
   courses = _.uniq(courses);
@@ -31,9 +30,12 @@ module.exports = function (courses, cb) {
   }
 
   function processEntities(courseData, entities) {
+    var bucket = heuristic.generateBuckets(courseData);
     var results = scheduler.combinations.sync(entities);
     results = _.map(results, (scenario) => {
-      return _.mapValues(scenario, (o) => (o.split(',')));
+      var combination = _.mapValues(scenario, function(o) {return o.split(',')});
+      var score = heuristic(combination, bucket);
+      return { combination, score };
     });
 
     cb({
