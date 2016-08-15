@@ -34,7 +34,9 @@ class Search extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ text: '' });
+    if (this.props.courses.indexOf(this.state.text) > -1) {
+      this.setState({ text: '' });
+    }
   }
 
 }
