@@ -12,6 +12,8 @@ class Calendar extends Component {
       days: { U: 'Sun', M: 'Mon', T: 'Tue', W: 'Wed', H: 'Thu', F: 'Fri', S: 'Sat', A: 'TBA' },
       events: { A: []},
       hour: 64,
+      index: null,
+      hoverIndex: null,
     };
   }
 
@@ -63,8 +65,19 @@ class Calendar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (Object.keys(nextProps.courseData).length === nextProps.courses.length) {
-      this.generateEvents(nextProps.courseData, nextProps.combinations[nextProps.index]);
+    if (
+      Object.keys(nextProps.courseData).length === nextProps.courses.length
+      && nextProps.courses.length !== this.state.numberOfCourses
+      || nextProps.hoverIndex !== this.state.hoverIndex
+      || nextProps.index !== this.state.index
+    ) {
+      this.generateEvents(
+        nextProps.courseData,
+        nextProps.combinations[nextProps.index],
+        nextProps.courses.length,
+        nextProps.index,
+        nextProps.hoverIndex
+      );
     }
   }
 
@@ -76,17 +89,21 @@ class Calendar extends Component {
     // stop any unnecessary processes just before unmount
   }
 
-  generateEvents(courseData, combinations) {
+  generateEvents(courseData, combinations, numberOfCourses, index, hoverIndex) {
     let events = _.mapValues(this.state.days, () => ([]));
     for (let courseId in combinations) {
+      let courseIndex = this.props.courses.indexOf(courseId);
       let sections = courseData[courseId].sections;
       for (let sectionId of combinations[courseId]) {
-        for (let block of sections[sectionId].blocks) {
-          console.log(block);
+        for (let key in sections[sectionId].blocks) {
+          let block = sections[sectionId].blocks[key];
           let newBlock = (<Block
-            key={courseId+'.'+sectionId}
+            hovers={(hoverIndex === courseIndex)}
+            onMouseEnter={this.props.setHover.bind(null, courseIndex)}
+            onMouseLeave={this.props.setHover.bind(null, null)}
+            key={courseId + '.' + sectionId + '.' + key}
             height={this.state.hour}
-            color={this.props.colors[this.props.courses.indexOf(courseId)]}
+            color={this.props.colors[courseIndex]}
             courseId={courseId}
             sectionId={sectionId}
             type={sections[sectionId].type}
@@ -95,13 +112,13 @@ class Calendar extends Component {
             location={block.location}
             spaces_available={sections[sectionId].spaces_available}
             number_registered={sections[sectionId].number_registered} />);
-          if (block.day === null) events['A'].push(newBlock);
+          if (!block.day) events['A'].push(newBlock);
           else events[block.day].push(newBlock);
         }
       }
     }
 
-    this.setState({ events });
+    this.setState({ events, numberOfCourses, hoverIndex });
   }
 
 };

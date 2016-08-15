@@ -16,10 +16,11 @@ class CourseList extends Component {
         <Search
           courses={this.props.courses}
           submit={this.addClass.bind(this)} />
-        <ul id='courselist'>
+        <ul id='courselist' onMouseLeave={this.props.setHover.bind(null, null)}>
           {this.props.courses.map((courseId, i) => (
             <Course key={courseId}
-              removeClass={this.props.removeClass.bind(this)}
+              onMouseEnter={this.props.setHover.bind(null, i)}
+              removeClass={this.props.removeClass.bind(null)}
               courseId={courseId}
               courseData={this.props.courseData[courseId]}
               color={this.props.colors[i]} />

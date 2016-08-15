@@ -10,15 +10,21 @@
     cursor:pointer;
     padding:4px 8px;
     text-align:center;
+    transition: all 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-fill-mode:both;
+
+    & > i {
+      opacity: 0.6;
+    }
+
+    &.active {
+      background-color:rgba(255,255,255,0.3);
+      transform:scale(1.05,1.05);
+    }
   }
 
   #ranks > li > i {
     opacity:0.6;
-  }
-
-  #ranks > li.active {
-    background-color:rgba(255,255,255,0.3);
-    transform:scale(1.05,1.05);-webkit-transform:scale(1.05,1.05);
   }
 
 }

@@ -41,7 +41,7 @@
     "reqwest": "^2.0.5",
     "scheduler-api": "^0.1.7",
     "socket.io": "^1.4.5",
-    "trojan-course-api": "^2.0.9"
+    "trojan-course-api": "^2.0.10"
   },
   "devDependencies": {
     "babelify": "^7.3.0",

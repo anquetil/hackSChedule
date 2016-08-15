@@ -15,8 +15,9 @@ class Scheduler extends Component {
       courses: [],
       courseData: {},
       combinations: [],
-      index: 0,
       colors: [],
+      index: null,
+      hover: null,
     };
   }
 
@@ -29,12 +30,15 @@ class Scheduler extends Component {
           combinations={this.state.combinations}
           addClass={this.addClass.bind(this)}
           removeClass={this.removeClass.bind(this)}
+          setHover={this.setHover.bind(this)}
           colors={this.state.colors} />
         <Calendar
           courses={this.state.courses}
           courseData={this.state.courseData}
           combinations={this.state.combinations}
           index={this.state.index}
+          hoverIndex={this.state.hover}
+          setHover={this.setHover.bind(this)}
           colors={this.state.colors} />
         <SelectorFilter
           courses={this.state.courses}
@@ -48,6 +52,7 @@ class Scheduler extends Component {
 
   componentDidMount() {
     document.addEventListener('keydown', this.keyboardCommands.bind(this), false);
+    document.getElementById('search').addEventListener('keydown', this.keyboardCommandsInInput.bind(this), false);
   }
 
   addClass(courseId) {
@@ -105,7 +110,6 @@ class Scheduler extends Component {
       colors.push(colorFade([233,52,50],[233,167,30], i, count));
     }
     this.setState({ colors });
-    console.log(colors);
 
     function colorFade(startColor, endColor, index, count){
       var diffR = endColor[0] - startColor[0],
@@ -127,6 +131,12 @@ class Scheduler extends Component {
     }
   }
 
+  keyboardCommandsInInput(e) {
+    if([37,39].indexOf(e.keyCode) > -1){
+      e.stopPropagation();
+    }
+  }
+
   goPrev() {
     if (this.state.index > 0) {
       this.setState({ index: this.state.index - 1 });
@@ -139,6 +149,10 @@ class Scheduler extends Component {
     } else {
       this.setState({ index: this.state.combinations.length - 1});
     }
+  }
+
+  setHover(i) {
+    this.setState({ hover: i });
   }
 
 };
