@@ -101,6 +101,10 @@
         transform:scale(1.05,1.05);
         z-index: 2;
         box-shadow:0 2px 10px rgba(0,0,0,0.3);
+
+        &:hover {
+          z-index: 3;
+        }
       }
     }
 

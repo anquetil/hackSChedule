@@ -8,7 +8,12 @@ export default (props) => {
   return (
     <section id='selector'>
       <ul id="ranks">
-        {combinations.map((combination, key) => (<Selector key={key} index={key} active={index} onClick={updateCal.bind(null, key)} />))}
+        {combinations.map((combination, key) => (
+          <Selector key={key}
+            index={key}
+            active={index}
+            onClick={updateCal.bind(null, key)}
+            score={combination.score} />))}
       </ul>
     </section>
   );
