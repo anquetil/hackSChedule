@@ -30,6 +30,7 @@ class Scheduler extends Component {
           combinations={this.state.combinations}
           addClass={this.addClass.bind(this)}
           removeClass={this.removeClass.bind(this)}
+          hoverIndex={this.state.hover}
           setHover={this.setHover.bind(this)}
           colors={this.state.colors} />
         <Calendar
@@ -104,23 +105,58 @@ class Scheduler extends Component {
   }
 
   generateColors() {
-    var colors = [];
-    let count = this.state.courses.length;
-    for (var i = 0; i < count; i++) {
-      colors.push(colorFade([233,52,50],[233,167,30], i, count));
-    }
-    this.setState({ colors });
+    // var colors = [];
+    // let count = this.state.courses.length;
+    // for (var i = 0; i < count; i++) {
+    //   colors.push(colorFade([233,52,50],[233,167,30], i, count));
+    // }
+    // this.setState({ colors });
+    //
+    // function colorFade(startColor, endColor, index, count){
+    //   var diffR = endColor[0] - startColor[0],
+    //       diffG = endColor[1] - startColor[1],
+    //       diffB = endColor[2] - startColor[2],
+    //       percentFade = (index + 1) / count;
+    //   diffR = Math.round((diffR * percentFade) + startColor[0]);
+    //   diffG = Math.round((diffG * percentFade) + startColor[1]);
+    //   diffB = Math.round((diffB * percentFade) + startColor[2]);
+    //   return [diffR, diffG, diffB];
+    // }
 
-    function colorFade(startColor, endColor, index, count){
-      var diffR = endColor[0] - startColor[0],
-          diffG = endColor[1] - startColor[1],
-          diffB = endColor[2] - startColor[2],
-          percentFade = (index + 1) / count;
-      diffR = Math.round((diffR * percentFade) + startColor[0]);
-      diffG = Math.round((diffG * percentFade) + startColor[1]);
-      diffB = Math.round((diffB * percentFade) + startColor[2]);
-      return [diffR, diffG, diffB];
+    function rgb(r,g,b) {
+      return [r,g,b];
     }
+
+    let color = {
+      red: rgb(244,67,54),
+      pink: rgb(233,30,99),
+      purple: rgb(156,39,176),
+      deepPurple: rgb(103,58,183),
+      indigo: rgb(63,81,181),
+      blue: rgb(33,150,243),
+      lightBlue: rgb(3,169,244),
+      cyan: rgb(0,188,212),
+      teal: rgb(0,150,136),
+      green: rgb(76,175,80),
+      lightGreen: rgb(104,159,56),
+      lime: rgb(175,180,43),
+      yellow: rgb(249,168,37),
+      orange: rgb(251,140,0),
+      deepOrange: rgb(255,87,34),
+      brown: rgb(121,85,72),
+      blueGrey: rgb(96,125,139),
+    };
+
+    let colors = [
+      color.orange,
+      color.green,
+      color.blue,
+      color.indigo,
+      color.purple,
+      color.brown,
+    ];
+
+    this.setState({ colors: colors.splice(0, this.state.courses.length).reverse() })
   }
 
   keyboardCommands(e) {

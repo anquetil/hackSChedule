@@ -17,7 +17,7 @@ export default props => {
     return (
       <li key={courseId} {...other} style={{ backgroundColor: rgb }}>
         <a className='close' onClick={removeClass.bind(null, courseId)}>×</a>
-        <span className='course tag'>{courseId}</span>
+        <span className='courseid'>{courseId}</span>
         <span className='unit tag'>{courseData.units} units</span>
         <span className='courseTitle'>{courseData.title}</span>
       </li>

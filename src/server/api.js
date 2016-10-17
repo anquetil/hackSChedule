@@ -16,7 +16,6 @@ module.exports = function (req, res) {
               else if(a.score > b.score) return 1;
               else return 0;
             });
-            console.log(data.results);
             res.json(data);
           });
           break;

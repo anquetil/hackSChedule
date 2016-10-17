@@ -25,11 +25,32 @@ export default (props) => {
     backgroundColor: 'rgb(' + color + ')',
   };
 
+  let className = ['event'];
+
+  if(hovers) className.push('hover');
+  if(number_registered >= spaces_available) className.push('full');
+
   return (
-    <li {...other} className={'event' + ((hovers) ? ' hover' : '')} style={Object.assign(css, style)}>
-      <b>{courseId}</b> ({type})<br />
-      {sectionId}, {location}<br />
-      {convertToTime(start)}-{convertToTime(end)}, {number_registered}/{spaces_available}
+    <li {...other}
+      className={className.join(' ')}
+      style={Object.assign(css, style)}>
+      <div>
+        <span className='courseid'>{courseId}</span>
+        <span className='sectionid'>{sectionId}</span>
+      </div>
+      <span className='tag'>{type}</span>
+      <span className='tag'>{convertToTime(start)}-{convertToTime(end)}</span>
+      {(()=>{
+        if(location) return <span className='tag'>{location}</span>;
+      })()}
+      <span className='tag'>{(()=>{
+        if(number_registered >= spaces_available) {
+          return 'FULL';
+        }
+        else {
+          return number_registered + '/' + spaces_available + ' seats';
+        }
+      })()}</span>
     </li>
   );
 

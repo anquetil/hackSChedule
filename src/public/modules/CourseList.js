@@ -10,6 +10,8 @@ class CourseList extends Component {
   }
 
   render() {
+
+
     return (
       <section id='courses'>
         <div id="logo" />
@@ -19,6 +21,7 @@ class CourseList extends Component {
         <ul id='courselist' onMouseLeave={this.props.setHover.bind(null, null)}>
           {this.props.courses.map((courseId, i) => (
             <Course key={courseId}
+              className={(i === this.props.hoverIndex) ? 'hover' : ''}
               onMouseEnter={this.props.setHover.bind(null, i)}
               removeClass={this.props.removeClass.bind(null)}
               courseId={courseId}

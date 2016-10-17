@@ -1,4 +1,5 @@
 #courses {
+  overflow-y: auto;
 
   #logo {
     background-image:url('./hackschedule.png');
@@ -32,30 +33,37 @@
   }
 
   #courselist {
-    margin: $space-sm 0;
+    margin: $space-sm;
 
     & > li {
       background-color:#CCC;
-      padding: $space-xs $space-sm;
+      padding: $space-xs;
+      margin: $space-xs 0;
       font-size: $font-sm;
       cursor: pointer;
       position: relative;
+      border-radius: 3px;
+      transition: all 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+      animation-fill-mode:both;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+
+      .courseid {
+        font-weight: bold;
+        margin-right: $unit * 2;
+        font-size: $font-lg;
+      }
 
       .tag {
         display: inline-block;
-        padding: $unit/2 $unit;
-        margin-right: $unit;
-        background-color: rgba(255,255,255,0.3);
-        color: inherit;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 2px;
         border-radius: 3px;
-
-        &.course {
-          font-weight: bold;
-        }
-
-        &.unit {
-          font-style: italic;
-        }
+        margin-right: $unit * 2;
+        color: inherit;
+        font-size: 11px;
+        line-height: 1;
+        vertical-align: text-bottom;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
       }
 
       .courseTitle {
@@ -76,13 +84,23 @@
         font-size: $font-md;
         text-align: center;
         cursor: pointer;
-        margin-right: -$space-xs;
+        margin: -$space-xs;
         text-decoration: none;
         opacity: 0;
       }
 
       &:hover .close {
-        display:1;
+        opacity: 1;
+      }
+
+      &.hover {
+        transform: scale(1.03,1.03);
+        z-index: 2;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        &:hover {
+          transform: scale(1.05,1.05);
+          box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
       }
 
     }

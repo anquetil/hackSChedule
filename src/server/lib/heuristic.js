@@ -61,7 +61,7 @@ function calcGaps(bucket) {
 function calcOptimalStartTime(bucket) {
   var score = 0;
 
-  var optimal = convertToMin('13:00');
+  var optimal = convertToMin('10:00');
 
   for (var obj of bucket) {
     if (obj.full) score += 10;

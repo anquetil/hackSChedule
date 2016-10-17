@@ -4,6 +4,12 @@ $space-sm: $space-xs * 2; // 16
 $space-md: $space-xs * 3; // 24
 $space-lg: $space-sm * 2; // 32
 
+$font-family: HelveticaNeue, Helvetica, Avenir, Sans-serif;
+$font-size:   13px;
+$line-height: 1.4em;
+$text-color: #000;
+$bg-color: #ce1a1a;
+
 $font-sm: 12px;
 $font-md: 14px;
 $font-lg: 16px;
@@ -12,6 +18,7 @@ $white: #FFF;
 $red1: #e93432;
 $red2: #ce1a1a;
 
+@import 'normalize';
 @import 'boilerplate';
 @import 'app';
 @import 'courses';

@@ -7,6 +7,8 @@ import browserify from 'browserify';
 import babelify from 'babelify';
 import source from 'vinyl-source-stream';
 import rename from 'gulp-rename';
+import browserSync from 'browser-sync';
+browserSync.create();
 
 let dest = './www/res';
 let server = './src/server';
@@ -24,7 +26,8 @@ gulp.task('react', () => {
   .bundle()
   .pipe(source('bundle.js'))
   .pipe(rename('app.js'))
-  .pipe(gulp.dest(dest));
+  .pipe(gulp.dest(dest))
+  .pipe(browserSync.stream());
 });
 
 gulp.task('scss', () => {
@@ -32,7 +35,8 @@ gulp.task('scss', () => {
   return gulp.src(entries)
     .pipe(sass().on('error', sass.logError))
     .pipe(cleanCSS({ compatibility: 'ie8' }))
-    .pipe(gulp.dest(dest));
+    .pipe(gulp.dest(dest))
+    .pipe(browserSync.stream());
 });
 
 gulp.task('nodemon', () => {
@@ -45,6 +49,11 @@ gulp.task('nodemon', () => {
 });
 
 gulp.task('watch', ['scss', 'react'], () => {
+
+  browserSync.init(null, {
+		proxy: "http://localhost:5000",
+	});
+
   gulp.watch(pub + '/scss/**/*.scss', ['scss']);
   gulp.watch(pub + '/**/*.js', ['react']);
 });

@@ -5,16 +5,16 @@ import _ from 'lodash';
 let methods = {};
 
 methods.verify = function (courseId, term) {
+  courseId = courseId.split('-');
   return new Promise((resolve, reject) => {
-    let courseId2 = courseId.split('-');
-    if (courseId2.length !== 2) resolve(false);
+    if (courseId.length !== 2) resolve(false);
 
-    let dept = courseId2[0];
-    let num = courseId2[1].slice(0, 3);
-    let seq = courseId2[1].slice(3);
+    let dept = courseId[0];
+    let num = courseId[1].slice(0, 3);
+    let seq = courseId[1].slice(3);
 
     interfacer('TROJAN', 'course', { dept, num, seq, term }).then((data) => {
-      resolve(!(_.isUndefined(data[courseId])));
+      resolve((Object.keys(data).length > 0));
     }).error(reject);
   });
 };
