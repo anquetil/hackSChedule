@@ -27,20 +27,36 @@ let pub = './src/public';
 
 gulp.task('react', () => {
   var entries = pub + '/render.js';
-  return browserify({
-    entries: entries,
-    extensions: ['.js'],
-    debug: (process.env.NODE_ENV != 'production'),
-  })
-  .transform('babelify', { presets: ['es2015', 'react'] })
-  .on('error', error)
-  .bundle()
-  .pipe(source('bundle.js'))
-  .pipe(buffer())
-  .pipe(uglify())
-  .pipe(rename('app.js'))
-  .pipe(gulp.dest(dest))
-  .pipe(browserSync.stream());
+
+  if (process.env.NODE_ENV == 'production') {
+    return browserify({
+      entries: entries,
+      extensions: ['.js'],
+      debug: false,
+    })
+    .transform('babelify', { presets: ['es2015', 'react'] })
+    .on('error', error)
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(rename('app.js'))
+    .pipe(gulp.dest(dest));
+  } else {
+    return browserify({
+      entries: entries,
+      extensions: ['.js'],
+      debug: true,
+    })
+    .transform('babelify', { presets: ['es2015', 'react'] })
+    .on('error', error)
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(rename('app.js'))
+    .pipe(gulp.dest(dest))
+    .pipe(browserSync.stream());
+  }
 });
 
 gulp.task('scss', () => {

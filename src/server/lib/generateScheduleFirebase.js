@@ -5,7 +5,7 @@ var heuristic = require('./heuristic');
 
 var db = require('./firebase');
 
-module.exports = function (courses, cb) {
+module.exports = function (courses = [], anchors = {}, cb) {
   courses = _.uniq(courses);
 
   var ref = db.ref('/courses');
@@ -17,11 +17,6 @@ module.exports = function (courses, cb) {
     var dept = course[0];
     var num = course[1].slice(0, 3);
     var seq = course[1].slice(3);
-
-    // due dilligence
-    TROJAN.courses(dept).then(function (courseData) {
-      ref.update(courseData);
-    });
 
     // ping the server
     ref.child(dept+'-'+num+seq).once('value', function(snap) {
@@ -48,6 +43,17 @@ module.exports = function (courses, cb) {
       var combination = _.mapValues(scenario, function(o) {return o.split(',')});
       var score = heuristic(combination, bucket);
       return { combination, score };
+    });
+
+    results = _.filter(results, (scenario) => {
+      for (var id in scenario.combination) {
+        if (anchors[id]) {
+          if (_.intersection(scenario.combination[id], anchors[id]).length < anchors[id].length) {
+            return false;
+          }
+        }
+      }
+      return true;
     });
 
     cb({

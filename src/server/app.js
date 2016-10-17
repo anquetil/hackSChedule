@@ -3,8 +3,10 @@
 // SETUP
 var express     = require('express');
 var app         = express(); // create express app
+var server      = require('http').Server(app);
+var io          = require('socket.io')(server);
+
 var bodyParser  = require('body-parser');
-var http        = require('http').Server(app);
 var path        = require('path');
 
 // configure body-parser
@@ -24,7 +26,11 @@ app.set('port', (process.env.PORT || 5000));
 var api = require('./api');
 app.use('/api', api);
 
+// setup socket
+var socket = require('./lib/socket');
+io.on('connection', socket);
+
 // start the server
-http.listen(app.get('port'), function () {
+server.listen(app.get('port'), function () {
   console.log('RUNNING.');
 });

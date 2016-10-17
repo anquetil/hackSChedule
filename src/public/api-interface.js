@@ -23,18 +23,18 @@ class ApiInterface {
         url: '/api/verify/'+dept+'-'+num+seq,
         method: 'get',
         data: { dept, num, seq, term },
-        success: data => resolve(Object.keys(data).length > 0),
+        success: data => resolve(data.exists),
         error: reject
       });
     });
   }
 
-  generateSchedules(courses = []) {
+  generateCourseDataAndSchedules(courses = [], anchors = {}) {
     return new Promise((resolve, reject) => {
       ajax({
         url: '/api/schedule',
         method: 'get',
-        data: { courses },
+        data: { courses, anchors },
         success: resolve,
         error: reject
       });

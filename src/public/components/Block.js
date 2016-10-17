@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 
 export default (props) => {
 
@@ -7,7 +8,7 @@ export default (props) => {
     location, start, end,
     spaces_available,
     number_registered,
-    style, color, height, hovers,
+    style, color, height, hovers, anchored,
     ...other
   } = props;
 
@@ -25,14 +26,13 @@ export default (props) => {
     backgroundColor: 'rgb(' + color + ')',
   };
 
-  let className = ['event'];
-
-  if(hovers) className.push('hover');
-  if(number_registered >= spaces_available) className.push('full');
-
   return (
     <li {...other}
-      className={className.join(' ')}
+      className={classNames('event', {
+        hover: (hovers),
+        full: (number_registered >= spaces_available),
+        anchored: (anchored)
+      })}
       style={Object.assign(css, style)}>
       <div>
         <span className='courseid'>{courseId}</span>

@@ -65,11 +65,12 @@ router.route('/schedule')
   .get(function (req, res) {
     // for testing purposes only
     var courses = req.query.courses;
+    var anchors = req.query.anchors;
     if (courses && courses.length > 0) {
       if (!_.isArray(courses)) courses = courses.split(',');
 
       // taking array of courses, generate schedule
-      generateSchedulesFirebase(courses, function (data) {
+      generateSchedulesFirebase(courses, anchors, function (data) {
         // sort results by score
         data.results.sort(function (a, b) {
           if (a.score < b.score) return -1;
@@ -206,6 +207,12 @@ router.route('/verify/:course_id')
   .get(function (req, res) {
     db.ref('/courses').child(req.params.course_id).once('value', function(snap) {
       res.json({ exists: snap.exists() });
+      if (snap.exists()) {
+        TROJAN.courses(req.params.course_id.split('-')[0])
+          .then(function (courseData) {
+          db.ref('/courses').update(courseData);
+        });
+      }
     });
   });
 
