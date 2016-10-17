@@ -18,6 +18,12 @@ module.exports = function (courses, cb) {
     var num = course[1].slice(0, 3);
     var seq = course[1].slice(3);
 
+    // due dilligence
+    TROJAN.courses(dept).then(function (courseData) {
+      ref.update(courseData);
+    });
+
+    // ping the server
     ref.child(dept+'-'+num+seq).once('value', function(snap) {
       if (snap.exists()) {
         var coursedata = snap.val();
