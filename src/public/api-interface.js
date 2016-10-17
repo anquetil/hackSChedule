@@ -41,6 +41,17 @@ class ApiInterface {
     });
   }
 
+  autocomplete(query) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/autocomplete/' + query,
+        method: 'get',
+        success: resolve,
+        error: reject
+      });
+    });
+  }
+
 }
 
 export default ApiInterface;

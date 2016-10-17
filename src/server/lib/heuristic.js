@@ -16,6 +16,10 @@ module.exports.generateBuckets = function (courseData) {
   for (var courseId in courseData) {
     for (var sectionId in courseData[courseId].sections) {
       var sectionData = courseData[courseId].sections[sectionId];
+      //quickfix
+      if (!_.isArray(sectionData.blocks)) {
+        sectionData.blocks = _.values(sectionData.blocks);
+      }
       for (var block of sectionData.blocks) {
         Object.assign(block, {
           start: convertToMin(block.start),
@@ -75,7 +79,7 @@ function calcOptimalStartTime(bucket) {
 
 function convertToMin(time) {
   // ex: convert '13:50' to '830'
-  if (time === null) return null;
+  if (!time) return null;
   var time = time.split(':');
   return Math.round(time[0]) * 60 + Math.round(time[1]);
 }

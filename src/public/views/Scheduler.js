@@ -63,7 +63,6 @@ class Scheduler extends Component {
 
   componentDidMount() {
     document.addEventListener('keydown', this.keyboardCommands.bind(this), false);
-    document.getElementById('search').addEventListener('keydown', this.keyboardCommandsInInput.bind(this), false);
 
     // sockets
     this.socket.on('receive:courseData', function (courseId) {
@@ -205,12 +204,6 @@ class Scheduler extends Component {
       e.preventDefault();
       if(e.keyCode == 37 || e.keyCode == 38) this.goPrev();
       else this.goNext();
-    }
-  }
-
-  keyboardCommandsInInput(e) {
-    if([37,39].indexOf(e.keyCode) > -1){
-      e.stopPropagation();
     }
   }
 

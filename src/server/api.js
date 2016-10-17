@@ -216,6 +216,31 @@ router.route('/verify/:course_id')
     });
   });
 
+router.route('/autocomplete')
+  .get(function(req, res) {
+    res.json([]);
+  });
+router.route('/autocomplete/:text')
+  .get(function (req, res) {
+    var text = req.params.text;
+    text = text.toUpperCase();
+    db.ref('/courses')
+      .orderByKey()
+      .startAt(text)
+      .limitToFirst(8)
+      // .startAt(text).endAt(text + '\uf8ff')
+      // .limit(5)
+      // res.json({hello:text})
+      .once('value', function (snap) {
+        res.json(_.values(_.mapValues(snap.val(), function (coursedata, key) {
+          return {
+            courseId: key,
+            title: coursedata.title
+          }
+        })));
+      });
+  });
+
 router.route('/trojan')
   .get(function (req, res) {
     res.json({

@@ -70,6 +70,11 @@ function normalize(coursedata, combinations) {
     entity[bucket] = {};
     for (var sectionId of bucket) {
       entity[bucket][sectionId] = coursedata.sections[sectionId].blocks;
+      if (coursedata.sections[sectionId].type == 'Qz') {
+        entity[bucket][sectionId].map(function (o) {
+          return o.transient = true;
+        });
+      }
     }
   }
 
