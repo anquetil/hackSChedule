@@ -8,8 +8,8 @@ import Scheduler from './views/Scheduler';
 render(
   <Router history={browserHistory}>
     <Route path='/'>
-      <IndexRoute component={Scheduler} />
-      {/*<Route path='/:userId' component={Scheduler} />*/}
+      <IndexRoute component={Landing} />
+      <Route path='/:userEmail' component={Scheduler} />
     </Route>
   </Router>,
   document.getElementById('app')

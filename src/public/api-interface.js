@@ -52,6 +52,40 @@ class ApiInterface {
     });
   }
 
+  createUser(email) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/schedule/' + email,
+        method: 'post',
+        success: resolve,
+        error: reject
+      });
+    });
+  }
+
+  getUser(email) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/schedule/' + email,
+        method: 'get',
+        success: resolve,
+        error: reject
+      });
+    });
+  }
+
+  updateUser(email, courses, anchors) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/schedule/' + email,
+        method: 'put',
+        data: { courses, anchors },
+        success: resolve,
+        error: reject
+      });
+    });
+  }
+
 }
 
 export default ApiInterface;

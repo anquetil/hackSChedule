@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router'
 import _ from 'lodash';
 
 import CourseList from '../containers/CourseList';
@@ -25,40 +26,67 @@ class Scheduler extends Component {
       colors: [],
       index: 0,
       hover: null,
+      enabled: true
     };
     this.socket = io();
   }
 
   render() {
-    return (
-      <main>
-        <CourseList
-          courses={this.state.courses}
-          courseData={this.state.courseData}
-          combinations={this.state.combinations}
-          addClass={this.addClass.bind(this)}
-          removeClass={this.removeClass.bind(this)}
-          hoverIndex={this.state.hover}
-          setHover={this.setHover.bind(this)}
-          colors={this.state.colors} />
-        <Calendar
-          courses={this.state.courses}
-          courseData={this.state.courseData}
-          combinations={this.state.combinations}
-          index={this.state.index}
-          hoverIndex={this.state.hover}
-          setHover={this.setHover.bind(this)}
-          anchors={this.state.anchors}
-          toggleAnchor={this.toggleAnchor.bind(this)}
-          colors={this.state.colors} />
-        <SelectorFilter
-          courses={this.state.courses}
-          courseData={this.state.courseData}
-          combinations={this.state.combinations}
-          index={this.state.index}
-          updateCal={this.updateCal.bind(this)} />
-      </main>
-    );
+    if (this.state.enabled) {
+      return (
+        <main>
+          <CourseList
+            courses={this.state.courses}
+            courseData={this.state.courseData}
+            combinations={this.state.combinations}
+            addClass={this.addClass.bind(this)}
+            removeClass={this.removeClass.bind(this)}
+            hoverIndex={this.state.hover}
+            setHover={this.setHover.bind(this)}
+            colors={this.state.colors} />
+          <Calendar
+            courses={this.state.courses}
+            courseData={this.state.courseData}
+            combinations={this.state.combinations}
+            index={this.state.index}
+            hoverIndex={this.state.hover}
+            setHover={this.setHover.bind(this)}
+            anchors={this.state.anchors}
+            toggleAnchor={this.toggleAnchor.bind(this)}
+            colors={this.state.colors} />
+          <SelectorFilter
+            courses={this.state.courses}
+            courseData={this.state.courseData}
+            combinations={this.state.combinations}
+            index={this.state.index}
+            updateCal={this.updateCal.bind(this)} />
+        </main>
+      );
+    }
+    else {
+      return (
+        <main>
+          <h1 style={{
+            textAlign: 'center',
+            margin: 100
+          }}>User does not exist. <Link to={`/`}>Go back.</Link></h1>
+        </main>
+      );
+    }
+  }
+
+  componentWillMount() {
+    let _this = this;
+    api.getUser(this.props.params.userEmail).then((data) =>{
+      if (data.error) {
+        _this.setState({ enabled: false });
+      } else {
+        _this.setState({
+          courses: data.courses,
+          anchors: data.anchors
+        }, _this.generateSchedules);
+      }
+    });
   }
 
   componentDidMount() {
@@ -72,6 +100,10 @@ class Scheduler extends Component {
     });
   }
 
+  updateServer() {
+    api.updateUser(this.props.params.userEmail, this.state.courses, this.state.anchors);
+  }
+
   addClass(courseId) {
     let _this = this;
 
@@ -83,9 +115,7 @@ class Scheduler extends Component {
       if (courseExists) {
         let coursesList = this.state.courses;
         coursesList.unshift(courseId);
-        _this.setState({ courses: coursesList }, () => {
-          _this.generateSchedules();
-        });
+        _this.setState({ courses: coursesList }, _this.generateSchedules());
       }
     });
   }
@@ -136,6 +166,7 @@ class Scheduler extends Component {
 
   generateSchedules() {
     this.generateColors();
+    this.updateServer();
     if (this.state.courses.length === 0) {
       this.setState({
         courseData: {},

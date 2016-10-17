@@ -89,13 +89,9 @@ router.route('/schedule')
   });
 
 router.route('/schedule/:user_email')
-  .put(function (req, res) {
+  .post(function (req, res) {
     var userEmail = req.params.user_email;
     var ref = db.ref('/schedules');
-    function validateEmail(email) {
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
-    }
     if (validateEmail(userEmail)) {
       ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {
 
@@ -107,13 +103,45 @@ router.route('/schedule/:user_email')
             courses: []
           });
         } else {
-          var courseList = snap.val()[Object.keys(snap.val())[0]].courses || [];
-          generateSchedulesFirebase(courseList, () => {});
+          var courses = snap.val()[Object.keys(snap.val())[0]].courses || [];
+          var anchors = snap.val()[Object.keys(snap.val())[0]].anchors || {};
           res.json({
             message: 'user exists',
             user_email: userEmail,
-            data: snap.val(),
-            courses: courseList
+            courses: courses,
+            anchors: anchors
+          });
+        }
+      });
+    } else {
+      res.json({
+        error: 'not a valid email'
+      });
+    }
+  })
+  .put(function (req, res) {
+    var userEmail = req.params.user_email;
+    var ref = db.ref('/schedules');
+    if (validateEmail(userEmail)) {
+      ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {
+        if (!snap.exists()) {
+          res.json({
+            error: 'cannot mutate, email does not exist',
+            user_email: userEmail
+          });
+        } else {
+          let courses = req.body.courses || [];
+          let anchors = req.body.anchors || {};
+
+          snap.child(Object.keys(snap.val())[0]).ref.update({
+            courses, anchors
+          });
+
+          res.json({
+            message: 'user data updated',
+            user_email: userEmail,
+            courses: courses,
+            anchors: anchors
           });
         }
       });
@@ -126,10 +154,6 @@ router.route('/schedule/:user_email')
   .get(function (req, res) {
     var userEmail = req.params.user_email;
     var ref = db.ref('/schedules');
-    function validateEmail(email) {
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
-    }
     if (validateEmail(userEmail)) {
       ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {
         if (!snap.exists()) {
@@ -138,67 +162,20 @@ router.route('/schedule/:user_email')
             user_email: userEmail
           });
         } else {
-          let course = req.query.course;
-          var courseList = snap.val()[Object.keys(snap.val())[0]].courses || [];
-          if (req.query.action == 'ADD') {
+          var courses = snap.val()[Object.keys(snap.val())[0]].courses || [];
+          var anchors = snap.val()[Object.keys(snap.val())[0]].anchors || {};
 
-            db.ref('/courses').child(course).once('value', function(snap) {
-
-              if (snap.exists()) {
-
-                var newCourses = _.uniq(courseList.concat([course]));
-                snap.ref.child(Object.keys(snap.val())[0]).update({
-                  courses: newCourses
-                });
-                res.json({
-                  message: 'courses added',
-                  user_email: userEmail,
-                  course_added: course,
-                  courses: newCourses
-                });
-
-              } else {
-                res.json({
-                  error: 'unable to add course',
-                  user_email: userEmail,
-                  course_add_attempt: course,
-                  courses: courseList
-                })
-              }
-
-            });
-          } else if (req.query.action == 'REMOVE') {
-            var newCourses = _.pull(courseList, course);
-
-            if (newCourses.length < courseList) {
-
-              snap.ref.child(Object.keys(snap.val())[0]).update({
-                courses: newCourses
-              });
-              res.json({
-                message: 'courses removed',
-                user_email: userEmail,
-                course_removed: course,
-                courses: newCourses
-              });
-
-            } else {
-              res.json({
-                error: 'unable to remove course',
-                user_email: userEmail,
-                course_remove_attempt: course,
-                courses: courseList
-              })
-            }
-
-
-          } else {
-            res.json({
-              error: 'action unrecognized',
-              user_email: userEmail
-            });
-          }
+          res.json({
+            message: 'user data retrieved',
+            user_email: userEmail,
+            courses: courses,
+            anchors: anchors
+          });
         }
+      });
+    } else {
+      res.json({
+        error: 'not a valid email'
       });
     }
   });
@@ -304,3 +281,9 @@ router.route('/trojan/:action')
 
 
 module.exports = router;
+
+
+function validateEmail(email) {
+  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}

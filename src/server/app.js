@@ -16,9 +16,6 @@ app.use(bodyParser.json());
 // allow promises
 app.use(require('express-promise')());
 
-// serve static
-app.use('/', express.static(path.join(__dirname, '../..', 'www')));
-
 // set port
 app.set('port', (process.env.PORT || 5000));
 
@@ -29,6 +26,10 @@ app.use('/api', api);
 // setup socket
 var socket = require('./lib/socket');
 io.on('connection', socket);
+
+// serve static
+app.use('/', express.static(path.join(__dirname, '../..', 'www')));
+app.get('*', (_, res) => { res.sendFile(path.join(__dirname, '../..', 'www', 'index.html')); });
 
 // start the server
 server.listen(app.get('port'), function () {
