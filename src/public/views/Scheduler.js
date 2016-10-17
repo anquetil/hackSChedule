@@ -5,7 +5,8 @@ import CourseList from '../modules/CourseList';
 import Calendar from '../modules/Calendar';
 import SelectorFilter from '../modules/SelectorFilter';
 
-import api from '../api-interface';
+import ApiInterface from '../api-interface';
+let api = new ApiInterface();
 
 class Scheduler extends Component {
 
@@ -162,8 +163,8 @@ class Scheduler extends Component {
   keyboardCommands(e) {
     if([37,38,39,40].indexOf(e.keyCode) > -1){
       e.preventDefault();
-      if(e.keyCode == 37 || e.keyCode == 38) this.goPrev().bind(this);
-      else this.goNext().bind(this);
+      if(e.keyCode == 37 || e.keyCode == 38) this.goPrev();
+      else this.goNext();
     }
   }
 

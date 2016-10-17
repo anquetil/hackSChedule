@@ -1,16 +1,30 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var path = require('path');
-var api = require('./api');
+// app.js
 
-app.set('port', (process.env.PORT || 5000));
+// SETUP
+var express     = require('express');
+var app         = express(); // create express app
+var bodyParser  = require('body-parser');
+var http        = require('http').Server(app);
+var path        = require('path');
 
+// configure body-parser
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// allow promises
 app.use(require('express-promise')());
+
+// serve static
 app.use('/', express.static(path.join(__dirname, '../..', 'www')));
 
-app.get('/api/:method.:action', api);
+// set port
+app.set('port', (process.env.PORT || 5000));
 
+// setup api router
+var api = require('./api');
+app.use('/api', api);
+
+// start the server
 http.listen(app.get('port'), function () {
   console.log('RUNNING.');
 });

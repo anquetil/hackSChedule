@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hackschedule-6933c",
+  "private_key_id": "6b05a1e6f9fd01d9a73db1a787b9152755eb60fc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC5T4AwOxLoNQUE\nEA5WW7vSrvNOK8aLvEHUgqRYMf7mGAjsez0EnER0Au4kJ1m5hsb4mCgqF2JBsOdF\n+LbN2YBt9KKut+aQH7GdVin8oqOmjW9K/NQTkzTT7nmpcSBIhZa4zPQidK9ISgmG\nw9fKS86o2Lh41YvXO6CCSwg8wY2Q9ShL1GGyrX9Dn+a6ZaPCvwmq5Ngd69G9N2tB\ns/soqXNIlwqNg1a96oynXIVxtNIzr6AhgtxePiLff+/hMYXYAwiqOyPwk4lUEQlJ\npIYtj8gSzgeT5U52Jqx/qYNUB1o1tc8tAkc9EeCOaMB0oHaXmTbQCyc+iubItPEl\nngmpj2iRAgMBAAECggEAdrrPQRe4Z3sA+bdn2EDyOGzLivxVO9akvwntTmzKCpa/\nsPTNBZUx7rqp5hQoUsxd0415vm45ECnOJHDUf1OqC8lAKn29hf4oiMxaHnn+LIpW\nEk+nedtJb7hNzxiiPJULGuCGU0U7wS9epy/3pK+pe1lP6Gu6K28SyihU4MiKcaLo\noftYTjxYxu8nKGzQ3YiMcm8KU9hcDZ9aMrHnBmO3ChN26K4ojZkiC+OMISJ4Lg1x\nihasBAuJX/De4mfftVB6FrX+xjqYXzMGi7M5O62fV8JkN8Kd4qxhPTnp4ffqh16i\nX3BKuVhEdwHSe7mY8OjNv8I89ldOcCB9LCh198LEoQKBgQD21iYa/VwsmcHD1RfU\nl7UD5Msa4rdkuBo9InSmb5hX3F0XNPTMLy0c412HKzl2WP62rdZuG31QwGlmyVyC\nw1qppKzxjXoPwqolgp1oLj5fB0OLDxycRDADGMYf1yR/Ca9HvyfKuR6o8TxNSDjG\ncZ5udg48nDvlxu3XLRujbv+j/QKBgQDAMKE6P8s9AzJkWjO4QS+XKWT0m7Lx6m0i\nHH22x8Fdq7CZLMzqQLEsFgw8M4q6BUKsj5t4FZE4q8L1AkghCFdcrF9gnGArHfVr\ncuH4b6y+pXjIIQAd/S1AhFDnHbfSmrjb1+tsCD4AGhfSYdLgQqXW608I2H6NqTlI\n1pCzjs0ZJQKBgQCLH0Q27honoTnO8KoPzrndyfSX4LTQ9dsEHgl1TWymCLQHQne/\nJc/demDasIggpiRaPjyfrqrA+tHtdwzHPug4uXIoaz8i5usTXTzu3TGWSffNxuSv\nRtdwx2PTymTtnT3HyHvbDN+1BNKiFFS7tIpBZBS+IKi555diMjBju0om2QKBgDbA\n4/4DVLSSJ5YdeKSitZs8KM3jWcy/+81/DnW3XSiBlHNfJxYJzjAALAYurPQoMYGV\n/DXu9wuNK6K/vqrihHkbhqSwiFlgVJ4DAcvUjQNXgxyJAk6I5Y5+48mkVs2CVO4V\nCrYhdwBybpz6T6iidDrRmRetDgjv0CknL9xn75idAoGBAMBH94jeY//676N1v5N6\nuNc7l0315Wywi7Hyc3bsu+MXRZxCFySFMA0MFbT4K45/izY2J4FjFAbWqBQcJzvU\nRt6tQBvMSq1MzP+mfS7HbHLLkz/jKlM5IKkJzuMW6Ia+riSM4olHH1EbW+3hZSrf\n2I62NABSENzghTb9Ihc8bUWm\n-----END PRIVATE KEY-----\n",
+  "client_email": "server@hackschedule-6933c.iam.gserviceaccount.com",
+  "client_id": "111029698213525999870",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/server%40hackschedule-6933c.iam.gserviceaccount.com"
+}
