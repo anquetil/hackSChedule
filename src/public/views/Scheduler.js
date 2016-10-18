@@ -41,6 +41,7 @@ class Scheduler extends Component {
             combinations={this.state.combinations}
             addClass={this.addClass.bind(this)}
             removeClass={this.removeClass.bind(this)}
+            anchors={this.state.anchors}
             hoverIndex={this.state.hover}
             setHover={this.setHover.bind(this)}
             colors={this.state.colors} />
@@ -53,7 +54,9 @@ class Scheduler extends Component {
             setHover={this.setHover.bind(this)}
             anchors={this.state.anchors}
             toggleAnchor={this.toggleAnchor.bind(this)}
-            colors={this.state.colors} />
+            colors={this.state.colors}
+            regenerate={this.generateSchedules.bind(this)}
+            save={()=>{}} />
           <SelectorFilter
             courses={this.state.courses}
             courseData={this.state.courseData}
@@ -221,6 +224,7 @@ class Scheduler extends Component {
     let colors = [
       color.orange,
       color.green,
+      color.cyan,
       color.blue,
       color.indigo,
       color.purple,

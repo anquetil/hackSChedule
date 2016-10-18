@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import _ from 'lodash';
 
 import Block from '../components/Block';
@@ -25,9 +26,10 @@ class Calendar extends Component {
     }
 
     let width = (this.state.events.A.length > 0) ? 100 / 8 + '%' : 100 / 7 + '%';
+    let { regenerate, save, courses, combinations } = this.props;
 
     return (
-      <section id='calendar'>
+      <section id='calendar' className={classNames({ disabled: (courses.length <= 0) })}>
         <ul id='days'>
           {Object.keys(this.state.days).map(day => {
             if (day !== 'A' || (day === 'A' && this.state.events.A.length > 0)) {
@@ -52,6 +54,28 @@ class Calendar extends Component {
             }
           })}
         </div>
+
+        {(() => {
+          if (courses.length > 0 && combinations.length <= 0) {
+            return (
+              <div className='alert'>
+                <b>🙊 Uh oh!</b>
+                <p>It seems like the courses you want to take aren't possible together. There are irresolvable section conflicts. If you have anchors, you can try removing them.</p>
+              </div>
+            );
+          }
+        })()}
+
+        {(() => {
+          if (courses.length > 0) {
+            return (
+              <div id='courses_actions'>
+                <button onClick={regenerate}>Regenerate</button>
+                <button onClick={save} className='blue'>Export</button>
+              </div>
+            );
+          }
+        })()}
       </section>
     );
   }
@@ -102,12 +126,10 @@ class Calendar extends Component {
               sectionId={sectionId}
               onClick={()=>{ this.props.toggleAnchor(courseId, sectionId) }}
               anchored={anchored}
-              type={sections[sectionId].type}
               start={block.start}
               end={block.end}
               location={block.location}
-              spaces_available={sections[sectionId].spaces_available}
-              number_registered={sections[sectionId].number_registered} />);
+              sectiondata={sections[sectionId]} />);
             if (!block.day) events['A'].push(newBlock);
             else events[block.day].push(newBlock);
           }

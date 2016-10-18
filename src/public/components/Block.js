@@ -1,13 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
+import _ from 'lodash';
 
 export default (props) => {
 
   let {
-    courseId, sectionId, type,
+    courseId, sectionId, sectiondata,
     location, start, end,
-    spaces_available,
-    number_registered,
     style, color, height, hovers, anchored,
     ...other
   } = props;
@@ -30,7 +29,7 @@ export default (props) => {
     <li {...other}
       className={classNames('event', {
         hover: (hovers),
-        full: (number_registered >= spaces_available),
+        full: (sectiondata.full),
         anchored: (anchored)
       })}
       style={Object.assign(css, style)}>
@@ -38,19 +37,26 @@ export default (props) => {
         <span className='courseid'>{courseId}</span>
         <span className='sectionid'>{sectionId}</span>
       </div>
-      <span className='tag'>{type}</span>
-      <span className='tag'>{convertToTime(start)}-{convertToTime(end)}</span>
-      {(()=>{
-        if(location) return <span className='tag'>{location}</span>;
-      })()}
-      <span className='tag'>{(()=>{
-        if(number_registered >= spaces_available) {
-          return 'FULL';
-        }
-        else {
-          return number_registered + '/' + spaces_available + ' seats';
-        }
-      })()}</span>
+      <div>
+        <span className='tag'>{sectiondata.type}</span>
+        <span className='tag'>{convertToTime(start)}-{convertToTime(end)}</span>
+        {(()=>{
+          if (location) return <span className='tag'>{location}</span>;
+        })()}
+        {(()=>{
+          if (sectiondata.instructor) {
+            if (_.isArray(sectiondata.instructor)) {
+              return sectiondata.instructor.map((o,i) => (
+                <span key={i} className='tag'>{o.first_name} {o.last_name}</span>
+              )).join('');
+            } else {
+              let { first_name, last_name } = sectiondata.instructor;
+              return <span className='tag'>{first_name} {last_name}</span>;
+            }
+          }
+        })()}
+        <span className='tag'>{(sectiondata.full) ? 'FULL' : sectiondata.number_registered + '/' + sectiondata.spaces_available + ' seats'}</span>
+      </div>
     </li>
   );
 

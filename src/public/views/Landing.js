@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
+import Course from '../components/Course';
+
 import ApiInterface from '../api-interface';
 let api = new ApiInterface();
 
@@ -17,14 +19,47 @@ class Landing extends Component {
   render() {
     return (
       <main id='landing'>
-        <div id="logo" />
-        <div id="blurb">
+        <div id='logo' />
+
+        <div id='blurb'>
           Design your perfect class schedule in 10 seconds. <br />
           USC's Spring 2017 course catalog is now available.
         </div>
-        <div id="login">
+
+        <ul id='courselist'>
+          <Course
+            removeClass={()=>{}}
+            courseId='CSCI-201'
+            courseData={{ units: '4.0 units', title: 'Principles of Software Development' }}
+            color={[251,140,0]}
+            anchors={{}}
+          />
+          <Course
+            removeClass={()=>{}}
+            courseId='CSCI-270'
+            courseData={{ units: '4.0 units', title: 'Introduction to Algorithms and Theory of Computing' }}
+            color={[76,175,80]}
+            anchors={{}}
+          />
+          <Course
+            removeClass={()=>{}}
+            courseId='ITP-380'
+            courseData={{ units: '4.0 units', title: 'Video Game Programming' }}
+            color={[0,188,212]}
+            anchors={{}}
+          />
+          <Course
+            removeClass={()=>{}}
+            courseId='EE-109'
+            courseData={{ units: '3.0 units', title: 'Introduction to Embedded Systems' }}
+            color={[33,150,243]}
+            anchors={{}}
+          />
+        </ul>
+        <div id='login'>
           <div className='prompt'>Enter your USC email to get started.</div>
           <input type='text'
+            ref='email'
             onChange={this.onChange.bind(this)}
             value={this.state.text}
             onKeyDown={this.checkSubmit.bind(this)}
@@ -34,6 +69,10 @@ class Landing extends Component {
         </div>
       </main>
     );
+  }
+
+  componentDidMount() {
+    this.refs.email.focus();
   }
 
   onChange(e) {
