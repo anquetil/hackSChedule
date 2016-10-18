@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 
 import Course from '../components/Course';
+import Calendar from '../containers/Calendar';
 
 import ApiInterface from '../api-interface';
 let api = new ApiInterface();
+
+let courses = ['CSCI-201', 'CSCI-270', 'ITP-380', 'EE-109'];
 
 class Landing extends Component {
 
@@ -13,6 +16,12 @@ class Landing extends Component {
     this.state = {
       text: '',
       msg: '',
+      courses: ['CSCI-201', 'CSCI-270', 'ITP-380', 'EE-109'],
+      courseData: {},
+      combinations: [],
+      colors: [],
+      index: 3,
+      hover: null
     };
   }
 
@@ -21,58 +30,100 @@ class Landing extends Component {
       <main id='landing'>
         <div id='logo' />
 
-        <div id='blurb'>
-          Design your perfect class schedule in 10 seconds. <br />
-          USC's Spring 2017 course catalog is now available.
-        </div>
+        <section id='blob'>
+          <div id='blurb'>
+            Design your perfect class schedule in 10 seconds. <br />
+            USC's Spring 2017 course catalog is now available.
+          </div>
+          <div id='login'>
+            <div className='prompt'>Enter your USC email to get started.</div>
+            <input type='text'
+              ref='email'
+              onChange={this.onChange.bind(this)}
+              value={this.state.text}
+              onKeyDown={this.checkSubmit.bind(this)}
+              placeholder='tommytrojan@usc.edu' />
+            <button onClick={this.submit.bind(this)}>Go</button>
+            <div className='alert'>{this.state.msg}</div>
+          </div>
+        </section>
 
-        <ul id='courselist'>
-          <Course
-            removeClass={()=>{}}
-            courseId='CSCI-201'
-            courseData={{ units: '4.0 units', title: 'Principles of Software Development' }}
-            color={[251,140,0]}
-            anchors={{}}
-          />
-          <Course
-            removeClass={()=>{}}
-            courseId='CSCI-270'
-            courseData={{ units: '4.0 units', title: 'Introduction to Algorithms and Theory of Computing' }}
-            color={[76,175,80]}
-            anchors={{}}
-          />
-          <Course
-            removeClass={()=>{}}
-            courseId='ITP-380'
-            courseData={{ units: '4.0 units', title: 'Video Game Programming' }}
-            color={[0,188,212]}
-            anchors={{}}
-          />
-          <Course
-            removeClass={()=>{}}
-            courseId='EE-109'
-            courseData={{ units: '3.0 units', title: 'Introduction to Embedded Systems' }}
-            color={[33,150,243]}
-            anchors={{}}
-          />
+        <ul id='courselist' onMouseLeave={(e) => {this.setState({ hover: null })}}>
+          {this.state.courses.map((courseId, i) => (
+            <Course
+              className={(i === this.state.hover) ? 'hover' : ''}
+              onMouseEnter={(e) => {this.setState({ hover: i })}}
+              removeClass={()=>{}}
+              courseId={courseId}
+              courseData={this.state.courseData[courseId]}
+              color={this.state.colors[i]}
+              anchors={{}}
+            />
+          ))}
         </ul>
-        <div id='login'>
-          <div className='prompt'>Enter your USC email to get started.</div>
-          <input type='text'
-            ref='email'
-            onChange={this.onChange.bind(this)}
-            value={this.state.text}
-            onKeyDown={this.checkSubmit.bind(this)}
-            placeholder='tommytrojan@usc.edu' />
-          <button onClick={this.submit.bind(this)}>Go</button>
-          <div className='alert'>{this.state.msg}</div>
-        </div>
+        <Calendar
+          courses={this.state.courses}
+          full={true}
+          courseData={this.state.courseData}
+          combinations={this.state.combinations}
+          index={this.state.index}
+          hoverIndex={this.state.hover}
+          setHover={(i) => {this.setState({ hover: i })}}
+          anchors={{}}
+          toggleAnchor={()=>{}}
+          colors={this.state.colors}
+          regenerate={() => {}}
+          save={()=>{}} />
       </main>
     );
   }
 
   componentDidMount() {
     this.refs.email.focus();
+
+    function rgb(r,g,b) {
+      return [r,g,b];
+    }
+
+    let color = {
+      red: rgb(244,67,54),
+      pink: rgb(233,30,99),
+      purple: rgb(156,39,176),
+      deepPurple: rgb(103,58,183),
+      indigo: rgb(63,81,181),
+      blue: rgb(33,150,243),
+      lightBlue: rgb(3,169,244),
+      cyan: rgb(0,188,212),
+      teal: rgb(0,150,136),
+      green: rgb(76,175,80),
+      lightGreen: rgb(104,159,56),
+      lime: rgb(175,180,43),
+      yellow: rgb(249,168,37),
+      orange: rgb(251,140,0),
+      deepOrange: rgb(255,87,34),
+      brown: rgb(121,85,72),
+      blueGrey: rgb(96,125,139),
+    };
+
+    let colors = [
+      color.orange,
+      color.green,
+      color.cyan,
+      color.blue,
+      color.indigo,
+      color.purple,
+      color.brown,
+    ];
+
+    this.setState({ colors: colors.splice(0, this.state.courses.length).reverse() });
+
+    api.generateCourseDataAndSchedules(this.state.courses)
+      .then(({ courseData, results }) => {
+        this.setState({
+          courseData,
+          combinations: results
+        });
+      });
   }
 
   onChange(e) {

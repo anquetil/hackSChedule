@@ -26,6 +26,21 @@
     padding-left: $space-lg;
   }
 
+  &.full {
+    position: relative !important;
+    width: 100%;
+    left: 0 !important;
+    right: 0 !important;
+    background: transparent !important;
+    & > #calwrap {
+      left: 0;
+      right: 0;
+      position: relative;
+      top: $space-xs;
+      bottom: $space-xs;
+    }
+  }
+
   ul#days {
     list-style: none;
     font-size: $font-sm - 2;

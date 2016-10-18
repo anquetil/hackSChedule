@@ -1,5 +1,9 @@
 #landing {
 
+  position: absolute!important;
+  top: 0!important; bottom: 0!important; left: 0!important; right: 0!important;
+  overflow-y: auto!important;
+
   text-align: center;
   padding: 80px 16px;
 
@@ -14,8 +18,31 @@
     margin:0 auto $space-sm auto;
   }
 
+  #blob {
+    background-color: white;
+    padding: $space-xs $space-sm;
+    border-radius: 3px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    color: black;
+    max-width: 500px;
+    margin: $space-lg auto;
+    input {
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      &:focus {
+        transform:scale(1.03,1.03);
+        box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.2);
+      }
+    }
+    button {
+      background-color: $red1;
+      &:hover {
+        background-color: $red2;
+      }
+    }
+  }
+
   #blurb {
-    font-size: $font-lg;
+    font-size: $font-lg * 1.1;
     line-height:1.4em;
     margin: 32px auto;
   }
@@ -29,7 +56,8 @@
     }
 
     input {
-      width: 300px;
+      max-width: 300px;
+      width: 100%;
     }
 
     .alert {
@@ -67,6 +95,10 @@
   button {
     display: block;
     margin: $space-sm auto;
+  }
+
+  #courses_actions {
+    display: none;
   }
 
 }

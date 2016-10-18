@@ -179,7 +179,6 @@ class Scheduler extends Component {
     } else {
       api.generateCourseDataAndSchedules(this.state.courses, this.state.anchors)
         .then(({ courseData, results }) => {
-          console.log(courseData, results);
           let index = this.state.index;
           if (index >= results.length) index = results.length - 1;
           if (index <= 0) index = 0;

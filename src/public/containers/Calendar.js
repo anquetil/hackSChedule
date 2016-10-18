@@ -26,10 +26,10 @@ class Calendar extends Component {
     }
 
     let width = (this.state.events.A.length > 0) ? 100 / 8 + '%' : 100 / 7 + '%';
-    let { regenerate, save, courses, combinations } = this.props;
+    let { regenerate, save, courses, combinations, full } = this.props;
 
     return (
-      <section id='calendar' className={classNames({ disabled: (courses.length <= 0) })}>
+      <section id='calendar' className={classNames({ disabled: (courses.length <= 0), full: (full) })}>
         <ul id='days'>
           {Object.keys(this.state.days).map(day => {
             if (day !== 'A' || (day === 'A' && this.state.events.A.length > 0)) {
