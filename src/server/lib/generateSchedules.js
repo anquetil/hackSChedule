@@ -9,18 +9,17 @@ module.exports = function (courses, cb) {
   var entities = {};
   var courseData = {};
   for (var course of courses) {
-    var courseid = course.split('-');
-    if (courseid.length !== 2) return false;
-    var dept = courseid[0];
-    var num = courseid[1].slice(0, 3);
-    var seq = courseid[1].slice(3);
+    var course = course.split('-');
+    var dept = course[0];
+    var num = course[1].slice(0, 3);
+    var seq = course[1].slice(3);
     TROJAN.course(dept, num, seq).then(function (coursedata) {
-      var courseid = Object.keys(coursedata)[0];
-      var coursedata = coursedata[courseid];
-      courseData[courseid] = coursedata;
+      var courseId = Object.keys(coursedata)[0];
+      var coursedata = coursedata[courseId];
+      courseData[courseId] = coursedata;
       TROJAN.combinations(coursedata).then(function (combinations) {
         var data = normalize(coursedata, combinations);
-        entities[courseid] = data;
+        entities[courseId] = data;
 
         if (Object.keys(entities).length === courses.length) {
           processEntities(courseData, entities);

@@ -1,4 +1,5 @@
 #courses {
+  overflow-y: auto;
 
   #logo {
     background-image:url('./hackschedule.png');
@@ -17,7 +18,7 @@
     input {
       width: 100%;
       border: 0;
-      background-color: rgba(0,0,0,0.1);
+      background-color: rgba(0,0,0,0.2);
       color: $white;
       padding: $space-xs;
       height: $font-lg * 2 + 4;
@@ -26,65 +27,85 @@
       text-align: left;
       border-radius: 3px;
       margin-bottom: 1px;
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
       font-weight: bold;
+
+      &:focus {
+        background-color: rgba(0, 0, 0, 0.3);
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2), inset 0 0 2px rgba(0, 0, 0, 0.1);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+      }
     }
+
+    .autocomplete {
+      position: absolute;
+      display: block;
+      width: auto;
+      margin-top: 2px;
+      left: 16px; right: 16px;
+      background-color: #FFF;
+      color: #222;
+      border-radius: 3px;
+      padding: $space-xs/2 0;
+      font-size: $font-sm;
+      line-height: 1.1em;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      z-index: 3;
+
+      li {
+        padding: 6px 8px;
+
+        &:hover, &.hover {
+          background-color: rgba(0, 0, 0, 0.1);
+          cursor: pointer;
+        }
+      }
+    }
+
   }
 
   #courselist {
-    margin: $space-sm 0;
+    margin: $space-sm;
+    margin-bottom: $space-lg;
+  }
 
-    & > li {
-      background-color:#CCC;
-      padding: $space-xs $space-sm;
+  #help {
+    margin-bottom: $space-lg;
+
+    .start {
+      display: block;
+      width: auto;
+      margin: $space-sm;
+      background-color: #FFF;
+      color: #222;
+      border-radius: 3px;
+      padding: $space-xs;
       font-size: $font-sm;
-      cursor: pointer;
-      position: relative;
+      line-height: 1.1em;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 
-      .tag {
-        display: inline-block;
-        padding: $unit/2 $unit;
-        margin-right: $unit;
-        background-color: rgba(255,255,255,0.3);
-        color: inherit;
-        border-radius: 3px;
+      ol {
+        padding-left: 1em;
+        li {
+          margin-bottom: $space-xs;
 
-        &.course {
-          font-weight: bold;
+          span {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 2px;
+            color: #c25;
+            padding: 0 2px;
+            font-family: 'Lucida Console', Monaco, monospace;
+            font-size: 0.8em;
+          }
         }
-
-        &.unit {
-          font-style: italic;
-        }
       }
+    }
 
-      .courseTitle {
-        font-size: $font-lg;
-        display: block;
-        padding: $unit 0;
-      }
-
-      .close {
-        display: block;
-        float:right;
-        font-weight:bold;
-        padding: $unit;
-        border-radius: 3px;
-        width: 22px;
-        height: 22px;
-        line-height: $font-md;
-        font-size: $font-md;
-        text-align: center;
-        cursor: pointer;
-        margin-right: -$space-xs;
-        text-decoration: none;
-        opacity: 0;
-      }
-
-      &:hover .close {
-        display:1;
-      }
-
+    button {
+      margin: 0 $space-sm;
     }
   }
 
@@ -92,6 +113,88 @@
     margin: $space-sm;
     font-size: $font-sm;
     text-align: center;
+    position: fixed;
+    bottom: 0;
+    opacity: 0.3;
+    &:hover {
+      opacity: 0.5;
+    }
   }
 
+}
+
+ul#courselist {
+
+  & > li {
+    background-color:#CCC;
+    padding: $space-xs;
+    margin: $space-xs 0;
+    font-size: $font-sm;
+    cursor: pointer;
+    position: relative;
+    border-radius: 3px;
+    transition: all 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-fill-mode:both;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+    text-align: left;
+
+    .courseid {
+      font-weight: bold;
+      margin-right: $unit * 2;
+      font-size: $font-lg;
+    }
+
+    .tag {
+      display: inline-block;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 2px;
+      border-radius: 3px;
+      margin-right: $unit * 2;
+      color: inherit;
+      font-size: 11px;
+      line-height: 1;
+      vertical-align: text-bottom;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    }
+
+    .courseTitle {
+      font-size: $font-lg;
+      display: block;
+      padding: $unit 0;
+    }
+
+    .close {
+      display: block;
+      float:right;
+      font-weight:bold;
+      padding: $unit;
+      border-radius: 3px;
+      width: 22px;
+      height: 22px;
+      line-height: $font-md;
+      font-size: $font-md;
+      text-align: center;
+      cursor: pointer;
+      margin: -$space-xs;
+      text-decoration: none;
+      opacity: 0;
+    }
+
+    &.hover:hover .close {
+      opacity: 1;
+    }
+
+    &.hover {
+      z-index: 2;
+      transform: scale(1.03,1.03);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    }
+
+    &:hover {
+      z-index: 2;
+      transform: scale(1.08,1.08);
+      box-shadow: 0 12px 20px -5px rgba(0,0,0,0.3);
+    }
+
+  }
 }

@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 export default props => {
 
-  var { removeClass, courseId, courseData, color, ...other } = props;
+  var { removeClass, courseId, courseData, color, anchors, ...other } = props;
 
   var rgb = 'rgb(' + color + ')';
 
@@ -17,9 +17,16 @@ export default props => {
     return (
       <li key={courseId} {...other} style={{ backgroundColor: rgb }}>
         <a className='close' onClick={removeClass.bind(null, courseId)}>×</a>
-        <span className='course tag'>{courseId}</span>
+        <span className='courseid'>{courseId}</span>
         <span className='unit tag'>{courseData.units} units</span>
         <span className='courseTitle'>{courseData.title}</span>
+        {(() => {
+          if (anchors.length > 0) {
+            return(
+              <span className='anchors'>&#9875; {anchors.join(', ')}</span>
+            );
+          }
+        })()}
       </li>
     );
   }

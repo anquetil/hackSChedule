@@ -1,6 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
-import Routes from './routes.js';
+import Landing from './views/Landing';
+import Scheduler from './views/Scheduler';
 
-render(<Routes />, document.getElementById('app'));
+render(
+  <Router history={browserHistory}>
+    <Route path='/'>
+      <IndexRoute component={Landing} />
+      <Route path='/:userEmail' component={Scheduler} />
+    </Route>
+  </Router>,
+  document.getElementById('app')
+);

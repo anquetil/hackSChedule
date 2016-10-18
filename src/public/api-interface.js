@@ -4,52 +4,88 @@ import _ from 'lodash';
 
 let methods = {};
 
-methods.verify = function (courseId, term) {
-  return new Promise((resolve, reject) => {
-    let courseId2 = courseId.split('-');
-    if (courseId2.length !== 2) resolve(false);
+class ApiInterface {
 
-    let dept = courseId2[0];
-    let num = courseId2[1].slice(0, 3);
-    let seq = courseId2[1].slice(3);
-
-    interfacer('TROJAN', 'course', { dept, num, seq, term }).then((data) => {
-      resolve(!(_.isUndefined(data[courseId])));
-    }).error(reject);
-  });
-};
-
-methods.generateSchedules = function (courses = []) {
-  return new Promise((resolve, reject) => {
-    interfacer('method', 'generateSchedules', { courses }).then((data) => {
-      resolve(data);
-    }).error(reject);
-  });
-};
-
-export default methods;
-
-function interfacer(method, action, queries = {}) {
-  let queriesString = '';
-  for (let key in queries) {
-    queriesString += '&' + key + '=' + queries[key];
+  constructor() {
+    // do nothing
+    // reserved for security verification
   }
 
-  return new Promise((resolve, reject) => {
-    buffer();
-    function buffer() {
-      ajax({
-        url: '/api/' + method + '.' + action + '?' + queriesString,
-        method: 'get',
-        success: function (res) {
-          resolve(res);
-        },
+  // quick verifier if course exists
+  verify(courseId, term=null) {
+    courseId = courseId.split('-');
+    let dept = courseId[0];
+    let num  = courseId[1].slice(0, 3);
+    let seq  = courseId[1].slice(3);
 
-        error: function (err) {
-          console.error('ajax err:', err._url.href);
-          setTimeout(buffer, 200);
-        },
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/verify/'+dept+'-'+num+seq,
+        method: 'get',
+        data: { dept, num, seq, term },
+        success: data => resolve(data.exists),
+        error: reject
       });
-    }
-  });
-};
+    });
+  }
+
+  generateCourseDataAndSchedules(courses = [], anchors = {}) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/schedule',
+        method: 'get',
+        data: { courses, anchors },
+        success: resolve,
+        error: reject
+      });
+    });
+  }
+
+  autocomplete(query) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/autocomplete/' + query,
+        method: 'get',
+        success: resolve,
+        error: reject
+      });
+    });
+  }
+
+  createUser(email) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/schedule/' + email,
+        method: 'post',
+        success: resolve,
+        error: reject
+      });
+    });
+  }
+
+  getUser(email) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/schedule/' + email,
+        method: 'get',
+        success: resolve,
+        error: reject
+      });
+    });
+  }
+
+  updateUser(email, courses, anchors) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/schedule/' + email,
+        method: 'put',
+        data: { courses, anchors },
+        success: resolve,
+        error: reject
+      });
+    });
+  }
+
+}
+
+export default ApiInterface;

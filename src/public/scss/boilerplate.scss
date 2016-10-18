@@ -1,47 +1,41 @@
-/* HTML5 Boilerplate */
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video
-{ margin: 0; padding: 0; border: 0; word-wrap: break-word; word-break: hyphenate; -moz-box-sizing: border-box; box-sizing: border-box; }
+html {
+  box-sizing: border-box;
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+}
 
-ul, li
-{ list-style: none; list-style-type: none; display: block; }
+body {
+  font-family: $font-family;
+  font-size: $font-size;
+  line-height: $line-height;
+  font-weight: 400;
+  color: $text-color;
 
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section
-{ display: block; word-wrap: break-word; }
+  background-color: $bg-color;
+  background-attachment: fixed;
+  background-size: cover;
 
-img { border: none; max-width: 100%; vertical-align: middle; margin: 0 auto; padding: 0; display: block; }
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+}
 
-table { border-collapse: collapse; border-spacing: 0; }
+img {
+  margin: 0;
+  padding: 0;
+  display: block;
+}
 
-body { font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, Avenir, Verdana, Sans-serif; font-size: 14px; line-height: 1.4em; font-weight: 400; color: #000; background-color: #FFF; background-attachment: fixed; background-size: cover; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; -webkit-text-size-adjust: 100%; position: absolute; left: 0; right: 0; top: 0; bottom: 0; max-width: 2000px; margin: 0 auto; overflow:hidden;}
+ul {
+  list-style: none;
+  padding: 0; margin: 0;
+}
 
-p { padding-bottom: 1em; display: block; line-height: 1.4em; }
+a, a:hover, a:active {
+  color: inherit;
+}
 
-a { text-decoration: underline; color: inherit; cursor: pointer; }
-
-h1, h2, h3, h4, h5, h6 { font-weight: bold; line-height: 1.1em; display: block; padding-bottom: 0.3em; }
-h1.nopad, h2.nopad, h3.nopad, h4.nopad, h5.nopad, h6.nopad { padding-bottom: 0; }
-h1 span, h2 span, h3 span, h4 span, h5 span, h6 span { white-space: nowrap; }
-
-h1 { font-size: 64px; }
-
-h2 { font-size: 56px; }
-
-h3 { font-size: 45px; }
-
-h4 { font-size: 34px; }
-
-h5 { font-size: 24px; }
-
-h6 { font-size: 20px; }
-
-hr { display: block; padding: 0; border: 0; height: 1px; background-color: rgba(0, 0, 0, 0.3); max-width: 100%; margin: 10px auto; }
-
-input, textarea { font-family:HelveticaNeue, "Helvetica Neue", Helvetica, Arial, Avenir, Verdana, Sans-serif; font-size: 14px; line-height: 1.4em; font-weight: 300; color: #000; -webkit-appearance: none; background-color: #FFF; -webkit-border-radius: 0px; -moz-border-radius: 0px; border-radius: 0px; border: 0px; outline: none; padding: 5px 10px; height: 20px; border: 1px solid rgba(0, 0, 0, 0.3); resize: none;  -moz-box-sizing: border-box; box-sizing: border-box;}
-
-input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { color: rgba(0, 0, 0, 0.3); }
-
-input:-moz-placeholder, textarea:-moz-placeholder { color: rgba(0, 0, 0, 0.3); }
-
-.s { text-decoration: line-through; }
-
-.clear { clear: both; display: block; }
+input, textarea {
+  outline: none;
+}
