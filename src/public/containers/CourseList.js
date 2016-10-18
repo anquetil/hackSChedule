@@ -80,7 +80,7 @@ class CourseList extends Component {
         })()}
 
         <div id='credits'>
-          <a href='http://github.com/ninjiangstar/hackSChedule'>Github</a>
+          <a href={'mailto:andrewji@usc.edu?subject=Feedback%20for%20HackSchedule'}>Feedback</a>
         </div>
       </section>
     );
