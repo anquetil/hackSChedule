@@ -73,9 +73,11 @@
 
   #help {
     margin-bottom: $space-lg;
+    text-align: center;
 
     .start {
       display: block;
+      text-align: left;
       width: auto;
       margin: $space-sm;
       background-color: #FFF;
@@ -109,6 +111,13 @@
     }
   }
 
+  .total_units {
+    font-size: $font-sm;
+    font-weight: bold;
+    text-align: center;
+    margin: $space-lg $space-sm;
+  }
+
   #credits {
     margin: $space-sm;
     font-size: $font-sm;
@@ -125,7 +134,7 @@
 
 ul#courselist {
 
-  & > li {
+  & > li:not(.txt) {
     background-color:#CCC;
     padding: $space-xs;
     margin: $space-xs 0;

@@ -86,6 +86,17 @@ class ApiInterface {
     });
   }
 
+  updateServer(courses = []) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/update_server',
+        method: 'post',
+        data: { courses },
+        success: resolve
+      });
+    });
+  }
+
 }
 
 export default ApiInterface;

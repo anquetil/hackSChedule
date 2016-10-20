@@ -22,6 +22,7 @@ export default (props) => {
   let css = {
     top: Math.round(((start / mins) - lowerHrLim) * height),
     height: Math.round((end - start) / mins * height),
+    minHeight: Math.round((end - start) / mins * height),
     backgroundColor: 'rgb(' + color + ')',
   };
 
@@ -43,19 +44,19 @@ export default (props) => {
         {(()=>{
           if (location) return <span className='tag'>{location}</span>;
         })()}
+        <span className='tag'>{(sectiondata.full) ? 'FULL' : sectiondata.number_registered + '/' + sectiondata.spaces_available + ' seats'}</span>
         {(()=>{
           if (sectiondata.instructor) {
             if (_.isArray(sectiondata.instructor)) {
               return sectiondata.instructor.map((o,i) => (
                 <span key={i} className='tag'>{o.first_name} {o.last_name}</span>
-              )).join('');
+              ));
             } else {
               let { first_name, last_name } = sectiondata.instructor;
               return <span className='tag'>{first_name} {last_name}</span>;
             }
           }
         })()}
-        <span className='tag'>{(sectiondata.full) ? 'FULL' : sectiondata.number_registered + '/' + sectiondata.spaces_available + ' seats'}</span>
       </div>
     </li>
   );

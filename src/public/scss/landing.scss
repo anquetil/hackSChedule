@@ -26,11 +26,34 @@
     color: black;
     max-width: 500px;
     margin: $space-lg auto;
+
+    #blurb {
+      font-size: $font-lg * 1.1;
+      line-height:1.4em;
+      margin: 32px auto;
+    }
+
+    #login {
+      margin: 32px auto;
+
+      .prompt {
+        margin: 8px auto;
+        font-weight: bold;
+      }
+
+      .alert {
+        margin: 8px auto;
+      }
+
+    }
+
     input {
+      max-width: 300px;
+      width: 100%;
       border: 1px solid rgba(0, 0, 0, 0.2);
       &:focus {
         transform:scale(1.03,1.03);
-        box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 6px 10px -3px rgba(0, 0, 0, 0.2);
       }
     }
     button {
@@ -41,38 +64,21 @@
     }
   }
 
-  #blurb {
-    font-size: $font-lg * 1.1;
-    line-height:1.4em;
-    margin: 32px auto;
-  }
-
-  #login {
-    margin: 32px auto;
-
-    .prompt {
-      margin: 8px auto;
-      font-weight: bold;
-    }
-
-    input {
-      max-width: 300px;
-      width: 100%;
-    }
-
-    .alert {
-      margin: 8px auto;
-    }
-
-  }
-
   #courselist {
     margin: $space-lg $space-xs;
 
-    & > li {
+    & > li:not(.txt) {
       width: 218px;
       display: inline-block;
       margin: $space-xs;
+      vertical-align: middle;
+    }
+    & > li.txt {
+      display: inline-block;
+      // margin: $space-xs;
+      vertical-align: middle;
+      font-size: $font-lg * 1.5;
+      font-weight: bold;
     }
   }
 
@@ -99,6 +105,16 @@
 
   #courses_actions {
     display: none;
+  }
+
+  #how_it_works {
+    margin: $space-lg*3 0;
+    p {
+      font-size: $font-lg;
+      max-width: 400px;
+      margin: $space-sm auto;
+      text-align: left;
+    }
   }
 
 }

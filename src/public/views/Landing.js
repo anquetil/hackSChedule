@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 
 import Course from '../components/Course';
-import Calendar from '../containers/Calendar';
 
 import ApiInterface from '../api-interface';
 let api = new ApiInterface();
@@ -48,39 +47,40 @@ class Landing extends Component {
           </div>
         </section>
 
-        <ul id='courselist' onMouseLeave={(e) => {this.setState({ hover: null })}}>
-          {this.state.courses.map((courseId, i) => (
-            <Course
-              className={(i === this.state.hover) ? 'hover' : ''}
-              onMouseEnter={(e) => {this.setState({ hover: i })}}
-              removeClass={()=>{}}
-              courseId={courseId}
-              courseData={this.state.courseData[courseId]}
-              color={this.state.colors[i]}
-              anchors={{}}
-            />
-          ))}
-        </ul>
-        <Calendar
-          courses={this.state.courses}
-          full={true}
-          courseData={this.state.courseData}
-          combinations={this.state.combinations}
-          index={this.state.index}
-          hoverIndex={this.state.hover}
-          setHover={(i) => {this.setState({ hover: i })}}
-          anchors={{}}
-          toggleAnchor={()=>{}}
-          colors={this.state.colors}
-          regenerate={() => {}}
-          save={()=>{}} />
+        <section id='how_it_works'>
+          <h1>How it works</h1>
+          <p>The worst part about course registration is making sure the sections in your classes don't overlap.</p>
+          <p>HackSChedule solves this by generating a huge list of potential schedules. Let's say you're taking the classes listed below.</p>
+          <p>There are {this.state.combinations.length} ways to arrange your schedule.</p>
+
+          <ul id='courselist'>
+            {this.state.courses.map((courseId, i) => {
+              let item = [<Course
+                className={(i === this.state.hover) ? 'hover' : ''}
+                onMouseEnter={(e) => {this.setState({ hover: i })}}
+                onMouseLeave={(e) => {this.setState({ hover: null })}}
+                removeClass={()=>{}}
+                courseId={courseId}
+                courseData={this.state.courseData[courseId]}
+                color={this.state.colors[i]}
+                anchors={{}}
+              />];
+              if (i !== this.state.courses.length - 1) {
+                item.push(<li className='txt'>+</li>);
+              } else {
+                item.push(<li className='txt'>= {this.state.combinations.length} schedules</li>);
+              }
+              return item;
+            })}
+          </ul>
+
+          <p>Try it out with your schedule! ~Andrew</p>
+        </section>
       </main>
     );
   }
 
-  componentDidMount() {
-    this.refs.email.focus();
-
+  componentWillMount() {
     function rgb(r,g,b) {
       return [r,g,b];
     }
@@ -116,6 +116,10 @@ class Landing extends Component {
     ];
 
     this.setState({ colors: colors.splice(0, this.state.courses.length).reverse() });
+  }
+
+  componentDidMount() {
+    this.refs.email.focus();
 
     api.generateCourseDataAndSchedules(this.state.courses)
       .then(({ courseData, results }) => {
@@ -144,9 +148,8 @@ class Landing extends Component {
       return re.test(email);
     }
 
-    if (validateEmail(this.state.text) && this.state.text.indexOf('@usc.edu') > 4) {
+    if (validateEmail(this.state.text) && this.state.text.indexOf('@usc.edu') > 1) {
       api.createUser(this.state.text).then(function (data) {
-        console.log(data);
         if (!data.error) {
           _this.props.history.push('/' + data.user_email);
         }

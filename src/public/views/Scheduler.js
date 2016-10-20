@@ -13,12 +13,11 @@ class Scheduler extends Component {
 
   constructor(props) {
     super(props);
-    let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-      return v.toString(16);
-    });
+    // let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    //   var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+    //   return v.toString(16);
+    // });
     this.state = {
-      uuid: uuid,
       courses: [],
       courseData: {},
       combinations: [],
@@ -32,37 +31,43 @@ class Scheduler extends Component {
   }
 
   render() {
-    if (this.state.enabled) {
+
+    let { enabled, courses, courseData, combinations,
+          anchors, colors, index, hover } = this.state;
+
+    if (enabled) {
       return (
         <main>
           <CourseList
-            courses={this.state.courses}
-            courseData={this.state.courseData}
-            combinations={this.state.combinations}
+            courses={courses}
+            courseData={courseData}
+            combinations={combinations}
             addClass={this.addClass.bind(this)}
             removeClass={this.removeClass.bind(this)}
-            anchors={this.state.anchors}
-            hoverIndex={this.state.hover}
+            anchors={anchors}
+            hoverIndex={hover}
             setHover={this.setHover.bind(this)}
-            colors={this.state.colors} />
+            colors={colors}
+          />
           <Calendar
-            courses={this.state.courses}
-            courseData={this.state.courseData}
-            combinations={this.state.combinations}
-            index={this.state.index}
-            hoverIndex={this.state.hover}
+            courses={courses}
+            courseData={courseData}
+            combinations={combinations}
+            index={index}
+            hoverIndex={hover}
             setHover={this.setHover.bind(this)}
-            anchors={this.state.anchors}
+            anchors={anchors}
             toggleAnchor={this.toggleAnchor.bind(this)}
-            colors={this.state.colors}
+            colors={colors}
             regenerate={this.generateSchedules.bind(this)}
-            save={()=>{}} />
+          />
           <SelectorFilter
-            courses={this.state.courses}
-            courseData={this.state.courseData}
-            combinations={this.state.combinations}
-            index={this.state.index}
-            updateCal={this.updateCal.bind(this)} />
+            courses={courses}
+            courseData={courseData}
+            combinations={combinations}
+            index={index}
+            updateCal={this.updateCal.bind(this)}
+          />
         </main>
       );
     }
@@ -88,6 +93,7 @@ class Scheduler extends Component {
           courses: data.courses,
           anchors: data.anchors
         }, _this.generateSchedules);
+        api.updateServer().then(()=>{});
       }
     });
   }
@@ -165,6 +171,11 @@ class Scheduler extends Component {
       delete anchors[courseId];
     }
     this.setState({ anchors }, this.generateSchedules);
+  }
+
+  regenerate() {
+    this.generateSchedules();
+    api.updateServer().then(()=>{});
   }
 
   generateSchedules() {

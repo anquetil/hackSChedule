@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import _ from 'lodash';
 
 import Block from '../components/Block';
+import ExportModal from '../components/ExportModal';
 
 class Calendar extends Component {
 
@@ -13,8 +14,8 @@ class Calendar extends Component {
       days: { U: 'Sun', M: 'Mon', T: 'Tue', W: 'Wed', H: 'Thu', F: 'Fri', S: 'Sat', A: 'TBA' },
       events: { A: []},
       hour: 64,
-      index: null,
       hoverIndex: null,
+      show_export: false,
     };
   }
 
@@ -26,10 +27,13 @@ class Calendar extends Component {
     }
 
     let width = (this.state.events.A.length > 0) ? 100 / 8 + '%' : 100 / 7 + '%';
-    let { regenerate, save, courses, combinations, full } = this.props;
+    let { regenerate, courses, courseData, index, combinations, full } = this.props;
+    let { show_export } = this.state;
+
+    let disabled = (courses.length <= 0 || (courses.length > 0 && _.isEmpty(courseData)));
 
     return (
-      <section id='calendar' className={classNames({ disabled: (courses.length <= 0), full: (full) })}>
+      <section id='calendar' className={classNames({ disabled, full: (full) })}>
         <ul id='days'>
           {Object.keys(this.state.days).map(day => {
             if (day !== 'A' || (day === 'A' && this.state.events.A.length > 0)) {
@@ -56,7 +60,7 @@ class Calendar extends Component {
         </div>
 
         {(() => {
-          if (courses.length > 0 && combinations.length <= 0) {
+          if (courses.length > 0 && combinations.length <= 0 && !disabled) {
             return (
               <div className='alert'>
                 <b>🙊 Uh oh!</b>
@@ -67,11 +71,22 @@ class Calendar extends Component {
         })()}
 
         {(() => {
-          if (courses.length > 0) {
+          if (courses.length > 0 && !disabled) {
             return (
               <div id='courses_actions'>
                 <button onClick={regenerate}>Regenerate</button>
-                <button onClick={save} className='blue'>Export</button>
+                <button onClick={()=>{
+                  this.setState({ show_export: !show_export });
+                }} className='blue'>{!show_export ? 'Export' : 'Close'}</button>
+                {(() => {
+                  if (show_export) {
+                    return(<ExportModal
+                      courses={courses}
+                      courseData={courseData}
+                      combination={(index in combinations) ? combinations[index].combination : {}}
+                    />);
+                  }
+                })()}
               </div>
             );
           }
@@ -81,20 +96,13 @@ class Calendar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      Object.keys(nextProps.courseData).length === nextProps.courses.length
-      && nextProps.courses.length !== this.state.numberOfCourses
-      || nextProps.hoverIndex !== this.state.hoverIndex
-      || nextProps.index !== this.state.index
-    ) {
-      this.generateEvents(
-        nextProps.courseData,
-        nextProps.combinations[nextProps.index],
-        nextProps.courses.length,
-        nextProps.index,
-        nextProps.hoverIndex
-      );
-    }
+    this.generateEvents(
+      nextProps.courseData,
+      nextProps.combinations[nextProps.index],
+      nextProps.courses.length,
+      nextProps.index,
+      nextProps.hoverIndex
+    );
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -115,6 +123,7 @@ class Calendar extends Component {
           for (let key in sections[sectionId].blocks) {
             let block = sections[sectionId].blocks[key];
             let anchored = (this.props.anchors[courseId] && this.props.anchors[courseId].indexOf(sectionId) >= 0);
+            // if (events[block.day].filter(()))
             let newBlock = (<Block
               hovers={(hoverIndex === courseIndex)}
               onMouseEnter={this.props.setHover.bind(null, courseIndex)}

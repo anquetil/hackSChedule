@@ -68,7 +68,6 @@ router.route('/schedule')
     var anchors = req.query.anchors;
     if (courses && courses.length > 0) {
       if (!_.isArray(courses)) courses = courses.split(',');
-
       // taking array of courses, generate schedule
       generateSchedulesFirebase(courses, anchors, function (data) {
         // sort results by score
@@ -87,6 +86,20 @@ router.route('/schedule')
       });
     }
   });
+
+router.route('/update_server').post(function (req, res) {
+  var courses = req.query.courses || [];
+  // due diligence
+  var uniqCourses = _.uniq(courses.map(function (courseId) { return courseId.split('-')[0]; }));
+  for (var id of uniqCourses) {
+    TROJAN.courses(id).then(function (courseData) {
+      if (courseData) {
+        db.ref('/courses').update(courseData);
+      }
+    });
+  }
+  res.json({ message: 'success', courses });
+});
 
 router.route('/schedule/:user_email')
   .post(function (req, res) {
@@ -184,12 +197,12 @@ router.route('/verify/:course_id')
   .get(function (req, res) {
     db.ref('/courses').child(req.params.course_id).once('value', function(snap) {
       res.json({ exists: snap.exists() });
-      if (snap.exists()) {
-        TROJAN.courses(req.params.course_id.split('-')[0])
-          .then(function (courseData) {
+      TROJAN.courses(req.params.course_id.split('-')[0])
+        .then(function (courseData) {
+        if (courseData) {
           db.ref('/courses').update(courseData);
-        });
-      }
+        }
+      });
     });
   });
 

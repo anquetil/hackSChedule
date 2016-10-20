@@ -152,6 +152,7 @@
           z-index: 3;
           box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3),
                       0 0 0 2px rgba(255, 255, 255, 0.5);
+          height: auto !important;
         }
       }
 
@@ -211,6 +212,28 @@
         &:hover {
           background-color: #1E88E5;
         }
+      }
+    }
+
+    .modal {
+      background-color: #2196F3;
+      text-align: left;
+      position: absolute;
+      bottom: $space-lg + $space-xs;
+      right: 0;
+      padding: $space-sm;
+      border-radius: 3px;
+      box-shadow: 0 6px 10px -3px rgba(0, 0, 0, 0.3),
+                  0 0 0 2px rgba(255, 255, 255, 0.5);
+
+      .selectableSpan {
+        &:after {
+          content: ' ';
+        }
+        // &::-moz-selection { background: $red1; }
+        // *::-moz-selection { background: $red1; }
+        // &::selection { background: $red1; }
+        // *::selection { background: $red1; }
       }
     }
 
