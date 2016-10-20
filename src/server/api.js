@@ -103,7 +103,7 @@ router.route('/update_server').post(function (req, res) {
 
 router.route('/schedule/:user_email')
   .post(function (req, res) {
-    var userEmail = req.params.user_email;
+    var userEmail = req.params.user_email.toLowerCase();
     var ref = db.ref('/schedules');
     if (validateEmail(userEmail)) {
       ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {
@@ -133,7 +133,7 @@ router.route('/schedule/:user_email')
     }
   })
   .put(function (req, res) {
-    var userEmail = req.params.user_email;
+    var userEmail = req.params.user_email.toLowerCase();
     var ref = db.ref('/schedules');
     if (validateEmail(userEmail)) {
       ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {
@@ -165,7 +165,7 @@ router.route('/schedule/:user_email')
     }
   })
   .get(function (req, res) {
-    var userEmail = req.params.user_email;
+    var userEmail = req.params.user_email.toLowerCase();
     var ref = db.ref('/schedules');
     if (validateEmail(userEmail)) {
       ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {

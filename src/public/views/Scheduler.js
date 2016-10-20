@@ -25,7 +25,8 @@ class Scheduler extends Component {
       colors: [],
       index: 0,
       hover: null,
-      enabled: true
+      enabled: true,
+      email: props.params.userEmail.toLowerCase()
     };
     this.socket = io();
   }
@@ -85,7 +86,7 @@ class Scheduler extends Component {
 
   componentWillMount() {
     let _this = this;
-    api.getUser(this.props.params.userEmail).then((data) =>{
+    api.getUser(this.state.email).then((data) =>{
       if (data.error) {
         _this.setState({ enabled: false });
       } else {
@@ -110,7 +111,7 @@ class Scheduler extends Component {
   }
 
   updateServer() {
-    api.updateUser(this.props.params.userEmail, this.state.courses, this.state.anchors);
+    api.updateUser(this.state.email, this.state.courses, this.state.anchors);
   }
 
   addClass(courseId) {

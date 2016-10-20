@@ -131,7 +131,7 @@ class Landing extends Component {
   }
 
   onChange(e) {
-    this.setState({ text: e.target.value });
+    this.setState({ text: e.target.value.toLowerCase() });
   }
 
   checkSubmit(e) {
