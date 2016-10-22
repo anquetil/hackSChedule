@@ -13,6 +13,7 @@ class Calendar extends Component {
       times: [ '', '8a', '9a', '10a', '11a', '12p', '1p', '2p', '3p', '4p', '5p', '6p', '7p', '8p', '9p', '10p' ],
       days: { U: 'Sun', M: 'Mon', T: 'Tue', W: 'Wed', H: 'Thu', F: 'Fri', S: 'Sat', A: 'TBA' },
       events: { A: []},
+      ghostEvents: {},
       hour: 64,
       hoverIndex: null,
       show_export: false,
@@ -53,6 +54,7 @@ class Calendar extends Component {
                 <ul key={day} id={day} className='col' style={{width}}>
                   {(() => { if (day !== 'A') return blank })()}
                   {this.state.events[day]}
+                  {this.state.ghostEvents[day]}
                 </ul>
               );
             }
@@ -100,10 +102,20 @@ class Calendar extends Component {
     this.generateEvents(
       nextProps.courseData,
       nextProps.combinations[nextProps.index],
-      nextProps.courses.length,
       nextProps.index,
       nextProps.hoverIndex
     );
+
+    if (this.props.ghostIndex != nextProps.ghostIndex) {
+
+      this.generateEvents(
+        nextProps.courseData,
+        nextProps.combinations[nextProps.ghostIndex],
+        nextProps.ghostIndex,
+        -1,
+        true
+      );
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -114,9 +126,9 @@ class Calendar extends Component {
     // stop any unnecessary processes just before unmount
   }
 
-  generateEvents(courseData, combinations, numberOfCourses, index, hoverIndex) {
+  generateEvents(courseData, combinations, index, hoverIndex, ghost = false) {
     let events = _.mapValues(this.state.days, () => ([]));
-    if (combinations) {
+    if (combinations && (!ghost || index != this.props.index)) {
       for (let courseId in combinations.combination) {
         let courseIndex = this.props.courses.indexOf(courseId);
         let sections = courseData[courseId].sections;
@@ -126,6 +138,7 @@ class Calendar extends Component {
             let anchored = (this.props.anchors[courseId] && this.props.anchors[courseId].indexOf(sectionId) >= 0);
             // if (events[block.day].filter(()))
             let newBlock = (<Block
+              className={classNames({ ghost: (ghost) })}
               hovers={(hoverIndex === courseIndex)}
               onMouseEnter={this.props.setHover.bind(null, courseIndex)}
               onMouseLeave={this.props.setHover.bind(null, null)}
@@ -147,7 +160,11 @@ class Calendar extends Component {
       }
     }
 
-    this.setState({ events, numberOfCourses, hoverIndex });
+    if (!ghost) {
+      this.setState({ events, hoverIndex });
+    } else {
+      this.setState({ ghostEvents: events });
+    }
   }
 
 };

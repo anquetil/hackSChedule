@@ -142,6 +142,10 @@
         line-height: 1;
       }
 
+      &.ghost {
+        opacity: 0.25;
+      }
+
       &.hover {
         transform:scale(1.03,1.03);
         z-index: 2;

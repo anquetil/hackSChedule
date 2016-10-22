@@ -26,6 +26,7 @@ class Scheduler extends Component {
       anchors: {},
       colors: [],
       index: 0,
+      ghostIndex: null,
       hover: null,
       enabled: true,
       email: props.params.userEmail.toLowerCase()
@@ -36,7 +37,7 @@ class Scheduler extends Component {
   render() {
 
     let { enabled, courses, courseData, combinations,
-          anchors, colors, index, hover } = this.state;
+          anchors, colors, index, hover, ghostIndex } = this.state;
 
     if (enabled) {
       return (
@@ -64,6 +65,7 @@ class Scheduler extends Component {
             colors={colors}
             regenerate={this.generateSchedules.bind(this)}
             screenshot={this.uploadImage.bind(this)}
+            ghostIndex={ghostIndex}
           />
           <SelectorFilter
             courses={courses}
@@ -71,6 +73,8 @@ class Scheduler extends Component {
             combinations={combinations}
             index={index}
             updateCal={this.updateCal.bind(this)}
+            ghostIndex={ghostIndex}
+            updateGhostIndex={this.updateGhostIndex.bind(this)}
           />
         </main>
       );
@@ -233,6 +237,10 @@ class Scheduler extends Component {
 
   updateCal(i) {
     this.setState({ index: i });
+  }
+
+  updateGhostIndex(i) {
+    this.setState({ ghostIndex: i });
   }
 
   generateColors() {

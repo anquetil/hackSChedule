@@ -3,7 +3,7 @@ import Selector from '../components/Selector';
 
 export default (props) => {
 
-  var { courses, updateCal, combinations, index, ...other} = props;
+  var { courses, updateCal, combinations, index, updateGhostIndex, ...other} = props;
 
   if (courses.length > 0) {
     return (
@@ -18,6 +18,8 @@ export default (props) => {
               index={key}
               active={index}
               onClick={updateCal.bind(null, key)}
+              onMouseEnter={() => { updateGhostIndex(key) }}
+              onMouseLeave={() => { updateGhostIndex(null) }}
               score={combination.score} />))}
         </ul>
       </section>

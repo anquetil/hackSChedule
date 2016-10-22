@@ -13,7 +13,11 @@ export default (props) => {
 
   function convertToTime(mins) {
     if (mins === null) return null;
-    return Math.round(mins/60) + ':' + ('0' + (mins % 60)).slice(-2);
+    let hour = Math.floor(mins/60) % 12;
+    if (hour == '0') hour += 12;
+    let min = ('0' + (mins % 60)).slice(-2);
+    let ampm = (Math.floor(mins/60) >= 12) ? 'pm' : 'am';
+    return hour + ':' + min + '' + ampm;
   }
 
   let mins = 60;
@@ -32,7 +36,7 @@ export default (props) => {
         hover: (hovers),
         full: (sectiondata.full),
         anchored: (anchored)
-      })}
+      }, props.className)}
       style={Object.assign(css, style)}>
       <div>
         <span className='courseid'>{courseId}</span>
@@ -40,7 +44,7 @@ export default (props) => {
       </div>
       <div>
         <span className='tag'>{sectiondata.type}</span>
-        <span className='tag'>{convertToTime(start)}-{convertToTime(end)}</span>
+        <span className='tag'>{convertToTime(start)}—{convertToTime(end)}</span>
         {(()=>{
           if (location) return <span className='tag'>{location}</span>;
         })()}
