@@ -261,7 +261,7 @@ class Scheduler extends Component {
       green: rgb(76,175,80),
       lightGreen: rgb(104,159,56),
       lime: rgb(175,180,43),
-      yellow: rgb(249,168,37),
+      yellow: rgb(251,192,45),
       orange: rgb(251,140,0),
       deepOrange: rgb(255,87,34),
       brown: rgb(121,85,72),
@@ -270,12 +270,12 @@ class Scheduler extends Component {
 
     let colors = [
       color.orange,
+      color.lime,
       color.green,
-      color.cyan,
       color.blue,
       color.indigo,
       color.purple,
-      color.brown,
+      color.pink,
     ];
 
     this.setState({ colors: colors.splice(0, this.state.courses.length).reverse() })

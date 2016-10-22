@@ -98,7 +98,7 @@ class CourseList extends Component {
           if (courses.length > 3) {
           return (
             <div id="support">
-              Did HackSchedule help you? Want more features? Consider buying your fellow trojan dev coffee (or beer) so he can keep on making stuff! (Venmo: @ninjiangstar)
+              Did HackSchedule help you? Want more features? Consider buying your fellow trojan dev a cup o' coffee (or beer) so he can keep on making more stuff! (Venmo: @ninjiangstar)
               <div>
                 <button onMouseUp={()=>{window.open('https://venmo.com/?txn=pay&audience=public&recipients=ninjiangstar&amount=3&note=coffee%20for%20hackschedule')}}>☕ $3</button>
                 <button onMouseUp={()=>{window.open('https://venmo.com/?txn=pay&audience=public&recipients=ninjiangstar&amount=5&note=beer%20for%20hackschedule')}}>🍻 $5</button>
