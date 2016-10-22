@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router'
 import _ from 'lodash';
 
+// require('../func/html2canvas');
+
 import CourseList from '../containers/CourseList';
 import Calendar from '../containers/Calendar';
 import SelectorFilter from '../containers/SelectorFilter';
@@ -61,6 +63,7 @@ class Scheduler extends Component {
             toggleAnchor={this.toggleAnchor.bind(this)}
             colors={colors}
             regenerate={this.generateSchedules.bind(this)}
+            screenshot={this.uploadImage.bind(this)}
           />
           <SelectorFilter
             courses={courses}
@@ -108,6 +111,7 @@ class Scheduler extends Component {
         this.generateSchedules();
       }
     });
+
   }
 
   updateServer() {
@@ -201,6 +205,30 @@ class Scheduler extends Component {
           });
       });
     }
+  }
+
+  uploadImage() {
+
+    // html2canvas(document.body).then(canvas => {
+    //
+    //   var data = canvas.toDataURL("image/jpeg", 1);
+    //   var meta = document.createElement('meta');
+    //   meta.property = 'og:image';
+    //   meta.content = data;
+    //   meta.content = "IE=edge";
+    //   document.getElementsByTagName('head')[0].appendChild(meta);
+    //   // api.uploadScreenshot(this.state.email, data)
+    //   //   .then(result => {
+    //   //     console.log(result);
+    //   //   });
+    // });
+
+    FB.ui({
+      method: 'share',
+      display: 'popup',
+      href: 'http://hackschedule.com',
+    }, function(response){});
+
   }
 
   updateCal(i) {

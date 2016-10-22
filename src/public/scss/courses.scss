@@ -111,6 +111,31 @@
     }
   }
 
+  #support {
+    margin: $space-sm;
+    margin-bottom: $space-lg;
+    padding: $space-xs;
+    border-radius: 3px;
+    font-size: $font-sm;
+    line-height: 1.1em;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+
+    div {
+      text-align: center;
+      button {
+        font-size: $font-sm;
+        line-height: 2em;
+        margin: $space-xs;
+        background-color: $red1;
+
+        &:hover {
+          background-color: $red2;
+        }
+      }
+    }
+  }
+
   .total_units {
     font-size: $font-sm;
     font-weight: bold;

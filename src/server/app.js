@@ -10,7 +10,7 @@ var bodyParser  = require('body-parser');
 var path        = require('path');
 
 // configure body-parser
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json());
 
 // allow promises
@@ -29,6 +29,7 @@ io.on('connection', socket);
 
 // serve static
 app.use('/', express.static(path.join(__dirname, '../..', 'www')));
+app.use('/screenshots', express.static(path.join(__dirname, 'screenshots')));
 app.get('*', (_, res) => { res.sendFile(path.join(__dirname, '../..', 'www', 'index.html')); });
 
 // start the server

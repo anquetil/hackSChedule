@@ -2,6 +2,9 @@
 var express = require('express');
 var router = express.Router();
 
+var fs = require('fs');
+var path = require('path');
+
 // included functions
 var generateSchedules = require('./lib/generateSchedules');
 var generateSchedulesFirebase = require('./lib/generateScheduleFirebase');
@@ -231,6 +234,46 @@ router.route('/autocomplete/:text')
       });
   });
 
+router.route('/upload/:user_email')
+  .post(function (req, res) {
+
+    var userEmail = req.params.user_email.toLowerCase();
+    var ref = db.ref('/schedules');
+
+    if (validateEmail(userEmail) && 'data' in req.body) {
+
+      var data = req.body.data.replace(/^data:image\/\w+;base64,/, "");
+      var dest = '../../www/screenshots/';
+      var buf = new Buffer(data, 'base64');
+
+      ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {
+
+        if (!snap.exists()) {
+          res.json({ error: 'not a valid email' });
+        } else {
+          var destination = path.join(__dirname, 'screenshots/' + Object.keys(snap.val())[0] + '.jpg')
+          fs.writeFile(destination, buf, (err) => {
+            if (err) {
+              res.json({
+                error: 'unable to upload file',
+                why: err
+              });
+            } else {
+              res.json({
+                message: 'file uploaded',
+                user_email: userEmail,
+                url: 'screenshots/' + Object.keys(snap.val())[0] + '.jpg'
+              });
+            }
+          });
+        }
+      });
+    } else {
+      res.json({ error: 'not a valid email or file' });
+    }
+
+  });
+
 router.route('/trojan')
   .get(function (req, res) {
     res.json({
@@ -290,6 +333,15 @@ router.route('/trojan/:action')
       default:
         res.json({ error: 'action not found' });
     }
+  });
+
+router.route('/usercount')
+  .get(function (req, res) {
+    db.ref('/schedules').once("value", function(snapshot) {
+      res.json({
+        userCount: snapshot.numChildren()
+      });
+    });
   });
 
 

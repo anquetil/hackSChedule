@@ -27,7 +27,7 @@ class Calendar extends Component {
     }
 
     let width = (this.state.events.A.length > 0) ? 100 / 8 + '%' : 100 / 7 + '%';
-    let { regenerate, courses, courseData, index, combinations, full } = this.props;
+    let { regenerate, courses, courseData, index, combinations, full, screenshot } = this.props;
     let { show_export } = this.state;
 
     let disabled = (courses.length <= 0 || (courses.length > 0 && _.isEmpty(courseData)));
@@ -75,6 +75,7 @@ class Calendar extends Component {
             return (
               <div id='courses_actions'>
                 <button onClick={regenerate}>Regenerate</button>
+                <button onClick={screenshot}>Share</button>
                 <button onClick={()=>{
                   this.setState({ show_export: !show_export });
                 }} className='blue'>{!show_export ? 'Export' : 'Close'}</button>

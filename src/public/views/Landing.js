@@ -20,7 +20,8 @@ class Landing extends Component {
       combinations: [],
       colors: [],
       index: 3,
-      hover: null
+      hover: null,
+      userCount: 0
     };
   }
 
@@ -74,7 +75,8 @@ class Landing extends Component {
             })}
           </ul>
 
-          <p>Try it out with your schedule! ~Andrew</p>
+          <p>Try it out with your schedule!</p>
+          <p style={{ fontSize: 10 }}>User count: {this.state.userCount}</p>
         </section>
       </main>
     );
@@ -128,6 +130,12 @@ class Landing extends Component {
           combinations: results
         });
       });
+
+    api.getUserCount().then(({ userCount }) => {
+      this.setState({
+        userCount
+      });
+    });
   }
 
   onChange(e) {
@@ -151,7 +159,9 @@ class Landing extends Component {
     if (validateEmail(this.state.text) && this.state.text.indexOf('@usc.edu') > 1) {
       api.createUser(this.state.text).then(function (data) {
         if (!data.error) {
-          _this.props.history.push('/' + data.user_email);
+          _this.context.router.push({
+            pathname: '/' + data.user_email
+          });
         }
       });
     } else {
@@ -161,6 +171,10 @@ class Landing extends Component {
     }
   }
 
+};
+
+Landing.contextTypes = {
+  router: React.PropTypes.object.isRequired
 };
 
 export default Landing;

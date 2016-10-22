@@ -97,6 +97,27 @@ class ApiInterface {
     });
   }
 
+  uploadScreenshot(email, data) {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/upload/' + email,
+        method: 'post',
+        data: { data },
+        success: resolve
+      });
+    });
+  }
+
+  getUserCount() {
+    return new Promise((resolve, reject) => {
+      ajax({
+        url: '/api/usercount',
+        method: 'get',
+        success: resolve
+      });
+    });
+  }
+
 }
 
 export default ApiInterface;
