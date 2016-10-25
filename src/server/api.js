@@ -18,7 +18,7 @@ var db = require('./lib/firebase');
 
 // middleware
 router.use(function (req, res, next) {
-  console.log('api call made');
+  // console.log('api call made');
   next();
 });
 
