@@ -40,13 +40,18 @@ const Block = ({
         <span className='sectionid'>{sectionId}</span>
       </div>
       <div>
+        {(() => {
+          if ('section_title' in sectiondata) {
+            return (<span className='tag'>{sectiondata.section_title}</span>)
+          }
+        })()}
         <span className='tag'>{sectiondata.type}</span>
         <span className='tag'>{convertToTime(start)}—{convertToTime(end)}</span>
-        {(()=>{
+        {(() => {
           if (location) return <span className='tag'>{location}</span>;
         })()}
         <span className='tag'>{(full) ? 'FULL / ' + sectiondata.spaces_available : sectiondata.number_registered + '/' + sectiondata.spaces_available + ' seats'}</span>
-        {(()=>{
+        {(() => {
           if ('instructor' in sectiondata) {
             if (!_.isArray(sectiondata.instructor))
               sectiondata.instructor = [sectiondata.instructor];
