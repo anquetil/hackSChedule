@@ -8,6 +8,8 @@ import CourseList from '../containers/CourseList';
 import Calendar from '../containers/Calendar';
 import SelectorFilter from '../containers/SelectorFilter';
 
+import colors from '../func/colors';
+
 import ApiInterface from '../api-interface';
 let api = new ApiInterface();
 
@@ -108,11 +110,11 @@ class Scheduler extends Component {
 
   componentDidMount() {
     document.addEventListener('keydown', this.keyboardCommands.bind(this), false);
-
+    let _this = this;
     // sockets
     this.socket.on('receive:courseData', function (courseId) {
-      if (this.state.courses.indexOf(courseId) > -1) {
-        this.generateSchedules();
+      if (_this.state.courses.indexOf(courseId) > -1) {
+        _this.generateSchedules();
       }
     });
 
@@ -188,8 +190,10 @@ class Scheduler extends Component {
   }
 
   generateSchedules() {
-    this.generateColors();
     this.updateServer();
+    this.setState({
+      colors: colors.splice(0, this.state.courses.length).reverse()
+    });
     if (this.state.courses.length === 0) {
       this.setState({
         courseData: {},
@@ -241,44 +245,6 @@ class Scheduler extends Component {
 
   updateGhostIndex(i) {
     this.setState({ ghostIndex: i });
-  }
-
-  generateColors() {
-    function rgb(r,g,b) {
-      return [r,g,b];
-    }
-
-    let color = {
-      red: rgb(244,67,54),
-      pink: rgb(233,30,99),
-      purple: rgb(156,39,176),
-      deepPurple: rgb(103,58,183),
-      indigo: rgb(63,81,181),
-      blue: rgb(33,150,243),
-      lightBlue: rgb(3,169,244),
-      cyan: rgb(0,188,212),
-      teal: rgb(0,150,136),
-      green: rgb(76,175,80),
-      lightGreen: rgb(104,159,56),
-      lime: rgb(175,180,43),
-      yellow: rgb(251,192,45),
-      orange: rgb(251,140,0),
-      deepOrange: rgb(255,87,34),
-      brown: rgb(121,85,72),
-      blueGrey: rgb(96,125,139),
-    };
-
-    let colors = [
-      color.orange,
-      color.lime,
-      color.green,
-      color.blue,
-      color.indigo,
-      color.purple,
-      color.pink,
-    ];
-
-    this.setState({ colors: colors.splice(0, this.state.courses.length).reverse() })
   }
 
   keyboardCommands(e) {

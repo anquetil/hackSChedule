@@ -23,7 +23,7 @@ export default props => {
         {(() => {
           if (anchors.length > 0) {
             return(
-              <span className='anchors'>&#9875; {anchors.join(', ')}</span>
+              <span className='anchors'>⚓ {anchors.join(', ')}</span>
             );
           }
         })()}

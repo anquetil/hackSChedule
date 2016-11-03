@@ -12,6 +12,10 @@ module.exports = function (socket) {
     socket.emit('receive:courseData', prevKey);
   });
 
+  socket.on('disconnect', function () {
+    ref.off('child_changed');
+  });
+
   // socket.on('connect', function() {
   //   if (saved) return;
   //

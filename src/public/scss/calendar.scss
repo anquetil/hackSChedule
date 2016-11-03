@@ -147,16 +147,15 @@
       }
 
       &.hover {
-        transform:scale(1.03,1.03);
+        transform: scale(1.02,1.02);
         z-index: 2;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.25);
         opacity: 1;
 
         &:hover {
-          transform:scale(1.1,1.1);
+          transform: scale(1.05,1.05) translateY(-4px);
           z-index: 3;
-          box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3),
-                      0 0 0 2px rgba(255, 255, 255, 0.5);
+          box-shadow: 0 8px 14px -1px rgba(0,0,0,0.35), 0 0 0 2px rgba(255, 255, 255, 0.5);
           height: auto !important;
         }
       }
@@ -166,6 +165,7 @@
       }
 
       &.anchored {
+        opacity: 1;
         box-shadow: inset 0 0 0 2px $red1;
 
         &.hover {
@@ -176,6 +176,14 @@
                         0 0 0 2px rgba(255, 255, 255, 0.5),
                         inset 0 0 0 2px $red1;
           }
+        }
+
+        &:after {
+          content: '⚓';
+          position: absolute;
+          bottom: $space-xs;
+          right: $space-xs;
+          text-shadow: 0 0 3px rgba(255,255,255,1)
         }
       }
     }

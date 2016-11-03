@@ -50,10 +50,15 @@
     input {
       max-width: 300px;
       width: 100%;
-      border: 1px solid rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15),
+                  0 1px 1px rgba(0, 0, 0, 0.1),
+                  inset 0 1px white;
+      background-color: rgba(0,0,0,0.02);
       &:focus {
-        transform:scale(1.03,1.03);
-        box-shadow: 0 6px 10px -3px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15),
+                    0 1px 1px rgba(0, 0, 0, 0.1),
+                    inset 0 1px white,
+                    0 0 0 4px rgba(0, 122, 255, 0.3);
       }
     }
     button {
@@ -87,15 +92,14 @@
     padding: 12px;
     font-size: $font-lg;
     box-shadow: none;
-    background-color: #FFF;
-    color: #000;
+    background-color: white;
+    color: black;
     border: none;
     border-radius: 3px;
     margin: 0 4px;
     max-width: 100%;
     transition:all .15s cubic-bezier(.215,.61,.355,1);
     animation-fill-mode:both;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   button {
