@@ -2,11 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 import _ from 'lodash';
 
+import EventBlock from './EventBlock';
+
 export default (props) => {
 
   let {
     courseId, sectionId, sectiondata,
-    location, start, end,
+    location, start, end, className,
     style, color, height, hovers, anchored,
     ...other
   } = props;
@@ -23,22 +25,22 @@ export default (props) => {
   let mins = 60;
   let lowerHrLim = 7;
 
-  let css = {
-    top: Math.round(((start / mins) - lowerHrLim) * height),
-    height: Math.round((end - start) / mins * height),
-    minHeight: Math.round((end - start) / mins * height),
-    backgroundColor: 'rgb(' + color + ')',
-  };
+  let top = Math.round(((start / mins) - lowerHrLim) * height);
+  let trueHeight = Math.round((end - start) / mins * height);
+
+  let css = { backgroundColor: 'rgb(' + color + ')' };
 
   let full = parseInt(sectiondata.number_registered) >= parseInt(sectiondata.spaces_available);
 
   return (
-    <li {...other}
-      className={classNames('event', {
+    <EventBlock {...other}
+      className={classNames({
         hover: (hovers),
         full: (full),
         anchored: (anchored)
-      }, props.className)}
+      }, className)}
+      top={top}
+      height={trueHeight}
       style={Object.assign(css, style)}>
       <div>
         <span className='courseid'>{courseId}</span>
@@ -64,7 +66,7 @@ export default (props) => {
           }
         })()}
       </div>
-    </li>
+    </EventBlock>
   );
 
 };

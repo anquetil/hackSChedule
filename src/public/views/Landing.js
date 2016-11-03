@@ -85,7 +85,7 @@ class Landing extends Component {
   }
 
   componentWillMount() {
-    this.setState({ colors: colors.splice(0, this.state.courses.length).reverse() });
+    this.setState({ colors: colors.slice(0).splice(0, this.state.courses.length).reverse() });
   }
 
   componentDidMount() {

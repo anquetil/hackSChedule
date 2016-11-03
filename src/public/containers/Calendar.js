@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import Block from '../components/Block';
 import ExportModal from '../components/ExportModal';
+import EventBlock from '../components/EventBlock';
 
 class Calendar extends Component {
 
@@ -17,7 +18,38 @@ class Calendar extends Component {
       hour: 64,
       hoverIndex: null,
       show_export: false,
+      createBlock: null,
+      startPos: null,
+      endPos: null,
+      dragging: false,
     };
+    this.createBlockDown = this.createBlockDown.bind(this);
+    this.createBlockMove = this.createBlockMove.bind(this);
+    this.createBlockUp = this.createBlockUp.bind(this);
+  }
+
+  getCursorY(e) {
+    var bounds = this.refs.calwrap.getBoundingClientRect();
+    var y = e.clientY - bounds.top + this.refs.calwrap.scrollTop;
+    return y;
+  }
+
+  createBlockDown(e) {
+    this.setState({
+      startPos: this.getCursorY(e),
+      endPos: this.getCursorY(e),
+      dragging: true
+    });
+  }
+
+  createBlockMove(e) {
+    if (this.state.dragging) {
+      this.setState({ endPos: this.getCursorY(e) });
+    }
+  }
+
+  createBlockUp(e) {
+    this.setState({ createBlock: null, startPos: null, endPos: null, dragging: false });
   }
 
   render() {
@@ -44,17 +76,28 @@ class Calendar extends Component {
             }
           })}
         </ul>
-        <div id='calwrap'>
+        <div id='calwrap' ref='calwrap'
+          onMouseDown={this.createBlockDown}
+          onMouseMove={this.createBlockMove}
+          onMouseUp={this.createBlockUp}>
           <ul className='time'>
             {this.state.times.map(time => (<li key={time}>{time}</li>))}
           </ul>
           {Object.keys(this.state.days).map(day => {
             if (day !== 'A' || (day === 'A' && this.state.events.A.length > 0)) {
               return (
-                <ul key={day} id={day} className='col' style={{width}}>
+                <ul key={day} id={day} className='col' style={{width}}
+                  onMouseDown={() => this.setState({ createBlock: day })}>
                   {(() => { if (day !== 'A') return blank })()}
                   {this.state.events[day]}
                   {this.state.ghostEvents[day]}
+                  {(() => {
+                    if (this.state.createBlock === day) {
+                      let top = (this.state.startPos <= this.state.endPos) ? this.state.startPos : this.state.endPos;
+                      let height = Math.abs(this.state.endPos - this.state.startPos);
+                      return (<EventBlock top={top} height={height} className="create">Coming soon...</EventBlock>);
+                    }
+                  })()}
                 </ul>
               );
             }
