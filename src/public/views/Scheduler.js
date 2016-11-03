@@ -191,14 +191,12 @@ class Scheduler extends Component {
 
   generateSchedules() {
     this.updateServer();
-    this.setState({
-      colors: colors.splice(0, this.state.courses.length).reverse()
-    });
+    this.generateColors();
     if (this.state.courses.length === 0) {
       this.setState({
         courseData: {},
         combinations: [],
-        index: 0,
+        index: 0
       });
     } else {
       api.generateCourseDataAndSchedules(this.state.courses, this.state.anchors)
@@ -213,6 +211,12 @@ class Scheduler extends Component {
           });
       });
     }
+  }
+
+  generateColors() {
+    this.setState({
+      colors: colors.splice(0, this.state.courses.length).reverse()
+    });
   }
 
   uploadImage() {

@@ -99,6 +99,7 @@ class Calendar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+
     this.generateEvents(
       nextProps.courseData,
       nextProps.combinations[nextProps.index],
@@ -116,14 +117,6 @@ class Calendar extends Component {
         true
       );
     }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // do something after component updated
-  }
-
-  componentWillUnmount() {
-    // stop any unnecessary processes just before unmount
   }
 
   generateEvents(courseData, combinations, index, hoverIndex, ghost = false) {

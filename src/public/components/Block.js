@@ -30,11 +30,13 @@ export default (props) => {
     backgroundColor: 'rgb(' + color + ')',
   };
 
+  let full = parseInt(sectiondata.number_registered) >= parseInt(sectiondata.spaces_available);
+
   return (
     <li {...other}
       className={classNames('event', {
         hover: (hovers),
-        full: (sectiondata.full),
+        full: (full),
         anchored: (anchored)
       }, props.className)}
       style={Object.assign(css, style)}>
@@ -48,7 +50,7 @@ export default (props) => {
         {(()=>{
           if (location) return <span className='tag'>{location}</span>;
         })()}
-        <span className='tag'>{(sectiondata.full) ? 'FULL' : sectiondata.number_registered + '/' + sectiondata.spaces_available + ' seats'}</span>
+        <span className='tag'>{(full) ? 'FULL / ' + sectiondata.spaces_available : sectiondata.number_registered + '/' + sectiondata.spaces_available + ' seats'}</span>
         {(()=>{
           if (sectiondata.instructor) {
             if (_.isArray(sectiondata.instructor)) {
