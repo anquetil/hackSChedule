@@ -183,7 +183,12 @@ class Calendar extends Component {
               color={this.props.colors[courseIndex]}
               courseId={courseId}
               sectionId={sectionId}
-              onClick={()=>{ this.props.toggleAnchor(courseId, sectionId) }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+              }}
+              onClick={(e)=>{
+                this.props.toggleAnchor(courseId, sectionId);
+              }}
               anchored={anchored}
               start={block.start}
               end={block.end}
