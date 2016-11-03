@@ -24,12 +24,12 @@ API.verify = (courseId, term=null) => {
   });
 }
 
-API.generateCourseDataAndSchedules = (courses = [], anchors = {}) => {
+API.generateCourseDataAndSchedules = (courses = [], anchors = {}, blocks = []) => {
   return new Promise((resolve, reject) => {
     ajax({
       url: '/api/schedule',
       method: 'get',
-      data: { courses, anchors },
+      data: { courses, anchors, blocks },
       success: resolve,
       error: reject
     });
@@ -69,12 +69,12 @@ API.getUser = (email) => {
   });
 }
 
-API.updateUser = (email, courses, anchors) => {
+API.updateUser = (email, courses, anchors, blocks) => {
   return new Promise((resolve, reject) => {
     ajax({
       url: '/api/schedule/' + email,
       method: 'put',
-      data: { courses, anchors },
+      data: { courses, anchors, blocks },
       success: resolve,
       error: reject
     });

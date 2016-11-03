@@ -65,7 +65,7 @@ function calcGaps(bucket) {
 function calcOptimalStartTime(bucket) {
   var score = 0;
 
-  var optimal = convertToMin('10:00');
+  var optimal = convertToMin('11:00');
 
   for (var obj of bucket) {
     if (obj.full) score += 10;
@@ -80,6 +80,10 @@ function calcOptimalStartTime(bucket) {
 function convertToMin(time) {
   // ex: convert '13:50' to '830'
   if (!time) return null;
+  if (Number.isInteger(time)) return time;
   var time = time.split(':');
+  if (time.length != 2) return parseInt(time);
   return Math.round(time[0]) * 60 + Math.round(time[1]);
 }
+
+module.exports.convertToMin = convertToMin;

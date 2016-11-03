@@ -7,7 +7,8 @@ import EventBlock from './EventBlock';
 const Block = ({
   courseId, sectionId, sectiondata,
   location, start, end, className,
-  style, color, height, hovers, anchored,
+  style, color, top, height, hovers, anchored,
+  lowerHrLim,
   ...other
 }) => {
 
@@ -19,12 +20,6 @@ const Block = ({
     let ampm = (Math.floor(mins/60) >= 12) ? 'pm' : 'am';
     return hour + ':' + min + '' + ampm;
   }
-
-  let mins = 60;
-  let lowerHrLim = 7;
-
-  let top = Math.round(((start / mins) - lowerHrLim) * height);
-  let trueHeight = Math.round((end - start) / mins * height);
 
   let css = { backgroundColor: 'rgb(' + color + ')' };
 
@@ -38,7 +33,7 @@ const Block = ({
         anchored: (anchored)
       }, className)}
       top={top}
-      height={trueHeight}
+      height={height}
       style={Object.assign(css, style)}>
       <div>
         <span className='courseid'>{courseId}</span>
@@ -75,7 +70,9 @@ Block.propTypes = {
   end: React.PropTypes.number.isRequired,
   className: React.PropTypes.string,
   style: React.PropTypes.object,
+  top: React.PropTypes.number,
   height: React.PropTypes.number,
+  lowerHrLim: React.PropTypes.number,
   anchored: React.PropTypes.bool
 };
 

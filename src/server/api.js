@@ -69,10 +69,11 @@ router.route('/schedule')
     // for testing purposes only
     var courses = req.query.courses;
     var anchors = req.query.anchors;
+    var blocks = req.query.blocks;
     if (courses && courses.length > 0) {
       if (!_.isArray(courses)) courses = courses.split(',');
       // taking array of courses, generate schedule
-      generateSchedulesFirebase(courses, anchors, function (data) {
+      generateSchedulesFirebase(courses, anchors, blocks, function (data) {
         // sort results by score
         data.results.sort(function (a, b) {
           if (a.score < b.score) return -1;
@@ -148,16 +149,18 @@ router.route('/schedule/:user_email')
         } else {
           let courses = req.body.courses || [];
           let anchors = req.body.anchors || {};
+          let blocks = req.body.blocks || [];
 
           snap.child(Object.keys(snap.val())[0]).ref.update({
-            courses, anchors
+            courses, anchors, blocks
           });
 
           res.json({
             message: 'user data updated',
             user_email: userEmail,
             courses: courses,
-            anchors: anchors
+            anchors: anchors,
+            blocks: blocks
           });
         }
       });
@@ -180,12 +183,14 @@ router.route('/schedule/:user_email')
         } else {
           var courses = snap.val()[Object.keys(snap.val())[0]].courses || [];
           var anchors = snap.val()[Object.keys(snap.val())[0]].anchors || {};
+          var blocks = snap.val()[Object.keys(snap.val())[0]].blocks || [];
 
           res.json({
             message: 'user data retrieved',
             user_email: userEmail,
             courses: courses,
-            anchors: anchors
+            anchors: anchors,
+            blocks: blocks
           });
         }
       });

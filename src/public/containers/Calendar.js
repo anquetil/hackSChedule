@@ -11,6 +11,7 @@ class Calendar extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      lowerHrLim: 7,
       times: [ '', '8a', '9a', '10a', '11a', '12p', '1p', '2p', '3p', '4p', '5p', '6p', '7p', '8p', '9p', '10p' ],
       days: { U: 'Sun', M: 'Mon', T: 'Tue', W: 'Wed', H: 'Thu', F: 'Fri', S: 'Sat', A: 'TBA' },
       events: { A: []},
@@ -21,7 +22,7 @@ class Calendar extends Component {
       createBlock: null,
       startPos: null,
       endPos: null,
-      dragging: false,
+      dragState: "STOP",
     };
     this.createBlockDown = this.createBlockDown.bind(this);
     this.createBlockMove = this.createBlockMove.bind(this);
@@ -39,27 +40,41 @@ class Calendar extends Component {
     this.setState({
       startPos: this.getCursorY(e),
       endPos: this.getCursorY(e),
-      dragging: true
+      dragState: "START"
     });
   }
 
   createBlockMove(e) {
-    if (this.state.dragging) {
-      this.setState({ endPos: this.getCursorY(e) });
+    if (this.state.dragState != "STOP") {
+      this.setState({ endPos: this.getCursorY(e), dragState: "DRAGGING" });
+      this.props.setHover(null);
+    } else {
+      this.setState({ startPos: this.getCursorY(e), endPos: this.getCursorY(e) });
     }
   }
 
   createBlockUp(e) {
+
+    let mins = 60;
+    let startPos = Math.round(((this.state.startPos / this.state.hour) + this.state.lowerHrLim) * mins);
+    let endPos = Math.round(((this.state.endPos / this.state.hour) + this.state.lowerHrLim) * mins);
+
+    if (startPos < endPos && this.state.createBlock) {
+      this.props.addBlock(startPos, endPos, this.state.createBlock);
+    } else if (endPos < startPos && this.state.createBlock) {
+      this.props.addBlock(endPos, startPos, this.state.createBlock);
+    }
+
     this.createBlockClear(e);
   }
 
   createBlockClear(e) {
-    if (this.state.dragging) {
+    if (this.state.dragState != "STOP") {
       this.setState({
         createBlock: null,
         startPos: null,
         endPos: null,
-        dragging: false
+        dragState: "STOP"
       });
     }
   }
@@ -100,17 +115,39 @@ class Calendar extends Component {
             if (day !== 'A' || (day === 'A' && this.state.events.A.length > 0)) {
               return (
                 <ul key={day} id={day} className='col' style={{width}}
-                  onMouseDown={() => this.setState({ createBlock: day })}>
+                  onMouseOver={() => this.setState({ createBlock: day })}>
+
                   {(() => { if (day !== 'A') return blank })()}
+
                   {this.state.events[day]}
+
+                  {this.props.blocks.map((block, i) => {
+                    if (day === block.day) {
+
+                      let mins = 60;
+                      let top = Math.round(((block.start / mins) - this.state.lowerHrLim) * this.state.hour);
+                      let height = Math.round((block.end - block.start) / mins * this.state.hour);
+
+                      return (<EventBlock
+                        key={i}
+                        top={top}
+                        height={height}
+                        className="block"
+                        onClick={() => this.props.removeBlock(i)} />);
+
+                    }
+                  })}
+
                   {this.state.ghostEvents[day]}
+
                   {(() => {
-                    if (this.state.createBlock === day) {
+                    if (this.state.createBlock === day && this.state.startPos) {
                       let top = (this.state.startPos <= this.state.endPos) ? this.state.startPos : this.state.endPos;
                       let height = Math.abs(this.state.endPos - this.state.startPos);
-                      return (<EventBlock top={top} height={height} className="create">Coming soon...</EventBlock>);
+                      return (<EventBlock top={top} height={height} className={classNames('create', { drag: this.state.dragState == "DRAGGING" })} />);
                     }
                   })()}
+
                 </ul>
               );
             }
@@ -175,6 +212,7 @@ class Calendar extends Component {
     }
   }
 
+  // just believe that this works :)
   generateEvents(courseData, combinations, index, hoverIndex, ghost = false) {
     let events = _.mapValues(this.state.days, () => ([]));
     if (combinations && (!ghost || index != this.props.index)) {
@@ -186,21 +224,27 @@ class Calendar extends Component {
             let block = sections[sectionId].blocks[key];
             let anchored = (this.props.anchors[courseId] && this.props.anchors[courseId].indexOf(sectionId) >= 0);
             // if (events[block.day].filter(()))
+
+            let mins = 60;
+            let top = Math.round(((block.start / mins) - this.state.lowerHrLim) * this.state.hour);
+            let height = Math.round((block.end - block.start) / mins * this.state.hour);
+
             let newBlock = (<Block
               className={classNames({ ghost: (ghost) })}
               hovers={(hoverIndex === courseIndex)}
               onMouseEnter={this.props.setHover.bind(null, courseIndex)}
               onMouseLeave={this.props.setHover.bind(null, null)}
               key={courseId + '.' + sectionId + '.' + key}
-              height={this.state.hour}
+              top={top}
+              height={height}
+              lowerHrLim={this.state.lowerHrLim}
               color={this.props.colors[courseIndex]}
               courseId={courseId}
               sectionId={sectionId}
-              onMouseDown={(e) => {
-                e.stopPropagation();
-              }}
-              onClick={(e)=>{
-                this.props.toggleAnchor(courseId, sectionId);
+              onMouseUp={(e)=>{
+                if (!this.state.dragState != "DRAGGING") {
+                  this.props.toggleAnchor(courseId, sectionId);
+                }
               }}
               anchored={anchored}
               start={block.start}

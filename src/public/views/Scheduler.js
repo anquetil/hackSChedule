@@ -25,6 +25,7 @@ class Scheduler extends Component {
       courseData: {},
       combinations: [],
       anchors: {},
+      blocks: [],
       colors: [],
       index: 0,
       ghostIndex: null,
@@ -34,12 +35,22 @@ class Scheduler extends Component {
       email: props.params.userEmail.toLowerCase()
     };
     this.socket = io();
+    this.addClass = this.addClass.bind(this);
+    this.removeClass = this.removeClass.bind(this);
+    this.setHover = this.setHover.bind(this);
+    this.toggleAnchor = this.toggleAnchor.bind(this);
+    this.generateSchedules = this.generateSchedules.bind(this);
+    this.uploadImage = this.uploadImage.bind(this);
+    this.updateCal = this.updateCal.bind(this);
+    this.updateGhostIndex = this.updateGhostIndex.bind(this);
+    this.addBlock = this.addBlock.bind(this);
+    this.removeBlock = this.removeBlock.bind(this);
   }
 
   render() {
 
     let { enabled, courses, courseData, combinations,
-          anchors, colors, index, hover, ghostIndex } = this.state;
+          anchors, colors, index, hover, ghostIndex, blocks } = this.state;
 
     if (enabled) {
       return (
@@ -48,11 +59,11 @@ class Scheduler extends Component {
             courses={courses}
             courseData={courseData}
             combinations={combinations}
-            addClass={this.addClass.bind(this)}
-            removeClass={this.removeClass.bind(this)}
+            addClass={this.addClass}
+            removeClass={this.removeClass}
             anchors={anchors}
             hoverIndex={hover}
-            setHover={this.setHover.bind(this)}
+            setHover={this.setHover}
             colors={colors}
             loading={this.state.loading}
           />
@@ -62,22 +73,25 @@ class Scheduler extends Component {
             combinations={combinations}
             index={index}
             hoverIndex={hover}
-            setHover={this.setHover.bind(this)}
+            setHover={this.setHover}
             anchors={anchors}
-            toggleAnchor={this.toggleAnchor.bind(this)}
+            toggleAnchor={this.toggleAnchor}
             colors={colors}
-            regenerate={this.generateSchedules.bind(this)}
-            screenshot={this.uploadImage.bind(this)}
+            regenerate={this.generateSchedules}
+            screenshot={this.uploadImage}
             ghostIndex={ghostIndex}
+            addBlock={this.addBlock}
+            removeBlock={this.removeBlock}
+            blocks={blocks}
           />
           <SelectorFilter
             courses={courses}
             courseData={courseData}
             combinations={combinations}
             index={index}
-            updateCal={this.updateCal.bind(this)}
+            updateCal={this.updateCal}
             ghostIndex={ghostIndex}
-            updateGhostIndex={this.updateGhostIndex.bind(this)}
+            updateGhostIndex={this.updateGhostIndex}
           />
           {(() => {
 
@@ -116,8 +130,9 @@ class Scheduler extends Component {
         _this.setState({ enabled: false });
       } else {
         _this.setState({
-          courses: data.courses,
-          anchors: data.anchors,
+          courses: data.courses || [],
+          anchors: data.anchors || {},
+          blocks: data.blocks || [],
           loading: false,
         }, _this.generateSchedules);
         api.updateServer().then(()=>{});
@@ -138,7 +153,7 @@ class Scheduler extends Component {
   }
 
   updateServer() {
-    api.updateUser(this.state.email, this.state.courses, this.state.anchors);
+    api.updateUser(this.state.email, this.state.courses, this.state.anchors, this.state.blocks);
   }
 
   addClass(courseId) {
@@ -216,7 +231,7 @@ class Scheduler extends Component {
         index: 0
       });
     } else {
-      api.generateCourseDataAndSchedules(this.state.courses, this.state.anchors)
+      api.generateCourseDataAndSchedules(this.state.courses, this.state.anchors, this.state.blocks)
         .then(({ courseData, results }) => {
           let index = this.state.index;
           if (index >= results.length) index = results.length - 1;
@@ -252,11 +267,11 @@ class Scheduler extends Component {
     //   //   });
     // });
 
-    FB.ui({
-      method: 'share',
-      display: 'popup',
-      href: 'http://hackschedule.com',
-    }, function(response){});
+    // FB.ui({
+    //   method: 'share',
+    //   display: 'popup',
+    //   href: 'http://hackschedule.com',
+    // }, function(response){});
 
   }
 
@@ -288,6 +303,18 @@ class Scheduler extends Component {
     } else {
       this.setState({ index: this.state.combinations.length - 1});
     }
+  }
+
+  addBlock(start, end, day) {
+    let blocks = this.state.blocks;
+    blocks.push({ start, end, day });
+    this.setState({ blocks }, this.generateSchedules);
+  }
+
+  removeBlock(index) {
+    let blocks = this.state.blocks;
+    blocks.splice(index, 1);
+    this.setState({ blocks }, this.generateSchedules);
   }
 
   setHover(i) {

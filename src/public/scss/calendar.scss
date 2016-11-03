@@ -27,6 +27,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding-left: $space-lg;
+    cursor: default;
   }
 
   &.full {
@@ -155,7 +156,7 @@
         opacity: 1;
 
         &:hover {
-          transform: scale(1.05,1.05) translateY(-4px);
+          transform: scale(1.08,1.08);
           z-index: 3;
           box-shadow: 0 8px 14px -1px rgba(0,0,0,0.35), 0 0 0 2px rgba(255, 255, 255, 0.5);
           height: auto !important;
@@ -197,6 +198,21 @@
         text-shadow: none;
         box-shadow: inset 0 0 0 2px rgba(0, 122, 255, 0.5);
         cursor: default;
+        padding: 1px;
+        pointer-events: none;
+
+        &:not(.drag) {
+          opacity: 0.2;
+        }
+      }
+
+      &.block {
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e93432+0,ce1a1a+100 */
+        background: #e93432; /* Old browsers */
+        background: -moz-linear-gradient(top, $red1 0%, $red2 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, $red1 0%, $red2 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, $red1 0%, $red2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$red1', endColorstr='$red2',GradientType=0 ); /* IE6-9 */
       }
     }
 
