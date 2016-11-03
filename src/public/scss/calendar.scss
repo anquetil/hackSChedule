@@ -1,5 +1,7 @@
 #calendar {
 
+  user-select: none;
+
   $hour: 64px;
   $full: 100%;
   $days: 8;
@@ -161,7 +163,7 @@
       }
 
       &.full {
-        opacity: 0.5 !important;
+        opacity: 0.5;
       }
 
       &.anchored {
@@ -239,6 +241,7 @@
     }
 
     .modal {
+      user-select: text;
       background-color: #2196F3;
       text-align: left;
       position: absolute;

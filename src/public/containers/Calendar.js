@@ -26,12 +26,13 @@ class Calendar extends Component {
     this.createBlockDown = this.createBlockDown.bind(this);
     this.createBlockMove = this.createBlockMove.bind(this);
     this.createBlockUp = this.createBlockUp.bind(this);
+    this.createBlockClear = this.createBlockClear.bind(this);
   }
 
   getCursorY(e) {
     var bounds = this.refs.calwrap.getBoundingClientRect();
     var y = e.clientY - bounds.top + this.refs.calwrap.scrollTop;
-    return y;
+    return y - (y % (this.state.hour / 4));
   }
 
   createBlockDown(e) {
@@ -49,7 +50,18 @@ class Calendar extends Component {
   }
 
   createBlockUp(e) {
-    this.setState({ createBlock: null, startPos: null, endPos: null, dragging: false });
+    this.createBlockClear(e);
+  }
+
+  createBlockClear(e) {
+    if (this.state.dragging) {
+      this.setState({
+        createBlock: null,
+        startPos: null,
+        endPos: null,
+        dragging: false
+      });
+    }
   }
 
   render() {
@@ -79,7 +91,8 @@ class Calendar extends Component {
         <div id='calwrap' ref='calwrap'
           onMouseDown={this.createBlockDown}
           onMouseMove={this.createBlockMove}
-          onMouseUp={this.createBlockUp}>
+          onMouseUp={this.createBlockUp}
+          onMouseLeave={this.createBlockClear}>
           <ul className='time'>
             {this.state.times.map(time => (<li key={time}>{time}</li>))}
           </ul>

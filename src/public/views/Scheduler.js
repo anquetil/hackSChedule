@@ -31,6 +31,7 @@ class Scheduler extends Component {
       ghostIndex: null,
       hover: null,
       enabled: true,
+      loading: true,
       email: props.params.userEmail.toLowerCase()
     };
     this.socket = io();
@@ -54,6 +55,7 @@ class Scheduler extends Component {
             hoverIndex={hover}
             setHover={this.setHover.bind(this)}
             colors={colors}
+            loading={this.state.loading}
           />
           <Calendar
             courses={courses}
@@ -78,6 +80,21 @@ class Scheduler extends Component {
             ghostIndex={ghostIndex}
             updateGhostIndex={this.updateGhostIndex.bind(this)}
           />
+          {(() => {
+
+            if (this.state.loading) {
+              return (
+                <div id="load_msg" style={{
+                  zIndex: 100
+                }}>
+                  <h1 style={{
+                    textAlign: 'center',
+                    marginTop: 100
+                  }}>Loading...</h1>
+                </div>);
+            }
+
+          })()}
         </main>
       );
     }
@@ -95,13 +112,14 @@ class Scheduler extends Component {
 
   componentWillMount() {
     let _this = this;
-    api.getUser(this.state.email).then((data) =>{
-      if (data.error) {
+    api.getUser(this.state.email).then(data =>{
+      if ('error' in data) {
         _this.setState({ enabled: false });
       } else {
         _this.setState({
           courses: data.courses,
-          anchors: data.anchors
+          anchors: data.anchors,
+          loading: false,
         }, _this.generateSchedules);
         api.updateServer().then(()=>{});
       }
