@@ -242,7 +242,7 @@ class Calendar extends Component {
               courseId={courseId}
               sectionId={sectionId}
               onMouseUp={(e)=>{
-                if (!this.state.dragState != "DRAGGING") {
+                if (this.state.dragState != "DRAGGING") {
                   this.props.toggleAnchor(courseId, sectionId);
                 }
               }}
