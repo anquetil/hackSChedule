@@ -215,7 +215,7 @@ class Scheduler extends Component {
 
   generateColors() {
     this.setState({
-      colors: colors.splice(0, this.state.courses.length).reverse()
+      colors: colors.slice(0).splice(0, this.state.courses.length).reverse()
     });
   }
 
