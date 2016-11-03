@@ -4,14 +4,12 @@ import _ from 'lodash';
 
 import EventBlock from './EventBlock';
 
-export default (props) => {
-
-  let {
-    courseId, sectionId, sectiondata,
-    location, start, end, className,
-    style, color, height, hovers, anchored,
-    ...other
-  } = props;
+const Block = ({
+  courseId, sectionId, sectiondata,
+  location, start, end, className,
+  style, color, height, hovers, anchored,
+  ...other
+}) => {
 
   function convertToTime(mins) {
     if (mins === null) return null;
@@ -54,15 +52,12 @@ export default (props) => {
         })()}
         <span className='tag'>{(full) ? 'FULL / ' + sectiondata.spaces_available : sectiondata.number_registered + '/' + sectiondata.spaces_available + ' seats'}</span>
         {(()=>{
-          if (sectiondata.instructor) {
-            if (_.isArray(sectiondata.instructor)) {
-              return sectiondata.instructor.map((o,i) => (
-                <span key={i} className='tag'>{o.first_name} {o.last_name}</span>
-              ));
-            } else {
-              let { first_name, last_name } = sectiondata.instructor;
-              return <span className='tag'>{first_name} {last_name}</span>;
-            }
+          if ('instructor' in sectiondata) {
+            if (!_.isArray(sectiondata.instructor))
+              sectiondata.instructor = [sectiondata.instructor];
+            return sectiondata.instructor.map((o,i) => (
+              <span key={i} className='tag'>{o.first_name} {o.last_name}</span>
+            ));
           }
         })()}
       </div>
@@ -70,3 +65,18 @@ export default (props) => {
   );
 
 };
+
+Block.propTypes = {
+  courseId: React.PropTypes.string.isRequired,
+  sectionId: React.PropTypes.string.isRequired,
+  sectiondata: React.PropTypes.object.isRequired,
+  location: React.PropTypes.string.isRequired,
+  start: React.PropTypes.number.isRequired,
+  end: React.PropTypes.number.isRequired,
+  className: React.PropTypes.string,
+  style: React.PropTypes.object,
+  height: React.PropTypes.number,
+  anchored: React.PropTypes.bool
+};
+
+export default Block;

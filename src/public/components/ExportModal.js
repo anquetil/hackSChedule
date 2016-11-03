@@ -36,9 +36,8 @@ class Span extends Component {
 
 }
 
-export default (props) => {
+const ExportModal = ({ courses, updateCal, combination, ...other}) => {
 
-  var { courses, updateCal, combination, ...other} = props;
   if (courses.length > 0) {
     return (
       <section className='modal'>
@@ -46,8 +45,7 @@ export default (props) => {
           {courses.map(courseId => (
             <li key={courseId}>
               <Span><b>{courseId}</b></Span>
-              {(courseId in combination) ?
-                  combination[courseId].map(sid => (<Span key={sid}>{sid}</Span>)) : ''}
+              {(courseId in combination) ? combination[courseId].map(sid => (<Span key={sid}>{sid}</Span>)) : ''}
             </li>
           ))}
         </ul>
@@ -55,8 +53,16 @@ export default (props) => {
     );
   } else {
     return (
-      <section className='modal'></section>
+      <section className='modal' style={{ display: 'none' }} />
     );
   }
 
 };
+
+ExportModal.propTypes = {
+  courses: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+  combination: React.PropTypes.object.isRequired,
+  updateCal: React.PropTypes.func
+};
+
+export default ExportModal;

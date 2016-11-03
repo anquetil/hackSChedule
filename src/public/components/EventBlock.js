@@ -2,9 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import _ from 'lodash';
 
-export default (props) => {
-
-  let { style, top, height, className, children, ...other } = props;
+const EventBlock = ({ style, top, height, className, children, ...other }) => {
 
   let css = {
     top: top,
@@ -21,3 +19,12 @@ export default (props) => {
   );
 
 };
+
+EventBlock.propTypes = {
+  top: React.PropTypes.number.isRequired,
+  height: React.PropTypes.number.isRequired,
+  className: React.PropTypes.string,
+  style: React.PropTypes.object
+};
+
+export default EventBlock;

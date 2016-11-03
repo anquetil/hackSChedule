@@ -10,8 +10,7 @@ import SelectorFilter from '../containers/SelectorFilter';
 
 import colors from '../func/colors';
 
-import ApiInterface from '../api-interface';
-let api = new ApiInterface();
+import api from '../api-interface';
 
 class Scheduler extends Component {
 

@@ -5,8 +5,7 @@ import Course from '../components/Course';
 
 import colors from '../func/colors';
 
-import ApiInterface from '../api-interface';
-let api = new ApiInterface();
+import api from '../api-interface';
 
 let courses = ['CSCI-201', 'CSCI-270', 'ITP-380', 'EE-109'];
 

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import classNames from 'classnames';
 
-import ApiInterface from '../api-interface';
-let api = new ApiInterface();
+import api from '../api-interface';
 
 class Search extends Component {
 
@@ -15,28 +14,33 @@ class Search extends Component {
       autocomplete: [],
       index: -1
     };
+
+    this.onChange = this.onChange.bind(this);
+    this.checkSubmit = this.checkSubmit.bind(this);
   }
 
   render() {
-    let _this = this;
+    let { disabled } = this.props;
+    let { text, autocomplete, index } = this.state;
+    let { onChange, checkSubmit, submitAutocompleteIndex } = this;
     return (
       <div id='search'>
         <input type='text'
           ref='search'
-          onChange={this.onChange.bind(this)}
-          value={this.state.text}
-          onKeyDown={this.checkSubmit.bind(this)}
-          disabled={this.props.disabled}
-          placeholder={(!this.props.disabled) ? 'Enter a class ID' : 'Exceeded maximum'} />
+          onChange={onChange}
+          value={text}
+          onKeyDown={checkSubmit}
+          disabled={disabled}
+          placeholder={(!disabled) ? 'Enter a class ID' : 'Exceeded maximum'} />
         {(()=>{
-          if (this.state.autocomplete.length > 0) {
+          if (autocomplete.length > 0) {
             return (
               <ul className='autocomplete'>
-                {this.state.autocomplete.map((o, i) => (
+                {autocomplete.map((o, i) => (
                   <li
                     key={o.courseId}
-                    className={classNames({ hover: (i == this.state.index)})}
-                    onClick={()=>{ _this.submitAutocompleteIndex(i); }}>
+                    className={classNames({ hover: (i === index)})}
+                    onClick={()=>{ submitAutocompleteIndex(i); }}>
                     <b>{o.courseId}</b><br /><i>{o.title}</i>
                   </li>
                 ))}
@@ -60,7 +64,8 @@ class Search extends Component {
   }
 
   onChange(e) {
-    if (!this.props.disabled) {
+    let { disabled } = this.props;
+    if (!disabled) {
       let text = e.target.value.toUpperCase().replace(' ', '-');
       this.setState({ text, text_copy: text });
       let _this = this;
@@ -73,24 +78,28 @@ class Search extends Component {
   }
 
   checkSubmit(e) {
-    if (e.keyCode === 13 && !this.props.disabled) {
+    let { disabled, submit } = this.props;
+    let { index, autocomplete, text } = this.state;
+    if (e.keyCode === 13 && !disabled) {
       e.preventDefault();
       var fixed;
-      if (this.state.index > -1) {
-        fixed = this.state.autocomplete[this.state.index].courseId;
+      if (index > -1) {
+        fixed = autocomplete[index].courseId;
       } else {
-        fixed = this.state.text.toUpperCase().replace(' ', '-');
+        fixed = text.toUpperCase().replace(' ', '-');
       }
       this.setState({ text: fixed }, () => {
-        this.props.submit(fixed);
+        submit(fixed);
       });
     }
   }
 
   submitAutocompleteIndex(i) {
-    let fixed = this.state.autocomplete[i].courseId;
+    let { submit } = this.props;
+    let { autocomplete } = this.state;
+    let fixed = autocomplete[i].courseId;
     this.setState({ text: fixed }, () => {
-      this.props.submit(fixed);
+      submit(fixed);
       this.setState({
         text: '',
         autocomplete: [],
@@ -100,13 +109,14 @@ class Search extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.courses.indexOf(this.state.text) > -1) {
+    let { text } = this.state;
+    if (nextProps.courses.indexOf(text) > -1) {
       this.setState({ text: '', autocomplete: [], index: -1 });
     }
   }
 
   keyboardCommandsInInput(e) {
-    let { text, text_copy, autocomplete, index } = this.state
+    let { text, text_copy, autocomplete, index } = this.state;
     if([37,39].indexOf(e.keyCode) > -1) {
       e.stopPropagation();
     }
@@ -137,7 +147,7 @@ class Search extends Component {
   }
 
   keyboardCommandsInInputUp(e) {
-    let { text, text_copy, autocomplete, index } = this.state
+    let { text, text_copy, autocomplete, index } = this.state;
     if ([38,40].indexOf(e.keyCode) > -1 && autocomplete.length > 0) {
       if (this.state.index > -1) {
         this.refs.search.select();
@@ -148,5 +158,11 @@ class Search extends Component {
   }
 
 }
+
+Search.propTypes = {
+  disabled: React.PropTypes.bool,
+  submit: React.PropTypes.func,
+  courses: React.PropTypes.array.isRequired
+};
 
 export default Search;

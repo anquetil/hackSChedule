@@ -1,11 +1,11 @@
 import React from 'react';
 import _ from 'lodash';
 
-export default props => {
+const Course = ({
+  removeClass, courseId, courseData, color, anchors, ...other
+}) => {
 
-  var { removeClass, courseId, courseData, color, anchors, ...other } = props;
-
-  var rgb = 'rgb(' + color + ')';
+  var rgb = (color) ? 'rgb(' + color + ')' : 'rgb(251,192,45)';
 
   if (_.isUndefined(courseData)) {
     return (
@@ -31,4 +31,14 @@ export default props => {
     );
   }
 
-}
+};
+
+Course.propTypes = {
+  removeClass: React.PropTypes.func,
+  courseId: React.PropTypes.string.isRequired,
+  anchors: React.PropTypes.arrayOf(React.PropTypes.string),
+  color: React.PropTypes.arrayOf(React.PropTypes.number),
+  courseData: React.PropTypes.object
+};
+
+export default Course;
