@@ -12,7 +12,8 @@ body {
   &,
   #courses,
   #calendar,
-  #selector {
+  #selector,
+  #load_msg {
     position: absolute;
     top: 0; bottom: 0;
     color: $white;
@@ -48,5 +49,22 @@ body {
     width: $selector;
     padding: $space-sm $space-xs;
     z-index: 1;
+  }
+
+  #load_msg {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    max-width: 200px;
+    text-align: center;
+    margin: 200px auto;
+    z-index: 3;
+    padding: $space-sm * 2;
+    border-radius: 3px;
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.3);
+
+    h1 {
+      margin: 0;
+    }
   }
 }

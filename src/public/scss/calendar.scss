@@ -15,6 +15,10 @@
     }
   }
 
+  &.loading {
+    opacity: 0.8;
+  }
+
   #calwrap {
     position: absolute;
     top: $space-md;

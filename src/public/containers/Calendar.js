@@ -93,7 +93,7 @@ class Calendar extends Component {
     let disabled = (courses.length <= 0 || (courses.length > 0 && _.isEmpty(courseData)));
 
     return (
-      <section id='calendar' className={classNames({ disabled, full: (full) })}>
+      <section id='calendar' className={classNames({ disabled, full: (full), loading: this.props.loading })}>
         <ul id='days'>
           {Object.keys(this.state.days).map(day => {
             if (day !== 'A' || (day === 'A' && this.state.events.A.length > 0)) {

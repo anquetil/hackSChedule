@@ -31,7 +31,8 @@ class Scheduler extends Component {
       ghostIndex: null,
       hover: null,
       enabled: true,
-      loading: true,
+      loading: false,
+      init: true,
       email: props.params.userEmail.toLowerCase()
     };
     this.socket = io();
@@ -65,7 +66,7 @@ class Scheduler extends Component {
             hoverIndex={hover}
             setHover={this.setHover}
             colors={colors}
-            loading={this.state.loading}
+            loading={this.state.init}
           />
           <Calendar
             courses={courses}
@@ -83,6 +84,7 @@ class Scheduler extends Component {
             addBlock={this.addBlock}
             removeBlock={this.removeBlock}
             blocks={blocks}
+            loading={this.state.loading}
           />
           <SelectorFilter
             courses={courses}
@@ -95,15 +97,10 @@ class Scheduler extends Component {
           />
           {(() => {
 
-            if (this.state.loading) {
+            if (this.state.loading || this.state.init) {
               return (
-                <div id="load_msg" style={{
-                  zIndex: 100
-                }}>
-                  <h1 style={{
-                    textAlign: 'center',
-                    marginTop: 100
-                  }}>Loading...</h1>
+                <div id="load_msg">
+                  <h1>Loading...</h1>
                 </div>);
             }
 
@@ -133,7 +130,7 @@ class Scheduler extends Component {
           courses: data.courses || [],
           anchors: data.anchors || {},
           blocks: data.blocks || [],
-          loading: false,
+          init: false,
         }, _this.generateSchedules);
         api.updateServer().then(()=>{});
       }
@@ -231,6 +228,7 @@ class Scheduler extends Component {
         index: 0
       });
     } else {
+      this.setState({ loading: true, hover: null });
       api.generateCourseDataAndSchedules(this.state.courses, this.state.anchors, this.state.blocks)
         .then(({ courseData, results }) => {
           let index = this.state.index;
@@ -239,7 +237,8 @@ class Scheduler extends Component {
           this.setState({
             courseData,
             combinations: results,
-            index
+            index,
+            loading: false
           });
       });
     }
@@ -318,7 +317,9 @@ class Scheduler extends Component {
   }
 
   setHover(i) {
-    this.setState({ hover: i });
+    if (!this.state.loading) {
+      this.setState({ hover: i });
+    }
   }
 
 };
