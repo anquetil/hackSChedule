@@ -36,3 +36,8 @@ app.get('*', (_, res) => { res.sendFile(path.join(__dirname, '../..', 'www', 'in
 server.listen(app.get('port'), function () {
   console.log('RUNNING.');
 });
+
+process.on('uncaughtException', function (err) {
+  console.log("Uncaught Exception:", err);
+  process.exit(1);  // This is VITAL. Don't swallow the err and try to continue.
+});
