@@ -13,6 +13,10 @@ var _ = require('lodash');
 
 // firebase
 var db = require('./lib/firebase');
+var refSched = db.ref('/20171');
+var refCourse = db.ref('/courses');
+
+var suffix = '@usc.edu';
 
 // ROUTES OF API
 
@@ -32,7 +36,6 @@ router.route('/')
 
 router.route('/refreshDatabase')
   .get(function (req, res) {
-    var ref = db.ref('/courses');
 
     // get full list of departments with courses
     TROJAN.deptsCN().then(function (dlist) {
@@ -53,7 +56,7 @@ router.route('/refreshDatabase')
         // merge it with the master data collector
         masterCourses = _.merge(masterCourses, courses);
         console.log(courses);
-        ref.update(courses);
+        refCourse.update(courses);
         index += 1;
 
         // once we hit the last index, turn the desc into the key.
@@ -98,7 +101,7 @@ router.route('/update_server').post(function (req, res) {
   for (var id of uniqCourses) {
     TROJAN.courses(id).then(function (courseData) {
       if (courseData) {
-        db.ref('/courses').update(courseData);
+        refCourse.update(courseData);
       }
     });
   }
@@ -108,28 +111,42 @@ router.route('/update_server').post(function (req, res) {
 router.route('/schedule/:user_email')
   .post(function (req, res) {
     var userEmail = req.params.user_email.toLowerCase();
-    var ref = db.ref('/schedules');
     if (validateEmail(userEmail)) {
-      ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {
+      userEmail = userEmail.split('@')[0];
+      refSched.orderByKey().equalTo(userEmail)
+        .once('value')
+        .then(function(snap) {
 
-        if (!snap.exists()) {
-          ref.push({ email: userEmail });
-          res.json({
-            message: 'new user created',
-            user_email: userEmail,
-            courses: []
-          });
-        } else {
-          var courses = snap.val()[Object.keys(snap.val())[0]].courses || [];
-          var anchors = snap.val()[Object.keys(snap.val())[0]].anchors || {};
-          res.json({
-            message: 'user exists',
-            user_email: userEmail,
-            courses: courses,
-            anchors: anchors
-          });
-        }
-      });
+          if (!snap.exists()) {
+            refSched.child(userEmail).set({
+              ts: Date.now(),
+              email: userEmail + suffix,
+              courses: [],
+              anchors: {},
+              blocks: []
+            });
+            res.json({
+              message: 'new user created',
+              user_email: userEmail + suffix,
+              courses: [],
+              anchors: {},
+              blocks: []
+            });
+          } else {
+            var courses = snap.val()[userEmail].courses || [];
+            var anchors = snap.val()[userEmail].anchors || {};
+            var blocks = snap.val()[userEmail].blocks || [];
+            res.json({
+              message: 'user exists',
+              user_email: userEmail + suffix,
+              courses: courses,
+              anchors: anchors,
+              blocks: blocks,
+            });
+          }
+        }).catch(function (e) {
+          return res.status(400).json({ error: e.message });
+        });
     } else {
       res.json({
         error: 'not a valid email'
@@ -138,32 +155,37 @@ router.route('/schedule/:user_email')
   })
   .put(function (req, res) {
     var userEmail = req.params.user_email.toLowerCase();
-    var ref = db.ref('/schedules');
     if (validateEmail(userEmail)) {
-      ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {
-        if (!snap.exists()) {
-          res.json({
-            error: 'cannot mutate, email does not exist',
-            user_email: userEmail
-          });
-        } else {
-          let courses = req.body.courses || [];
-          let anchors = req.body.anchors || {};
-          let blocks = req.body.blocks || [];
+      userEmail = userEmail.split('@')[0];
+      refSched.orderByKey().equalTo(userEmail).once('value')
+        .then(function(snap) {
+          if (!snap.exists()) {
+            res.json({
+              error: 'cannot mutate, email does not exist',
+              user_email: userEmail + suffix
+            });
+          } else {
+            let courses = req.body.courses || [];
+            let anchors = req.body.anchors || {};
+            let blocks = req.body.blocks || [];
 
-          snap.child(Object.keys(snap.val())[0]).ref.update({
-            courses, anchors, blocks
-          });
+            refSched.child(userEmail).update({
+              courses,
+              anchors,
+              blocks
+            });
 
-          res.json({
-            message: 'user data updated',
-            user_email: userEmail,
-            courses: courses,
-            anchors: anchors,
-            blocks: blocks
-          });
-        }
-      });
+            res.json({
+              message: 'user data updated',
+              user_email: userEmail + suffix,
+              courses: courses,
+              anchors: anchors,
+              blocks: blocks
+            });
+          }
+        }).catch(function (e) {
+          return res.status(400).json({ error: e.message });
+        });
     } else {
       res.json({
         error: 'not a valid email'
@@ -172,22 +194,23 @@ router.route('/schedule/:user_email')
   })
   .get(function (req, res) {
     var userEmail = req.params.user_email.toLowerCase();
-    var ref = db.ref('/schedules');
+    console.log(userEmail);
     if (validateEmail(userEmail)) {
-      ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {
+      userEmail = userEmail.split('@')[0];
+      refSched.orderByKey().equalTo(userEmail).once('value', function(snap) {
         if (!snap.exists()) {
           res.json({
             error: 'cannot mutate, email does not exist',
-            user_email: userEmail
+            user_email: userEmail + suffix
           });
         } else {
-          var courses = snap.val()[Object.keys(snap.val())[0]].courses || [];
-          var anchors = snap.val()[Object.keys(snap.val())[0]].anchors || {};
-          var blocks = snap.val()[Object.keys(snap.val())[0]].blocks || [];
+          var courses = snap.val()[userEmail].courses || [];
+          var anchors = snap.val()[userEmail].anchors || {};
+          var blocks = snap.val()[userEmail].blocks || [];
 
           res.json({
             message: 'user data retrieved',
-            user_email: userEmail,
+            user_email: userEmail + suffix,
             courses: courses,
             anchors: anchors,
             blocks: blocks
@@ -203,12 +226,12 @@ router.route('/schedule/:user_email')
 
 router.route('/verify/:course_id')
   .get(function (req, res) {
-    db.ref('/courses').child(req.params.course_id).once('value', function(snap) {
+    refCourse.child(req.params.course_id).once('value', function(snap) {
       res.json({ exists: snap.exists() });
       TROJAN.courses(req.params.course_id.split('-')[0])
         .then(function (courseData) {
         if (courseData) {
-          db.ref('/courses').update(courseData);
+          refCourse.update(courseData);
         }
       });
     });
@@ -222,20 +245,23 @@ router.route('/autocomplete/:text')
   .get(function (req, res) {
     var text = req.params.text;
     text = text.toUpperCase();
-    db.ref('/courses')
+    refCourse
       .orderByKey()
       .startAt(text)
       .limitToFirst(8)
       // .startAt(text).endAt(text + '\uf8ff')
       // .limit(5)
       // res.json({hello:text})
-      .once('value', function (snap) {
+      .once('value')
+      .then(function (snap) {
         res.json(_.values(_.mapValues(snap.val(), function (coursedata, key) {
           return {
             courseId: key,
             title: coursedata.title
           }
         })));
+      }).catch(function (e) {
+        return res.status(400).json({ error: e.message });
       });
   });
 
@@ -243,20 +269,20 @@ router.route('/upload/:user_email')
   .post(function (req, res) {
 
     var userEmail = req.params.user_email.toLowerCase();
-    var ref = db.ref('/schedules');
 
     if (validateEmail(userEmail) && 'data' in req.body) {
+      userEmail = userEmail.split('@')[0];
 
       var data = req.body.data.replace(/^data:image\/\w+;base64,/, "");
       var dest = '../../www/screenshots/';
       var buf = new Buffer(data, 'base64');
 
-      ref.orderByChild('email').equalTo(userEmail).once('value', function(snap) {
+      refSched.orderByKey().equalTo(userEmail).once('value', function(snap) {
 
         if (!snap.exists()) {
           res.json({ error: 'not a valid email' });
         } else {
-          var destination = path.join(__dirname, 'screenshots/' + Object.keys(snap.val())[0] + '.jpg')
+          var destination = path.join(__dirname, 'screenshots/' + snap.key + '.jpg')
           fs.writeFile(destination, buf, (err) => {
             if (err) {
               res.json({
@@ -266,8 +292,8 @@ router.route('/upload/:user_email')
             } else {
               res.json({
                 message: 'file uploaded',
-                user_email: userEmail,
-                url: 'screenshots/' + Object.keys(snap.val())[0] + '.jpg'
+                user_email: userEmail + suffix,
+                url: 'screenshots/' + snap.key + '.jpg'
               });
             }
           });
@@ -293,47 +319,47 @@ router.route('/trojan/:action')
 
     switch (action) {
       case 'terms':
-        TROJAN.terms().then(res.json);
+        TROJAN.terms().then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'current_term':
-        TROJAN.current_term().then(res.json);
+        TROJAN.current_term().then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'depts':
-        if (q.term) TROJAN.depts(q.term).then(res.json);
+        if (q.term) TROJAN.depts(q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         else res.json({ depts: ['term'] })
         break;
       case 'dept':
-        TROJAN.dept(q.dept, q.term).then(res.json);
+        TROJAN.dept(q.dept, q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'courses':
-        TROJAN.courses(q.dept, q.term).then(res.json);
+        TROJAN.courses(q.dept, q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'dept_info':
-        TROJAN.dept_info(q.dept, q.term).then(res.json);
+        TROJAN.dept_info(q.dept, q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'course':
-        TROJAN.course(q.dept, q.num, q.seq, q.term).then(res.json);
+        TROJAN.course(q.dept, q.num, q.seq, q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'section':
-        TROJAN.section(q.dept, q.num, q.seq, q.sect, q.term).then(res.json);
+        TROJAN.section(q.dept, q.num, q.seq, q.sect, q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'depts_flat':
-        TROJAN.depts_flat(q.term).then(res.json);
+        TROJAN.depts_flat(q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'deptsY':
-        TROJAN.deptsY(q.term).then(res.json);
+        TROJAN.deptsY(q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'deptsC':
-        TROJAN.deptsC(q.term).then(res.json);
+        TROJAN.deptsC(q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'deptsN':
-        TROJAN.deptsN(q.term).then(res.json);
+        TROJAN.deptsN(q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'deptsCN':
-        TROJAN.deptsCN(q.term).then(res.json);
+        TROJAN.deptsCN(q.term).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       case 'deptBatch':
-        TROJAN.deptBatch(q.depts).then(res.json);
+        TROJAN.deptBatch(q.depts).then(res.json).catch(function (e) { return res.status(400).json({ error: e.message }) });
         break;
       default:
         res.json({ error: 'action not found' });
@@ -342,7 +368,7 @@ router.route('/trojan/:action')
 
 router.route('/usercount')
   .get(function (req, res) {
-    db.ref('/schedules').once("value", function(snapshot) {
+    refSched.once("value", function(snapshot) {
       res.json({
         userCount: snapshot.numChildren()
       });
@@ -355,5 +381,5 @@ module.exports = router;
 
 function validateEmail(email) {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
+  return re.test(email) && email.indexOf('@usc.edu') > 1;
 }

@@ -49,6 +49,7 @@ class Scheduler extends Component {
   }
 
   render() {
+    // console.log(this.state.fromLanding);
 
     let { enabled, courses, courseData, combinations,
           anchors, colors, index, hover, ghostIndex, blocks } = this.state;
@@ -122,6 +123,10 @@ class Scheduler extends Component {
 
   componentWillMount() {
     let _this = this;
+    // if (this.state.fromLanding) {
+    //   this.generateSchedules();
+    //   api.updateServer().then(()=>{});
+    // } else {
     api.getUser(this.state.email).then(data =>{
       if ('error' in data) {
         _this.setState({ enabled: false });
@@ -135,6 +140,7 @@ class Scheduler extends Component {
         api.updateServer().then(()=>{});
       }
     });
+    // }
   }
 
   componentDidMount() {

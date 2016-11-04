@@ -70,7 +70,7 @@ Block.propTypes = {
   courseId: React.PropTypes.string.isRequired,
   sectionId: React.PropTypes.string.isRequired,
   sectiondata: React.PropTypes.object.isRequired,
-  location: React.PropTypes.string.isRequired,
+  location: React.PropTypes.string,
   start: React.PropTypes.number.isRequired,
   end: React.PropTypes.number.isRequired,
   className: React.PropTypes.string,

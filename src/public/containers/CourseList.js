@@ -60,7 +60,8 @@ class CourseList extends Component {
         <div id='logo' />
         <Search
           courses={courses}
-          disabled={(courses.length >= 7 || loading)}
+          disabled={(courses.length >= 7)}
+          loading={loading}
           submit={this.addClass.bind(this)} />
 
         {(() => {

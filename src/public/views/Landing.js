@@ -65,7 +65,7 @@ class Landing extends Component {
                 courseId={courseId}
                 courseData={this.state.courseData[courseId]}
                 color={this.state.colors[i]}
-                anchors={{}}
+                anchors={[]}
               />];
               if (i !== this.state.courses.length - 1) {
                 item.push(<li className='txt'>+</li>);
@@ -126,9 +126,7 @@ class Landing extends Component {
     if (validateEmail(this.state.text) && this.state.text.indexOf('@usc.edu') > 1) {
       api.createUser(this.state.text).then(function (data) {
         if (!data.error) {
-          _this.context.router.push({
-            pathname: '/' + data.user_email
-          });
+          _this.context.router.push({ pathname: '/' + data.user_email });
         }
       });
     } else {

@@ -1,10 +1,34 @@
-import ajax from 'reqwest';
+import request from 'request';
 import Promise from 'bluebird';
 import _ from 'lodash';
 
 let methods = {};
 
 let API = {};
+
+function interfacer(reqUrl, verb, data = {}) {
+  return new Promise((resolve, reject) => {
+    const requestUrl = window.location.origin + reqUrl;
+    buffer();
+    function buffer() {
+      var req = request({
+        uri: requestUrl,
+        method: verb,
+        json: true,
+        body: data,
+        qs: data
+      }, (error, response, body) => {
+        if (error) {
+          return reject(error);
+        } else if(response.statusCode !== 200) {
+          return reject(new Error(body.error));
+        } else {
+          return resolve(body);
+        }
+      });
+    }
+  });
+}
 
 // quick verifier if course exists
 API.verify = (courseId, term=null) => {
@@ -14,102 +38,65 @@ API.verify = (courseId, term=null) => {
   let seq  = courseId[1].slice(3);
 
   return new Promise((resolve, reject) => {
-    ajax({
-      url: '/api/verify/'+dept+'-'+num+seq,
-      method: 'get',
-      data: { dept, num, seq, term },
-      success: data => resolve(data.exists),
-      error: reject
-    });
+    interfacer('/api/verify/'+dept+'-'+num+seq, 'get', { dept, num, seq, term })
+      .then(data => resolve(data.exists))
+      .catch(reject);
   });
 }
 
 API.generateCourseDataAndSchedules = (courses = [], anchors = {}, blocks = []) => {
   return new Promise((resolve, reject) => {
-    ajax({
-      url: '/api/schedule',
-      method: 'get',
-      data: { courses, anchors, blocks },
-      success: resolve,
-      error: reject
-    });
+    interfacer('/api/schedule', 'get', { courses, anchors, blocks })
+      .then(resolve).catch(reject);
   });
 }
 
 API.autocomplete = (query) => {
   return new Promise((resolve, reject) => {
-    ajax({
-      url: '/api/autocomplete/' + query,
-      method: 'get',
-      success: resolve,
-      error: reject
-    });
+    interfacer('/api/autocomplete/' + query, 'get')
+      .then(resolve).catch(reject);
   });
 }
 
 API.createUser = (email) => {
   return new Promise((resolve, reject) => {
-    ajax({
-      url: '/api/schedule/' + email,
-      method: 'post',
-      success: resolve,
-      error: reject
-    });
+    interfacer('/api/schedule/' + email, 'post')
+      .then(resolve).catch(reject);
   });
 }
 
 API.getUser = (email) => {
   return new Promise((resolve, reject) => {
-    ajax({
-      url: '/api/schedule/' + email,
-      method: 'get',
-      success: resolve,
-      error: reject
-    });
+    interfacer('/api/schedule/' + email, 'get')
+      .then(resolve).catch(reject);
   });
 }
 
 API.updateUser = (email, courses, anchors, blocks) => {
   return new Promise((resolve, reject) => {
-    ajax({
-      url: '/api/schedule/' + email,
-      method: 'put',
-      data: { courses, anchors, blocks },
-      success: resolve,
-      error: reject
-    });
+    interfacer('/api/schedule/' + email, 'put', { courses, anchors, blocks })
+      .then(resolve).catch(reject);
   });
 }
 
 API.updateServer = (courses = []) => {
   return new Promise((resolve, reject) => {
-    ajax({
-      url: '/api/update_server',
-      method: 'post',
-      data: { courses },
-      success: resolve
-    });
+    interfacer('/api/update_server', 'post', { courses })
+      .then(resolve).catch(reject);
   });
 }
 
 API.uploadScreenshot = (email, data) => {
   return new Promise((resolve, reject) => {
-    ajax({
-      url: '/api/upload/' + email,
-      method: 'post',
-      data: { data },
-      success: resolve
-    });
+    interfacer('/api/upload/' + email, 'post', { data })
+      .then(resolve).catch(reject);
   });
 }
 
 API.getUserCount = () => {
   return new Promise((resolve, reject) => {
-    ajax({
-      url: '/api/usercount',
-      method: 'get',
-      success: resolve
-    });
+    interfacer('/api/usercount', 'get')
+      .then(resolve).catch(reject);
   });
 }
 

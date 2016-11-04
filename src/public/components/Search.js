@@ -17,10 +17,11 @@ class Search extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.checkSubmit = this.checkSubmit.bind(this);
+    this.submitAutocompleteIndex = this.submitAutocompleteIndex.bind(this);
   }
 
   render() {
-    let { disabled } = this.props;
+    let { disabled, loading } = this.props;
     let { text, autocomplete, index } = this.state;
     let { onChange, checkSubmit, submitAutocompleteIndex } = this;
     return (
@@ -30,7 +31,7 @@ class Search extends Component {
           onChange={onChange}
           value={text}
           onKeyDown={checkSubmit}
-          disabled={disabled}
+          disabled={disabled || loading}
           placeholder={(!disabled) ? 'Enter a class ID' : 'Exceeded maximum'} />
         {(()=>{
           if (autocomplete.length > 0) {
@@ -115,6 +116,12 @@ class Search extends Component {
     }
   }
 
+  componentDidUpdate(nextProps, nextState) {
+    if (this.props.loading && !nextProps.loading) {
+      this.refs.search.focus();
+    }
+  }
+
   keyboardCommandsInInput(e) {
     let { text, text_copy, autocomplete, index } = this.state;
     if([37,39].indexOf(e.keyCode) > -1) {
@@ -161,6 +168,7 @@ class Search extends Component {
 
 Search.propTypes = {
   disabled: React.PropTypes.bool,
+  loading: React.PropTypes.bool,
   submit: React.PropTypes.func,
   courses: React.PropTypes.array.isRequired
 };

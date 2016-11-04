@@ -49,7 +49,8 @@ module.exports = function (courses = [], anchors = {}, blocks = [], cb) {
           if (courseEntityCounter === courses.length) {
             processEntities();
           }
-        });
+          return;
+        }).catch(function (e) { return console.error('error:', e.message) });
       }
     });
   }
