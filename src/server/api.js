@@ -112,7 +112,7 @@ router.route('/schedule/:user_email')
   .post(function (req, res) {
     var userEmail = req.params.user_email.toLowerCase();
     if (validateEmail(userEmail)) {
-      userEmail = userEmail.split('@')[0];
+      userEmail = userEmail.split('@')[0].replace('.', '-');
       refSched.orderByKey().equalTo(userEmail)
         .once('value')
         .then(function(snap) {
@@ -120,14 +120,14 @@ router.route('/schedule/:user_email')
           if (!snap.exists()) {
             refSched.child(userEmail).set({
               ts: Date.now(),
-              email: userEmail + suffix,
+              email: req.params.user_email.toLowerCase(),
               courses: [],
               anchors: {},
               blocks: []
             });
             res.json({
               message: 'new user created',
-              user_email: userEmail + suffix,
+              user_email: req.params.user_email.toLowerCase(),
               courses: [],
               anchors: {},
               blocks: []
@@ -138,7 +138,7 @@ router.route('/schedule/:user_email')
             var blocks = snap.val()[userEmail].blocks || [];
             res.json({
               message: 'user exists',
-              user_email: userEmail + suffix,
+              user_email: req.params.user_email.toLowerCase(),
               courses: courses,
               anchors: anchors,
               blocks: blocks,
@@ -156,13 +156,13 @@ router.route('/schedule/:user_email')
   .put(function (req, res) {
     var userEmail = req.params.user_email.toLowerCase();
     if (validateEmail(userEmail)) {
-      userEmail = userEmail.split('@')[0];
+      userEmail = userEmail.split('@')[0].replace('.', '-');
       refSched.orderByKey().equalTo(userEmail).once('value')
         .then(function(snap) {
           if (!snap.exists()) {
             res.json({
               error: 'cannot mutate, email does not exist',
-              user_email: userEmail + suffix
+              user_email: req.params.user_email.toLowerCase()
             });
           } else {
             let courses = req.body.courses || [];
@@ -177,7 +177,7 @@ router.route('/schedule/:user_email')
 
             res.json({
               message: 'user data updated',
-              user_email: userEmail + suffix,
+              user_email: req.params.user_email.toLowerCase(),
               courses: courses,
               anchors: anchors,
               blocks: blocks
@@ -196,12 +196,12 @@ router.route('/schedule/:user_email')
     var userEmail = req.params.user_email.toLowerCase();
     console.log(userEmail);
     if (validateEmail(userEmail)) {
-      userEmail = userEmail.split('@')[0];
+      userEmail = userEmail.split('@')[0].replace('.', '-');
       refSched.orderByKey().equalTo(userEmail).once('value', function(snap) {
         if (!snap.exists()) {
           res.json({
             error: 'cannot mutate, email does not exist',
-            user_email: userEmail + suffix
+            user_email: req.params.user_email.toLowerCase()
           });
         } else {
           var courses = snap.val()[userEmail].courses || [];
@@ -210,7 +210,7 @@ router.route('/schedule/:user_email')
 
           res.json({
             message: 'user data retrieved',
-            user_email: userEmail + suffix,
+            user_email: req.params.user_email.toLowerCase(),
             courses: courses,
             anchors: anchors,
             blocks: blocks
@@ -271,7 +271,7 @@ router.route('/upload/:user_email')
     var userEmail = req.params.user_email.toLowerCase();
 
     if (validateEmail(userEmail) && 'data' in req.body) {
-      userEmail = userEmail.split('@')[0];
+      userEmail = userEmail.split('@')[0].replace('.', '-');
 
       var data = req.body.data.replace(/^data:image\/\w+;base64,/, "");
       var dest = '../../www/screenshots/';
@@ -292,7 +292,7 @@ router.route('/upload/:user_email')
             } else {
               res.json({
                 message: 'file uploaded',
-                user_email: userEmail + suffix,
+                user_email: req.params.user_email.toLowerCase(),
                 url: 'screenshots/' + snap.key + '.jpg'
               });
             }
