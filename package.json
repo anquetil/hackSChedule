@@ -6,7 +6,7 @@
   "scripts": {
     "prebuild": "npm install",
     "build": "npm run prebuild && gulp build",
-    "start": "npm run build && node src/server/app.js"
+    "start": "gulp build && node src/server/app.js"
   },
   "repository": {
     "type": "git",
