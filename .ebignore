@@ -1,5 +1,4 @@
 node_modules
-hackSChedule-*.json
 www/res/*
 
 # Elastic Beanstalk Files
