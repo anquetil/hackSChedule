@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 // app.use(require('express-promise')());
 
 // set port
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 80));
 
 // setup api router
 var api = require('./api/routes');
@@ -33,7 +33,7 @@ app.get('*', (_, res) => { res.sendFile(path.join(__dirname, '../..', 'www', 'in
 
 
 // start the server
-http.createServer(app).listen(5000);
+http.createServer(app).listen(app.get('port'));
 
 // logs errors
 process.on('uncaughtException', function (err) {

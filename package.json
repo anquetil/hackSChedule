@@ -4,7 +4,7 @@
   "description": "A webapp for USC students to design their course schedule with less frustration.",
   "main": "src/server/app.js",
   "scripts": {
-    "start": "gulp"
+    "start": "node src/server/app.js"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,7 @@
 node_modules
 hackSChedule-*.json
-www/res/app.js
+www/res/*
+artifacts
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
