@@ -4,9 +4,6 @@
   "description": "A webapp for USC students to design their course schedule with less frustration.",
   "main": "src/server/app.js",
   "scripts": {
-	  "gulp": "gulp build",
-	  "preinstall": "npm install -g gulp",
-	  "prestart": "npm run gulp",
 		"start": "node src/server/app.js"
   },
   "repository": {
@@ -54,7 +51,9 @@
     "scheduler-api": "^0.1.74",
     "socket.io": "^1.5.0",
     "stripe": "^4.15.1",
-    "trojan-course-api": "^2.2.1",
+    "trojan-course-api": "^2.2.1"
+  },
+  "devDependencies": {
     "autoprefixer": "^6.5.1",
     "babelify": "^7.3.0",
     "browser-sync": "^2.14.0",
