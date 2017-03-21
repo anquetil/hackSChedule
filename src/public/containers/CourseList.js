@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import _ from 'lodash';
 
 import Search from '../components/Search';
@@ -51,39 +52,48 @@ class CourseList extends Component {
   }
 
   render() {
+		let { show_help } = this.state;
+    let { colors, loading } = this.props;
+		let { courses, coursesData, anchors, hoverIndex } = this.props;
+		let { setHover, addClass, removeClass, toggleClass } = this.props;
 
-    let { courses, setHover, hoverIndex, anchors,
-      removeClass, courseData, colors, loading } = this.props;
+		let enabledCourses = Object.keys(courses).filter(id => courses[id]);
+		let disabledCourses = Object.keys(courses).filter(id => !courses[id]);
+		let arrayedCourses = Object.keys(courses);
+
+		let total_units = _.sum(enabledCourses.map(courseId => {
+			if (courseId in coursesData) {
+				return parseInt(coursesData[courseId].units[0]);
+			} else return 0;
+		}));
 
     return (
       <section id='courses'>
         <div id='logo' />
+
         <Search
-          courses={courses}
-          disabled={(courses.length >= 7)}
+          courses={arrayedCourses}
+          disabled={(arrayedCourses.length >= 7)}
           loading={loading}
-          submit={this.addClass.bind(this)} />
+          submit={addClass} />
 
         {(() => {
-          if (courses.length > 0) {
-            let total_units = _.sum(courses.map(courseId => {
-              if (courseId in courseData) {
-                return parseInt(courseData[courseId].units[0]);
-              } else {
-                return 0;
-              }
-            }));
+          if (arrayedCourses.length > 0) {
             return (
               <div>
                 <ul id='courselist'>
-                  {courses.map((courseId, i) => (
+                  {arrayedCourses.map((courseId, i) => (
                     <Course key={courseId}
-                      className={(i === hoverIndex) ? 'hover' : ''}
+                      className={classNames({
+												hover: (i === hoverIndex),
+												disabled: !courses[courseId]
+											})}
                       onMouseEnter={setHover.bind(null, i)}
                       onMouseLeave={setHover.bind(null, null)}
-                      removeClass={removeClass.bind(null)}
+											onClick={toggleClass.bind(null, courseId)}
+                      removeClass={removeClass}
                       courseId={courseId}
-                      courseData={courseData[courseId]}
+                      courseData={coursesData[courseId]}
                       color={colors[i]}
                       anchors={(anchors[courseId]) ? anchors[courseId] : []} />
                   ))}
@@ -97,12 +107,12 @@ class CourseList extends Component {
         })()}
 
         <Instructions
-          courses={courses}
-          show_help={this.state.show_help}
+          courses={arrayedCourses}
+          show_help={show_help}
           loading={loading}
           show={(bool) => { this.setState({ show_help: bool }) }} />
 
-        {(() => {
+        {/* {(() => {
           if (courses.length > 3) {
             return (
               <div id="support">
@@ -114,22 +124,13 @@ class CourseList extends Component {
               </div>
             );
           }
-        })()}
+        })()} */}
 
         <div id='credits'>
           <a href={'mailto:andrewji@usc.edu?subject=Feedback%20for%20HackSchedule'}>Feedback</a>
         </div>
       </section>
     );
-  }
-
-  addClass(courseId) {
-    this.props.addClass(courseId);
-  }
-
-  removeClass(courseId) {
-    this.props.removeClass(courseId);
-    this.props.setHover(null)
   }
 
 };

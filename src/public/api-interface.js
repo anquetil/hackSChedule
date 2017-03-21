@@ -6,98 +6,67 @@ let methods = {};
 
 let API = {};
 
-function interfacer(reqUrl, verb, data = {}) {
-  return new Promise((resolve, reject) => {
-    const requestUrl = window.location.origin + reqUrl;
-    buffer();
-    function buffer() {
-      var req = request({
-        uri: requestUrl,
-        method: verb,
-        json: true,
-        body: data,
-        qs: data
-      }, (error, response, body) => {
-        if (error) {
-          return reject(error);
-        } else if(response.statusCode !== 200) {
-          return reject(new Error(body.error));
-        } else {
-          return resolve(body);
-        }
-      });
-    }
-  });
+API.get = (requestUrl, data) => {
+	data = data || {};
+	requestUrl = window.location.origin + '/api' + requestUrl;
+	return new Promise(function (resolve, reject) {
+		request.get({
+			uri: requestUrl,
+			json: true,
+			qs: data
+		}, (error, response, body) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(body,response.statusCode);
+			}
+		});
+	});
 }
 
-// quick verifier if course exists
-API.verify = (courseId, term=null) => {
-  courseId = courseId.split('-');
-  let dept = courseId[0];
-  let num  = courseId[1].slice(0, 3);
-  let seq  = courseId[1].slice(3);
-
-  return new Promise((resolve, reject) => {
-    interfacer('/api/verify/'+dept+'-'+num+seq, 'get', { dept, num, seq, term })
-      .then(data => resolve(data.exists))
-      .catch(reject);
-  });
+API.post = (requestUrl, data) => {
+	data = data || {};
+	requestUrl = window.location.origin + '/api' + requestUrl;
+	return new Promise(function (resolve, reject) {
+		request.post({
+			uri: requestUrl,
+			json: true,
+			body: data
+		}, (error, response, body) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(body,response.statusCode);
+			}
+		});
+	});
 }
 
-API.generateCourseDataAndSchedules = (courses = [], anchors = {}, blocks = []) => {
-  return new Promise((resolve, reject) => {
-    interfacer('/api/schedule', 'get', { courses, anchors, blocks })
-      .then(resolve).catch(reject);
-  });
-}
+API.validate = {};
+API.validate.email = (userEmail) => ('/validate/email/' + userEmail);
+API.validate.pin = () => ('/validate/pin');
 
-API.autocomplete = (query) => {
-  return new Promise((resolve, reject) => {
-    interfacer('/api/autocomplete/' + query, 'get')
-      .then(resolve).catch(reject);
-  });
-}
+API.user = {}
+API.user.count = () => ('/user/count');
+API.user.data = (userEmail) => ('/user/' + userEmail);
+API.user.schedule = (userEmail) => ('/user/' + userEmail + '/schedule');
+API.user.generateSchedule = (userEmail) => ('/user/' + userEmail + '/schedule/generate');
+API.user.addCourse = (userEmail, courseId) => ('/user/' + userEmail + '/schedule/add_course/' + courseId);
+API.user.enableCourse = (userEmail, courseId) => ('/user/' + userEmail + '/schedule/enable_course/' + courseId);
+API.user.disableCourse = (userEmail, courseId) => ('/user/' + userEmail + '/schedule/disable_course/' + courseId);
+API.user.removeCourse = (userEmail, courseId) => ('/user/' + userEmail + '/schedule/remove_course/' + courseId);
+API.user.enableAnchor = (userEmail, courseId, sectionId) => ('/user/' + userEmail + '/schedule/course/' + courseId + '/enable_anchor/' + sectionId);
+API.user.disableAnchor = (userEmail, courseId, sectionId) => ('/user/' + userEmail + '/schedule/course/' + courseId + '/disable_anchor/' + sectionId);
+API.user.addBlock = (userEmail) => ('/user/' + userEmail + '/schedule/add_block');
+API.user.removeBlock = (userEmail, blockKey) => ('/user/' + userEmail + '/schedule/remove_block/' + blockKey);
 
-API.createUser = (email) => {
-  return new Promise((resolve, reject) => {
-    interfacer('/api/schedule/' + email, 'post')
-      .then(resolve).catch(reject);
-  });
-}
+API.course = {};
+API.course.updateDept = (deptId) => ('/course/dept/' + deptId + '/update');
+API.course.updateAll = () => ('/course/updateAllCourses');
+API.course.data = (courseId) => ('/course/' + courseId);
+API.course.sections = (courseId) => ('/course/' + courseId + '/sections');
+API.course.section = (courseId, sectionId) => ('/course/' + courseId + '/section/' + sectionId);
 
-API.getUser = (email) => {
-  return new Promise((resolve, reject) => {
-    interfacer('/api/schedule/' + email, 'get')
-      .then(resolve).catch(reject);
-  });
-}
-
-API.updateUser = (email, courses, anchors, blocks) => {
-  return new Promise((resolve, reject) => {
-    interfacer('/api/schedule/' + email, 'put', { courses, anchors, blocks })
-      .then(resolve).catch(reject);
-  });
-}
-
-API.updateServer = (courses = []) => {
-  return new Promise((resolve, reject) => {
-    interfacer('/api/update_server', 'post', { courses })
-      .then(resolve).catch(reject);
-  });
-}
-
-API.uploadScreenshot = (email, data) => {
-  return new Promise((resolve, reject) => {
-    interfacer('/api/upload/' + email, 'post', { data })
-      .then(resolve).catch(reject);
-  });
-}
-
-API.getUserCount = () => {
-  return new Promise((resolve, reject) => {
-    interfacer('/api/usercount', 'get')
-      .then(resolve).catch(reject);
-  });
-}
+API.autocomplete = (text) => ('/autocomplete/' + text);
 
 export default API;

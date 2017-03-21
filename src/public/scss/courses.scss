@@ -225,21 +225,28 @@ ul#courselist {
       opacity: 0;
     }
 
+		&.disabled {
+			opacity: 0.5;
+		}
+
     &.hover:hover .close {
       opacity: 1;
     }
 
-    &.hover {
-      z-index: 2;
-      transform: scale(1.03,1.03);
-      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-    }
+		&:not(.disabled) {
 
-    &:hover {
-      z-index: 2;
-      transform: scale(1.08,1.08);
-      box-shadow: 0 12px 20px -5px rgba(0,0,0,0.3);
-    }
+	    &.hover {
+	      z-index: 2;
+	      transform: scale(1.03,1.03);
+	      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+	    }
+
+	    &:hover {
+	      z-index: 2;
+	      transform: scale(1.08,1.08);
+	      box-shadow: 0 12px 20px -5px rgba(0,0,0,0.3);
+	    }
+		}
 
   }
 }

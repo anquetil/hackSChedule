@@ -66,13 +66,14 @@ class Search extends Component {
 
   onChange(e) {
     let { disabled } = this.props;
+		let text = e.target.value;
+
     if (!disabled) {
-      let text = e.target.value.toUpperCase().replace(' ', '-');
       this.setState({ text, text_copy: text });
-      let _this = this;
-      api.autocomplete(e.target.value).then(function (arr) {
-        _this.setState({ autocomplete: arr, index: -1 });
-      });
+			api.get(api.autocomplete(e.target.value))
+				.then((response) => {
+					this.setState({ autocomplete: response, index: -1 });
+				});
     } else {
       this.setState({ autocomplete: [], index: -1 });
     }

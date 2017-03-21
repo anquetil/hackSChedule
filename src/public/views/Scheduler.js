@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router'
 import _ from 'lodash';
 
-// require('../func/html2canvas');
-
 import CourseList from '../containers/CourseList';
 import Calendar from '../containers/Calendar';
 import SelectorFilter from '../containers/SelectorFilter';
@@ -16,271 +14,375 @@ class Scheduler extends Component {
 
   constructor(props) {
     super(props);
-    // let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    //   var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-    //   return v.toString(16);
-    // });
+
     this.state = {
-      courses: [],
-      courseData: {},
+			// user info
+			email: '',
+			pin: '',
+
+			// courses info
+      courses: {},
+      coursesData: {},
+			coursesSections: {},
       combinations: [],
       anchors: {},
-      blocks: [],
+      blocks: {},
+
+			// visuals
       colors: [],
       index: 0,
       ghostIndex: null,
       hover: null,
+
+			// flags
       enabled: true,
       loading: false,
-      init: true,
-      email: props.params.userEmail.toLowerCase()
+      init: true
     };
-    this.socket = io();
-    this.addClass = this.addClass.bind(this);
-    this.removeClass = this.removeClass.bind(this);
-    this.setHover = this.setHover.bind(this);
-    this.toggleAnchor = this.toggleAnchor.bind(this);
-    this.generateSchedules = this.generateSchedules.bind(this);
-    this.uploadImage = this.uploadImage.bind(this);
-    this.updateCal = this.updateCal.bind(this);
-    this.updateGhostIndex = this.updateGhostIndex.bind(this);
-    this.addBlock = this.addBlock.bind(this);
-    this.removeBlock = this.removeBlock.bind(this);
+
+		this.addClass = this.addClass.bind(this);
+		this.removeClass = this.removeClass.bind(this);
+		this.enableClass = this.enableClass.bind(this);
+		this.disableClass = this.disableClass.bind(this);
+		this.toggleClass = this.toggleClass.bind(this);
+		this.toggleAnchor = this.toggleAnchor.bind(this);
+		this.addAnchor = this.addAnchor.bind(this);
+		this.removeAnchor = this.removeAnchor.bind(this);
+		this.addBlock = this.addBlock.bind(this);
+		this.removeBlock = this.removeBlock.bind(this);
+		this.generate = this.generate.bind(this);
+		this.generateColors = this.generateColors.bind(this);
+		this.updateIndex = this.updateIndex.bind(this);
+		this.updateGhostIndex = this.updateGhostIndex.bind(this);
+		this.keyboardCommands = this.keyboardCommands.bind(this);
+		this.goPrev = this.goPrev.bind(this);
+		this.goNext = this.goNext.bind(this);
+		this.setHover = this.setHover.bind(this);
   }
+
+	componentWillMount() {
+		let { location, params } = this.props;
+		api.get(api.validate.email(params.userEmail))
+			.then((response) => {
+				let email = response.email;
+				let user_exists = response.user_exists;
+				if (user_exists) {
+					if (location.state && location.state.pin) {
+						this.setState({ email, pin: location.state.pin, init: false }, this.initialize);
+					} else {
+						this.setState({ email, init: false });
+					}
+				} else {
+					this.setState({ enabled: false });
+				}
+			});
+	}
+
+	componentDidMount() {
+		document.addEventListener('keydown', this.keyboardCommands, false);
+	}
+
+	initialize() {
+		let { email, pin, coursesData, coursesSections } = this.state;
+
+		api.get(api.user.schedule(email))
+			.then((response) => {
+				response = response || {};
+				let courses = response.courses || {};
+				let anchors = response.anchors || {};
+				let blocks = response.blocks || {};
+
+
+				anchors = _.mapValues(anchors, (value, key) => {
+					return Object.keys(value);
+				});
+				this.setState({ courses, anchors, blocks }, this.generate);
+
+				for (let courseId in courses) {
+					// grab course data
+					api.get(api.course.data(courseId))
+						.then((courseData) => {
+							coursesData[courseId] = courseData;
+							this.setState({ coursesData });
+						});
+
+					// grab course sections
+					api.get(api.course.sections(courseId))
+						.then((courseSections) => {
+							coursesSections[courseId] = courseSections;
+							this.setState({ coursesSections });
+						});
+				}
+
+			});
+	}
 
   render() {
-    // console.log(this.state.fromLanding);
+    let { init, loading, enabled } = this.state; // flags
+		let { courses, coursesData, coursesSections, combinations, anchors, blocks } = this.state;
+		let { colors, index, hover, ghostIndex } = this.state;
 
-    let { enabled, courses, courseData, combinations,
-          anchors, colors, index, hover, ghostIndex, blocks } = this.state;
+    return (
+      <main className={(init || !enabled) ? 'blur' : ''}>
+        <CourseList
+					colors={colors}
+					loading={init}
 
-    if (enabled) {
-      return (
-        <main>
-          <CourseList
-            courses={courses}
-            courseData={courseData}
-            combinations={combinations}
-            addClass={this.addClass}
-            removeClass={this.removeClass}
-            anchors={anchors}
-            hoverIndex={hover}
-            setHover={this.setHover}
-            colors={colors}
-            loading={this.state.init}
-          />
-          <Calendar
-            courses={courses}
-            courseData={courseData}
-            combinations={combinations}
-            index={index}
-            hoverIndex={hover}
-            setHover={this.setHover}
-            anchors={anchors}
-            toggleAnchor={this.toggleAnchor}
-            colors={colors}
-            regenerate={this.generateSchedules}
-            screenshot={this.uploadImage}
-            ghostIndex={ghostIndex}
-            addBlock={this.addBlock}
-            removeBlock={this.removeBlock}
-            blocks={blocks}
-            loading={this.state.loading}
-          />
-          <SelectorFilter
-            courses={courses}
-            courseData={courseData}
-            combinations={combinations}
-            index={index}
-            updateCal={this.updateCal}
-            ghostIndex={ghostIndex}
-            updateGhostIndex={this.updateGhostIndex}
-          />
-          {(() => {
+          courses={courses}
+          coursesData={coursesData}
+          anchors={anchors}
+          hoverIndex={hover}
 
-            if (this.state.loading || this.state.init) {
-              return (
-                <div id="load_msg">
-                  <h1>Loading...</h1>
-                </div>);
-            }
+          setHover={this.setHover}
+          addClass={this.addClass}
+          removeClass={this.removeClass}
+					toggleClass={this.toggleClass}
+        />
+        <Calendar
+					loading={(loading || init)}
+					colors={colors}
 
-          })()}
-        </main>
-      );
-    }
-    else {
-      return (
-        <main>
-          <h1 style={{
-            textAlign: 'center',
-            margin: 100
-          }}>User does not exist. <Link to={`/`}>Go back.</Link></h1>
-        </main>
-      );
-    }
-  }
+          courses={courses}
+          coursesData={coursesData}
+					coursesSections={coursesSections}
+          combinations={combinations}
+          anchors={anchors}
+          blocks={blocks}
+          index={index}
+          hoverIndex={hover}
+          ghostIndex={ghostIndex}
 
-  componentWillMount() {
-    let _this = this;
-    // if (this.state.fromLanding) {
-    //   this.generateSchedules();
-    //   api.updateServer().then(()=>{});
-    // } else {
-    api.getUser(this.state.email).then(data =>{
-      if ('error' in data) {
-        _this.setState({ enabled: false });
-      } else {
-        _this.setState({
-          courses: data.courses || [],
-          anchors: data.anchors || {},
-          blocks: data.blocks || [],
-          init: false,
-        }, _this.generateSchedules);
-        api.updateServer().then(()=>{});
-      }
-    });
-    // }
-  }
+          setHover={this.setHover}
+          toggleAnchor={this.toggleAnchor}
+          addBlock={this.addBlock}
+          removeBlock={this.removeBlock}
+          regenerate={this.generate}
+        />
+        <SelectorFilter
+          courses={courses}
+          combinations={combinations}
+          index={index}
+          ghostIndex={ghostIndex}
+          updateIndex={this.updateIndex}
+          updateGhostIndex={this.updateGhostIndex}
+        />
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.keyboardCommands.bind(this), false);
-    let _this = this;
-    // sockets
-    this.socket.on('receive:courseData', function (courseId) {
-      if (_this.state.courses.indexOf(courseId) > -1) {
-        _this.generateSchedules();
-      }
-    });
-
-  }
-
-  updateServer() {
-    api.updateUser(this.state.email, this.state.courses, this.state.anchors, this.state.blocks);
+				{(() => {
+					if (!enabled) {
+						return <div>
+		          <h1 style={{ textAlign: 'center', margin: 100 }}>
+								User does not exist. <Link to={`/`}>Go back.</Link>
+							</h1>
+		        </div>;
+					}
+				})}
+      </main>
+    );
   }
 
   addClass(courseId) {
-    let _this = this;
+    let { courses, coursesData, coursesSections, email, pin } = this.state;
+		let { generate } = this;
 
     // don't re-add class
-    if (this.state.courses.indexOf(courseId) > -1) return;
+    if (courseId in courses) return;
 
-    // 1. verify that the course exists
-    api.verify(courseId, 20163).then(courseExists => {
-      if (courseExists) {
-        let coursesList = this.state.courses;
-        coursesList.unshift(courseId);
-        _this.setState({ courses: coursesList }, _this.generateSchedules());
-      }
-    });
+    // verify that the course exists
+		api.post(api.user.addCourse(email, courseId), { pin })
+			.then((response) => {
+				if ('error' in response) return;
+				courses[courseId] = response[courseId];
+				this.setState({ courses }, generate);
+			});
+
+		// grab course data
+		api.get(api.course.data(courseId))
+			.then((courseData) => {
+				coursesData[courseId] = courseData;
+				this.setState({ coursesData });
+			});
+
+		// grab course sections
+		api.get(api.course.sections(courseId))
+			.then((courseSections) => {
+				coursesSections[courseId] = courseSections;
+				this.setState({ coursesSections });
+			});
   }
 
-  removeClass(courseId) {
-    let anchors = this.state.anchors;
-    if (anchors[courseId]) {
-      delete anchors[courseId];
-      this.setState({ anchors });
-    }
+	enableClass(courseId) {
+		let { courses, coursesData, coursesSections, email, pin } = this.state;
 
-    this.setState({
-      courses: _.pull(this.state.courses, courseId)
-    }, this.generateSchedules);
+		// verify that the course exists
+		api.post(api.user.enableCourse(email, courseId), { pin })
+			.then((response) => {
+				if ('error' in response) return;
+				courses[courseId] = response[courseId];
+				this.setState({ courses }, this.generate);
+			});
+	}
+
+	disableClass(courseId) {
+		let { courses, coursesData, coursesSections, email, pin } = this.state;
+
+		// verify that the course exists
+		api.post(api.user.disableCourse(email, courseId), { pin })
+			.then((response) => {
+				if ('error' in response) return;
+				courses[courseId] = response[courseId];
+				this.setState({ courses }, this.generate);
+			});
+	}
+
+	toggleClass(courseId) {
+		let { courses } = this.state;
+		if (courseId in courses && courses[courseId]) {
+			this.disableClass(courseId);
+		} else {
+			this.enableClass(courseId);
+		}
+	}
+
+  removeClass(courseId) {
+		let { courses, coursesData, coursesSections, email, pin, anchors } = this.state;
+		let { generate } = this;
+
+		// don't delete class that isn't there
+		if (!(courseId in courses)) return;
+
+		api.post(api.user.removeCourse(email, courseId), { pin })
+			.then((response) => {
+				if ('error' in response) return;
+
+				if (anchors[courseId]) {
+		      delete anchors[courseId];
+		    }
+
+				if (courseId in courses) {
+					delete courses[courseId];
+				}
+
+				if (courseId in coursesData) {
+					delete coursesData[courseId];
+				}
+
+				if (courseId in coursesSections) {
+					delete coursesSections[courseId];
+				}
+
+				this.setState({
+					courses,
+					coursesData,
+					coursesSections,
+					anchors,
+					hover: null
+				}, generate);
+			});
   }
 
   toggleAnchor(courseId, sectionId) {
-    let anchors = this.state.anchors;
+    let { anchors } = this.state;
+		let { removeAnchor, addAnchor } = this;
     if (anchors[courseId] && anchors[courseId].indexOf(sectionId) >= 0) {
-      this.removeAnchor(courseId, sectionId);
+    	removeAnchor(courseId, sectionId);
     } else {
-      this.addAnchor(courseId, sectionId);
+    	addAnchor(courseId, sectionId);
     }
   }
 
   addAnchor(courseId, sectionId) {
-    let anchors = this.state.anchors;
+    let { anchors, email, pin } = this.state;
+		api.post(api.user.enableAnchor(email, courseId, sectionId), { pin })
+			.then((response) => {
+				if ('error' in response) return;
 
-    if (!_.isArray(anchors[courseId]))
-      anchors[courseId] = [];
+		    if (!_.isArray(anchors[courseId]))
+		      anchors[courseId] = [];
 
-    if (anchors[courseId].indexOf(sectionId) >= 0) return;
+		    if (anchors[courseId].indexOf(sectionId) > -1) return;
 
-    anchors[courseId].push(sectionId);
-    this.setState({ anchors }, this.generateSchedules);
+		    anchors[courseId].push(sectionId);
+		    this.setState({ anchors }, this.generate);
+
+			});
   }
 
   removeAnchor(courseId, sectionId) {
-    let anchors = this.state.anchors;
-    if (!anchors[courseId]) return;
-    if (anchors[courseId].indexOf(sectionId) < 0) return;
-    anchors[courseId] = _.pull(anchors[courseId], sectionId)
-    if (anchors[courseId].length <= 0) {
-      delete anchors[courseId];
-    }
-    this.setState({ anchors }, this.generateSchedules);
+		let { anchors, email, pin } = this.state;
+
+		api.post(api.user.disableAnchor(email, courseId, sectionId), { pin })
+			.then((response) => {
+				if ('error' in response) return;
+		    if (!anchors[courseId]) return;
+		    if (anchors[courseId].indexOf(sectionId) < 0) return;
+		    anchors[courseId] = _.pull(anchors[courseId], sectionId)
+		    if (anchors[courseId].length <= 0) {
+		      delete anchors[courseId];
+		    }
+		    this.setState({ anchors }, this.generate);
+			});
   }
 
-  regenerate() {
-    this.generateSchedules();
-    api.updateServer().then(()=>{});
+  addBlock(start, end, day) {
+		let { blocks, email, pin } = this.state;
+		let block = { start, end, day };
+
+		api.post(api.user.addBlock(email), { pin, block })
+			.then((response) => {
+				if ('error' in response) return;
+		    blocks[response.block_key] = block;
+				this.setState({ blocks }, this.generate);
+			});
   }
 
-  generateSchedules() {
-    this.updateServer();
-    this.generateColors();
-    if (this.state.courses.length === 0) {
-      this.setState({
-        courseData: {},
-        combinations: [],
-        index: 0
-      });
-    } else {
-      this.setState({ loading: true, hover: null });
-      api.generateCourseDataAndSchedules(this.state.courses, this.state.anchors, this.state.blocks)
-        .then(({ courseData, results }) => {
-          let index = this.state.index;
-          if (index >= results.length) index = results.length - 1;
-          if (index <= 0) index = 0;
-          this.setState({
-            courseData,
-            combinations: results,
-            index,
-            loading: false
-          });
-      });
-    }
+  removeBlock(blockKey) {
+		let { blocks, email, pin } = this.state;
+
+		api.post(api.user.removeBlock(email, blockKey), { pin })
+			.then((response) => {
+				if ('error' in response) return;
+		    delete blocks[blockKey];
+				this.setState({ blocks }, this.generate);
+			});
   }
+
+	generate() {
+		let { courses, email, pin, index } = this.state;
+
+		this.generateColors();
+		if (_.isEmpty(courses)) {
+			this.setState({
+				coursesData: {},
+				coursesSections: {},
+				combinations: [],
+				loading: false,
+				index: 0
+			});
+		} else {
+			this.setState({ loading: true, hover: null }, () => {
+				api.get(api.user.generateSchedule(email), { pin })
+					.then((results) => {
+						if (index >= results.length) index = results.length - 1;
+						if (index <= 0) index = 0;
+						console.log(results);
+						this.setState({
+							combinations: results,
+							loading: false,
+							index: index
+						});
+					});
+			});
+		}
+	}
 
   generateColors() {
+		let { courses } = this.state;
     this.setState({
-      colors: colors.slice(0).splice(0, this.state.courses.length).reverse()
+      colors: colors.slice(0).splice(0, Object.keys(courses).length).reverse()
     });
   }
 
-  uploadImage() {
-
-    // html2canvas(document.body).then(canvas => {
-    //
-    //   var data = canvas.toDataURL("image/jpeg", 1);
-    //   var meta = document.createElement('meta');
-    //   meta.property = 'og:image';
-    //   meta.content = data;
-    //   meta.content = "IE=edge";
-    //   document.getElementsByTagName('head')[0].appendChild(meta);
-    //   // api.uploadScreenshot(this.state.email, data)
-    //   //   .then(result => {
-    //   //     console.log(result);
-    //   //   });
-    // });
-
-    // FB.ui({
-    //   method: 'share',
-    //   display: 'popup',
-    //   href: 'http://hackschedule.com',
-    // }, function(response){});
-
-  }
-
-  updateCal(i) {
+  updateIndex(i) {
     this.setState({ index: i });
   }
 
@@ -297,37 +399,35 @@ class Scheduler extends Component {
   }
 
   goPrev() {
-    if (this.state.index > 0) {
-      this.setState({ index: this.state.index - 1 });
+		let { index } = this.state;
+
+    if (index > 0) {
+      this.setState({ index: index - 1 });
     }
   }
 
   goNext() {
-    if (this.state.index < this.state.combinations.length - 1) {
-      this.setState({ index: this.state.index + 1 });
+		let { index, combinations } = this.state;
+
+    if (index < combinations.length - 1) {
+      this.setState({ index: index + 1 });
     } else {
-      this.setState({ index: this.state.combinations.length - 1});
+      this.setState({ index: combinations.length - 1});
     }
   }
 
-  addBlock(start, end, day) {
-    let blocks = this.state.blocks;
-    blocks.push({ start, end, day });
-    this.setState({ blocks }, this.generateSchedules);
-  }
-
-  removeBlock(index) {
-    let blocks = this.state.blocks;
-    blocks.splice(index, 1);
-    this.setState({ blocks }, this.generateSchedules);
-  }
-
   setHover(i) {
-    if (!this.state.loading) {
+		let { loading } = this.state;
+
+    if (!loading) {
       this.setState({ hover: i });
     }
   }
 
+};
+
+Scheduler.contextTypes = {
+  router: React.PropTypes.object.isRequired
 };
 
 export default Scheduler;

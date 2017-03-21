@@ -3,9 +3,12 @@ import Selector from '../components/Selector';
 
 export default (props) => {
 
-  var { courses, updateCal, combinations, index, updateGhostIndex, ...other} = props;
+  let { courses, combinations, index, ghostIndex} = props;
+	let { updateIndex, updateGhostIndex } = props;
 
-  if (courses.length > 0) {
+	let enabledCourses = Object.keys(courses).filter(id => courses[id]);
+
+  if (enabledCourses.length > 0) {
     return (
       <section id='selector'>
         <div id="heading">
@@ -13,15 +16,18 @@ export default (props) => {
           <div className="label">schedules</div>
         </div>
         <ul id="ranks">
-          {combinations.map((combination, key) => (
+          {combinations.slice(0,200).map((combination, key) => (
             <Selector key={key}
               index={key}
               active={index}
-              onClick={updateCal.bind(null, key)}
+              onClick={updateIndex.bind(null, key)}
               onMouseEnter={() => { updateGhostIndex(key) }}
               onMouseLeave={() => { updateGhostIndex(null) }}
               score={combination.score} />))}
         </ul>
+				<div className='maxed'>
+					{combinations.length > 200 ? 'Showing first 200...' : ''}
+				</div>
       </section>
     );
   } else {
