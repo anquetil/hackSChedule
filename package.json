@@ -54,9 +54,7 @@
     "stripe": "^4.15.1",
     "trojan-course-api": "^2.2.1",
     "autoprefixer": "^6.5.1",
-    "babelify": "^7.3.0"
-  },
-	"devDependencies": {
+    "babelify": "^7.3.0",
     "browser-sync": "^2.14.0",
     "browserify": "^13.1.0",
     "cssnano": "^3.7.7",
