@@ -16,9 +16,6 @@ app.use(bodyParser.json());
 // allow promises
 // app.use(require('express-promise')());
 
-// set port
-app.set('port', (process.env.PORT || 80));
-
 // setup api router
 var api = require('./api/routes');
 app.use('/api', api);
@@ -33,7 +30,8 @@ app.get('*', (_, res) => { res.sendFile(path.join(__dirname, '../..', 'www', 'in
 
 
 // start the server
-http.createServer(app).listen(app.get('port'));
+var port = process.env.PORT || 3000;
+http.createServer(app).listen(port);
 
 // logs errors
 process.on('uncaughtException', function (err) {
