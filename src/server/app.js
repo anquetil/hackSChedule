@@ -12,14 +12,6 @@ var path        = require('path');
 
 app.set('port', process.env.PORT || 5000);
 
-app.use('*', function (req, res, next) {
-	if (req.headers['X-Forwarded-Proto'] === "https"){
-   return next();
-  }
-	res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
-  res.end();
-});
-
 // configure body-parser
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json());
