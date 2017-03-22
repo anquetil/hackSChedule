@@ -91,7 +91,7 @@ class Search extends Component {
         fixed = text.toUpperCase().replace(' ', '-');
       }
       this.setState({ text: fixed }, () => {
-        submit(fixed);
+				if (fixed.length > 4) submit(fixed);
       });
     }
   }

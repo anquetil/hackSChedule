@@ -249,6 +249,8 @@ class Scheduler extends Component {
     let { courses, coursesData, coursesSections, email, pin } = this.state;
 		let { generate } = this;
 
+		if (courseId === '') return;
+
     // don't re-add class
     if (courseId in courses) return;
 
@@ -443,7 +445,7 @@ class Scheduler extends Component {
 					.then((results) => {
 						if (index >= results.length) index = results.length - 1;
 						if (index <= 0) index = 0;
-						console.log(results);
+						// console.log(results);
 						this.setState({
 							combinations: results,
 							loading: false,
