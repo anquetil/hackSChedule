@@ -12,15 +12,6 @@ var path        = require('path');
 
 app.set('port', process.env.PORT || 5000);
 
-app.use('*', function (req, res, next) {
-	if (req.ip !== "127.0.0.1" && req.protocol === "http") {
-		res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
-		res.end();
-	} else {
-		next();
-	}
-});
-
 // configure body-parser
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json());
