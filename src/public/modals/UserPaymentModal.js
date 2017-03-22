@@ -35,7 +35,7 @@ class UserPaymentModal extends Component {
 			</div>
 			<div style={{ textAlign: 'left', maxWidth: 500, fontSize: 14, textAlign: 'left' }}>
 				<ol>
-					<li>See more than the first 5 options</li>
+					<li>See more than the first 20 options</li>
 					<li><b>Anchor</b> the sections that you will definitely take</li>
 					<li><b>Block</b> out time that you don't want classes</li>
 					<li><b>Enable and disable classes</b> to see combinations works</li>

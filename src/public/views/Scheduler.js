@@ -462,8 +462,10 @@ class Scheduler extends Component {
   }
 
   updateIndex(i) {
-		if (this.state.paid || i < 5) {
+		if (this.state.paid || i < 20) {
 	    this.setState({ index: i });
+		} else {
+			this.openUpgrade();
 		}
   }
 
@@ -484,7 +486,7 @@ class Scheduler extends Component {
   goPrev() {
 		let { index } = this.state;
 
-    if (index > 0 && (this.state.paid || index < 5)) {
+    if (index > 0 && (this.state.paid || index < 20)) {
       this.setState({ index: index - 1 });
     }
   }
@@ -493,7 +495,7 @@ class Scheduler extends Component {
 		let { index, combinations } = this.state;
 
 		let max = combinations.length;
-		if (!this.state.paid) max = 5;
+		if (!this.state.paid) max = 20;
 
     if (index < max - 1) {
       this.setState({ index: index + 1 });

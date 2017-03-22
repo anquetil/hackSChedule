@@ -23,7 +23,7 @@ export default (props) => {
               onClick={updateIndex.bind(null, key)}
               onMouseEnter={() => { updateGhostIndex(key) }}
               onMouseLeave={() => { updateGhostIndex(null) }}
-							disabled={!paid && key > 4}
+							disabled={!paid && key >= 20}
               score={combination.score} />))}
         </ul>
 				<div className='maxed'>
