@@ -23,11 +23,13 @@ user.isEmailValid = function (req, res) {
 
 	usersRef.child(userName).once('value')
 		.then(function (snap) {
+			var user_exists = snap.exists();
+			var paid = user_exists ? snap.val().paid : false;
 			res.json({
 				email: userEmail,
 				email_format_valid: isEmailValid(userEmail),
-				user_exists: snap.exists(),
-				paid: snap.val().paid || false
+				user_exists: user_exists,
+				paid: paid
 			});
 		});
 
