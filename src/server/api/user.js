@@ -1,4 +1,7 @@
 var _ = require('lodash');
+var stripe_key = process.env.STRIPE_SECRET_KEY;
+var stripe = require('stripe')(stripe_key);
+
 var database = require('./database');
 var usersRef = database.usersRef;
 var schedulesRef = database.schedulesRef;
@@ -23,7 +26,8 @@ user.isEmailValid = function (req, res) {
 			res.json({
 				email: userEmail,
 				email_format_valid: isEmailValid(userEmail),
-				user_exists: snap.exists()
+				user_exists: snap.exists(),
+				paid: snap.val().paid || false
 			});
 		});
 
@@ -114,6 +118,35 @@ user.postUser = function (req, res) {
 				res.json(userData);
 			}
 		});
+}
+
+user.pay = function (req, res) {
+	var userEmail = req.params.user_email.toLowerCase();
+	var userName = getUserName(userEmail);
+	var token = req.body.token;
+	// Create a Customer:
+	stripe.customers.create({
+	  email: userEmail,
+	  source: token.id,
+	}).then(function(customer) {
+	  return stripe.charges.create({
+	    amount: 300, // 3.00 usd
+	    currency: "usd",
+	    customer: customer.id,
+	  });
+	}).then(function (charge) {
+		var chargeId = charge.id;
+
+		res.json({
+			paid: true
+		});
+
+		usersRef.child(userName).child('paid').set(true);
+
+	}).catch(function (error) {
+		console.error(error);
+		res.json({ paid: false, error: error.message });
+	});
 }
 
 // get: /user/:user_email

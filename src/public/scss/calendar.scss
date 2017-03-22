@@ -22,10 +22,10 @@
   #calwrap {
     position: absolute;
     top: $space-md;
-    bottom: $space-xs;
+    bottom: 0;
     width: 100%;
     background-color:#FFF;
-    border-radius: 3px;
+    // border-radius: 3px;
     box-shadow:0 2px 4px rgba(0,0,0,0.3);
     color: #000;
     overflow-y: auto;
@@ -238,8 +238,25 @@
     border-radius: 3px;
   }
 
+	#upgrade_button {
+		margin: $space-xs;
+		margin-top: $space-lg;
+		position: absolute;
+		right: 0;
+		top: 0;
+		z-index: 10;
+
+		button {
+      margin-right: 0;
+			background-color: $red1;
+      &:hover {
+        background-color: $red2;
+      }
+    }
+	}
+
   #courses_actions {
-    margin: $space-sm $space-xs;
+    margin: $space-xs;
     position: absolute;
     right: 0;
     bottom: 0;
@@ -260,7 +277,7 @@
       }
     }
 
-    .modal {
+    .export-modal {
       user-select: text;
       background-color: #2196F3;
       text-align: left;

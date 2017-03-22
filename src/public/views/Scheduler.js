@@ -1,14 +1,32 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router'
 import _ from 'lodash';
+import classNames from 'classnames';
 
 import CourseList from '../containers/CourseList';
 import Calendar from '../containers/Calendar';
 import SelectorFilter from '../containers/SelectorFilter';
 
-import colors from '../func/colors';
+import UserEnterPinModal from '../modals/UserEnterPinModal';
+import UserNotFoundModal from '../modals/UserNotFoundModal';
+import UserPaymentModal from '../modals/UserPaymentModal';
 
+import colors from '../func/colors';
 import api from '../api-interface';
+
+const ModalConductor = props => {
+	switch (props.currentModal) {
+		case 'USER_NOT_FOUND':
+			return <UserNotFoundModal {...props} />;
+
+		case 'USER_ENTER_PIN':
+			return <UserEnterPinModal {...props} />;
+
+		case 'USER_PAYMENT':
+			return <UserPaymentModal {...props} />;
+
+		default: return null;
+	}
+}
 
 class Scheduler extends Component {
 
@@ -19,6 +37,7 @@ class Scheduler extends Component {
 			// user info
 			email: '',
 			pin: '',
+			paid: false,
 
 			// courses info
       courses: {},
@@ -35,9 +54,12 @@ class Scheduler extends Component {
       hover: null,
 
 			// flags
-      enabled: true,
+      init: true,
+      enabled: false,
       loading: false,
-      init: true
+
+			// modals
+			showModal: false
     };
 
 		this.addClass = this.addClass.bind(this);
@@ -58,6 +80,8 @@ class Scheduler extends Component {
 		this.goPrev = this.goPrev.bind(this);
 		this.goNext = this.goNext.bind(this);
 		this.setHover = this.setHover.bind(this);
+		this.closeModal = this.closeModal.bind(this);
+		this.openUpgrade = this.openUpgrade.bind(this);
   }
 
 	componentWillMount() {
@@ -66,14 +90,21 @@ class Scheduler extends Component {
 			.then((response) => {
 				let email = response.email;
 				let user_exists = response.user_exists;
-				if (user_exists) {
-					if (location.state && location.state.pin) {
-						this.setState({ email, pin: location.state.pin, init: false }, this.initialize);
-					} else {
-						this.setState({ email, init: false });
-					}
+				if (user_exists && location.state && location.state.pin) {
+					this.setState({
+						email: email,
+						pin: location.state.pin,
+						init: false,
+						enabled: true,
+						paid: response.paid
+					}, this.initialize);
 				} else {
-					this.setState({ enabled: false });
+					this.setState({
+						email: email || '',
+						init: false,
+						enabled: false,
+						showModal: user_exists ? 'USER_ENTER_PIN' : 'USER_NOT_FOUND'
+					});
 				}
 			});
 	}
@@ -118,67 +149,101 @@ class Scheduler extends Component {
 	}
 
   render() {
-    let { init, loading, enabled } = this.state; // flags
-		let { courses, coursesData, coursesSections, combinations, anchors, blocks } = this.state;
+    let { init, loading, enabled, showModal } = this.state; // flags
+		let { email, pin, paid, courses, coursesData, coursesSections, combinations, anchors, blocks } = this.state;
 		let { colors, index, hover, ghostIndex } = this.state;
 
     return (
-      <main className={(init || !enabled) ? 'blur' : ''}>
-        <CourseList
-					colors={colors}
-					loading={init}
+      <section>
+				<section id="main-section" className={classNames({ blur: (!enabled || showModal != false) })}>
+	        <CourseList
+						colors={colors}
+						loading={init}
 
-          courses={courses}
-          coursesData={coursesData}
-          anchors={anchors}
-          hoverIndex={hover}
+	          courses={courses}
+	          coursesData={coursesData}
+	          anchors={anchors}
+	          hoverIndex={hover}
 
-          setHover={this.setHover}
-          addClass={this.addClass}
-          removeClass={this.removeClass}
-					toggleClass={this.toggleClass}
-        />
-        <Calendar
-					loading={(loading || init)}
-					colors={colors}
+	          setHover={this.setHover}
+	          addClass={this.addClass}
+	          removeClass={this.removeClass}
+						toggleClass={this.toggleClass}
+						paid={paid}
+	        />
+	        <Calendar
+						loading={(loading || init)}
+						colors={colors}
 
-          courses={courses}
-          coursesData={coursesData}
-					coursesSections={coursesSections}
-          combinations={combinations}
-          anchors={anchors}
-          blocks={blocks}
-          index={index}
-          hoverIndex={hover}
-          ghostIndex={ghostIndex}
+	          courses={courses}
+	          coursesData={coursesData}
+						coursesSections={coursesSections}
+	          combinations={combinations}
+	          anchors={anchors}
+	          blocks={blocks}
+	          index={index}
+	          hoverIndex={hover}
+	          ghostIndex={ghostIndex}
 
-          setHover={this.setHover}
-          toggleAnchor={this.toggleAnchor}
-          addBlock={this.addBlock}
-          removeBlock={this.removeBlock}
-          regenerate={this.generate}
-        />
-        <SelectorFilter
-          courses={courses}
-          combinations={combinations}
-          index={index}
-          ghostIndex={ghostIndex}
-          updateIndex={this.updateIndex}
-          updateGhostIndex={this.updateGhostIndex}
-        />
-
-				{(() => {
-					if (!enabled) {
-						return <div>
-		          <h1 style={{ textAlign: 'center', margin: 100 }}>
-								User does not exist. <Link to={`/`}>Go back.</Link>
-							</h1>
-		        </div>;
-					}
-				})}
-      </main>
+	          setHover={this.setHover}
+	          toggleAnchor={this.toggleAnchor}
+	          addBlock={this.addBlock}
+	          removeBlock={this.removeBlock}
+	          regenerate={this.generate}
+						openUpgrade={this.openUpgrade}
+						paid={paid}
+	        />
+	        <SelectorFilter
+	          courses={courses}
+	          combinations={combinations}
+	          index={index}
+	          ghostIndex={ghostIndex}
+	          updateIndex={this.updateIndex}
+	          updateGhostIndex={this.updateGhostIndex}
+						paid={paid}
+	        />
+				</section>
+				<ModalConductor
+					currentModal={showModal}
+					email={email}
+					pin={pin}
+					close={this.closeModal}
+				/>
+      </section>
     );
   }
+
+	closeModal(data) {
+		if (data) {
+			if (data.action == 'LOGIN') {
+				this.setState({
+					pin: data.pin,
+					init: false,
+					enabled: true
+				}, this.initialize);
+				this.context.router.push({
+					pathname: this.props.location.pathname,
+					state: { pin: data.pin }
+				});
+			} else if(data.action == 'PAYMENT') {
+				this.setState({
+					paid: data.paid
+				});
+			}
+		}
+
+		this.setState({
+			showModal: false,
+			enabled: true
+		});
+	}
+
+	openUpgrade(){
+		this.setState({
+			showModal: 'USER_PAYMENT',
+			enabled: false
+		})
+	}
 
   addClass(courseId) {
     let { courses, coursesData, coursesSections, email, pin } = this.state;
@@ -235,6 +300,7 @@ class Scheduler extends Component {
 	}
 
 	toggleClass(courseId) {
+		if (!this.state.paid) return;
 		let { courses } = this.state;
 		if (courseId in courses && courses[courseId]) {
 			this.disableClass(courseId);
@@ -291,6 +357,7 @@ class Scheduler extends Component {
   }
 
   addAnchor(courseId, sectionId) {
+		if (!this.state.paid) return;
     let { anchors, email, pin } = this.state;
 		api.post(api.user.enableAnchor(email, courseId, sectionId), { pin })
 			.then((response) => {
@@ -324,6 +391,7 @@ class Scheduler extends Component {
   }
 
   addBlock(start, end, day) {
+		if (!this.state.paid) return;
 		let { blocks, email, pin } = this.state;
 		let block = { start, end, day };
 
@@ -346,10 +414,21 @@ class Scheduler extends Component {
 			});
   }
 
+	updateCoursesCache() {
+		let courses = Object.keys(this.state.courses);
+		let depts = courses.map(course => course.split('-')[0]);
+		depts = _.uniq(depts);
+		for (let dept of depts) {
+			api.get(api.course.updateDept(dept));
+		}
+	}
+
 	generate() {
 		let { courses, email, pin, index } = this.state;
 
 		this.generateColors();
+		this.updateCoursesCache();
+
 		if (_.isEmpty(courses)) {
 			this.setState({
 				coursesData: {},
@@ -383,11 +462,15 @@ class Scheduler extends Component {
   }
 
   updateIndex(i) {
-    this.setState({ index: i });
+		if (this.state.paid || i < 5) {
+	    this.setState({ index: i });
+		}
   }
 
   updateGhostIndex(i) {
-    this.setState({ ghostIndex: i });
+		if (this.state.paid) {
+	    this.setState({ ghostIndex: i });
+		}
   }
 
   keyboardCommands(e) {
@@ -401,7 +484,7 @@ class Scheduler extends Component {
   goPrev() {
 		let { index } = this.state;
 
-    if (index > 0) {
+    if (index > 0 && (this.state.paid || index < 5)) {
       this.setState({ index: index - 1 });
     }
   }
@@ -409,10 +492,13 @@ class Scheduler extends Component {
   goNext() {
 		let { index, combinations } = this.state;
 
-    if (index < combinations.length - 1) {
+		let max = combinations.length;
+		if (!this.state.paid) max = 5;
+
+    if (index < max - 1) {
       this.setState({ index: index + 1 });
     } else {
-      this.setState({ index: combinations.length - 1});
+      this.setState({ index: max - 1});
     }
   }
 

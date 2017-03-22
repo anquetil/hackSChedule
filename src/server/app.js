@@ -10,7 +10,7 @@ var bodyParser  = require('body-parser');
 var path        = require('path');
 
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 5000);
 
 // configure body-parser
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));

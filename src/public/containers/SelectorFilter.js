@@ -3,7 +3,7 @@ import Selector from '../components/Selector';
 
 export default (props) => {
 
-  let { courses, combinations, index, ghostIndex} = props;
+  let { courses, combinations, index, ghostIndex, paid } = props;
 	let { updateIndex, updateGhostIndex } = props;
 
 	let enabledCourses = Object.keys(courses).filter(id => courses[id]);
@@ -23,6 +23,7 @@ export default (props) => {
               onClick={updateIndex.bind(null, key)}
               onMouseEnter={() => { updateGhostIndex(key) }}
               onMouseLeave={() => { updateGhostIndex(null) }}
+							disabled={!paid && key > 4}
               score={combination.score} />))}
         </ul>
 				<div className='maxed'>

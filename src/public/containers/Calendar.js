@@ -175,10 +175,10 @@ class Calendar extends Component {
 
 	render() {
 
-		let { loading, colors } = this.props;
+		let { paid, loading, colors } = this.props;
 		let { courses, coursesData, coursesSections, combinations, anchors, blocks } = this.props;
 		let { index, hoverIndex, ghostIndex } = this.props;
-		let { sethover, toggleAnchor, addBlock, removeBlock, regenerate } = this.props;
+		let { sethover, toggleAnchor, addBlock, removeBlock, regenerate, openUpgrade } = this.props;
 
 		let { events, days, times, hour, lowerHrLim, createBlock, startPos, endPos, dragState, show_export, ghostEvents } = this.state;
 		let { createBlockDown, createBlockMove, createBlockUp, createBlockClear } = this;
@@ -189,12 +189,13 @@ class Calendar extends Component {
 		}
 
 		let width = (events['A'].length > 0) ? 100 / 8 + '%' : 100 / 7 + '%';
-		let disabled = (courses.length <= 0 || (courses.length > 0 && _.isEmpty(coursesData)));
+
+		let enabledCourses = Object.keys(courses).filter(id => courses[id]);
 
 		let eventBlocks = _.toArray(_.mapValues(blocks, (value, key) => ({ key, block: value })));
 
 		return (
-			<section id='calendar' className={classNames({ disabled, full: false, loading })}>
+			<section id='calendar' className={classNames({ full: false, loading })}>
 				<ul id='days'>
 					{Object.keys(days).map(day => {
 						if (day !== 'A' || (day === 'A' && events.A.length > 0)) {
@@ -252,7 +253,7 @@ class Calendar extends Component {
 					</div>
 
 					{(() => {
-						if (courses.length > 0 && combinations.length <= 0 && !disabled) {
+						if (enabledCourses.length > 0 && combinations.length <= 0 && !loading) {
 							return (
 								<div className='alert'>
 									<b>🙊 Uh oh!</b>
@@ -263,20 +264,28 @@ class Calendar extends Component {
 					})()}
 
 					{(() => {
-						if (courses.length > 0 && !disabled) {
+						if (!paid) {
 							return (
-								<div id='courses_actions'>
+								<div id="upgrade_button">
+									<button onClick={openUpgrade} className="accent">Upgrade</button>
+								</div>
+							)
+						}
+					})()}
+
+					{(() => {
+						if (enabledCourses.length > 0 && !loading) {
+							return (
+								<div id="courses_actions">
 									<button onClick={regenerate}>Regenerate</button>
-									<button onClick={screenshot}>Share</button>
 									<button onClick={()=>{
 										this.setState({ show_export: !show_export });
 									}} className='blue'>{!show_export ? 'Export' : 'Close'}</button>
 									{(() => {
 										if (show_export) {
 											return(<ExportModal
-												courses={courses}
-												courseData={courseData}
-												combination={(index in combinations) ? combinations[index].combination : {}}
+												courses={enabledCourses}
+												combination={(index in combinations) ? combinations[index] : {}}
 											/>);
 										}
 									})()}

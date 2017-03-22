@@ -73,7 +73,7 @@ class CourseList extends Component {
 
         <Search
           courses={arrayedCourses}
-          disabled={(arrayedCourses.length >= 7)}
+          disabled={(arrayedCourses.length >= 12)}
           loading={loading}
           submit={addClass} />
 

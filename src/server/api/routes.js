@@ -24,6 +24,9 @@ router.route('/user/:user_email')
 	.post(user.isEmailValidMiddleware, user.isPinValidMiddleware, user.postUser)
 	.get(user.isEmailValidMiddleware, user.isPinValidMiddleware, user.getUser)
 
+router.route('/user/:user_email/pay')
+	.post(user.isEmailValidMiddleware, user.isPinValidMiddleware, user.pay);
+
 router.route('/user/:user_email/schedule')
 	.get(user.getSchedule)
 

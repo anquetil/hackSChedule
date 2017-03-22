@@ -98,8 +98,9 @@ class Landing extends Component {
 		return (
 			<section id='blob'>
 				<div id='blurb'>
+					<h1 style={{ fontWeight: 100 }}>It's Back!</h1>
 					Design your perfect class schedule in 10 seconds. <br />
-					USC's Spring 2017 course catalog is now available.
+					USC's <b>Fall 2017</b> course catalog is now available.
 				</div>
 				<div id='login'>
 					<div className='prompt'>Enter your USC email to get started.</div>
@@ -142,14 +143,17 @@ class Landing extends Component {
 	}
 
 	renderSecondCard() {
-		let { userAlreadyExists, pin, errorMessage } = this.state;
+		let { userAlreadyExists, pin, errorMessage, email } = this.state;
 		let { goForwardToThird, login } = this;
+
+		let username = email.split('@')[0].split('.')[0];
+		username = username.charAt(0).toUpperCase() + username.slice(1);
 
 		return (
 			<section id='blob'>
 				<div id='blurb'>
-					<b>{userAlreadyExists ? 'Welcome Back!' : 'Create An Account'}</b><br />
-					I'm warming up the scheduling algorithm for you
+					<b>{userAlreadyExists ? 'Welcome Back, ' + username + '!' : 'Create An Account'}</b><br />
+					Warming up the scheduling algorithm...
 				</div>
 				<div id='login'>
 					<div className='prompt'>Enter your 4-digit pin number:</div>

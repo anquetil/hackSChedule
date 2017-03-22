@@ -49,6 +49,7 @@ API.validate.pin = () => ('/validate/pin');
 API.user = {}
 API.user.count = () => ('/user/count');
 API.user.data = (userEmail) => ('/user/' + userEmail);
+API.user.pay = (userEmail) => ('/user/' + userEmail + '/pay');
 API.user.schedule = (userEmail) => ('/user/' + userEmail + '/schedule');
 API.user.generateSchedule = (userEmail) => ('/user/' + userEmail + '/schedule/generate');
 API.user.addCourse = (userEmail, courseId) => ('/user/' + userEmail + '/schedule/add_course/' + courseId);
