@@ -132,7 +132,7 @@ user.pay = function (req, res) {
 	  source: token.id,
 	}).then(function(customer) {
 	  return stripe.charges.create({
-	    amount: 300, // 3.00 usd
+	    amount: 200, // 2.00 usd
 	    currency: "usd",
 	    customer: customer.id,
 	  });
