@@ -16,18 +16,18 @@ export default (props) => {
           <div className="label">schedules</div>
         </div>
         <ul id="ranks">
-          {combinations.slice(0,200).map((combination, key) => (
+          {combinations.slice(0,250).map((combination, key) => (
             <Selector key={key}
               index={key}
               active={index}
               onClick={updateIndex.bind(null, key)}
               onMouseEnter={() => { updateGhostIndex(key) }}
               onMouseLeave={() => { updateGhostIndex(null) }}
-							disabled={!paid && key >= 20}
+							disabled={!paid && key >= 25}
               score={combination.score} />))}
         </ul>
 				<div className='maxed'>
-					{combinations.length > 200 ? 'Showing first 200...' : ''}
+					{combinations.length > 250 ? 'Showing first 250...' : ''}
 				</div>
       </section>
     );

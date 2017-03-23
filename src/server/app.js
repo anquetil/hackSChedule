@@ -1,16 +1,17 @@
 // app.js
 
 // SETUP
-var express     = require('express');
+var express 		= require('express');
+var app         = express();
 var http        = require('http');
-var app         = express(); // create express app
-// var io          = require('socket.io')(server);
+var server 			= http.Server(app);
+var io          = require('socket.io')(server);
+
+app.set('port', process.env.PORT || 5000);
+server.listen(app.get('port'));
 
 var bodyParser  = require('body-parser');
 var path        = require('path');
-
-
-app.set('port', process.env.PORT || 5000);
 
 // configure body-parser
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
@@ -24,20 +25,13 @@ var api = require('./api/routes');
 app.use('/api', api);
 
 // setup socket
-// var socket = require('./lib/socket');
-// io.on('connection', socket);
+var socket = require('./api/socket');
+io.on('connection', socket);
 
 // serve static
 app.use('/', express.static(path.join(__dirname, '../..', 'www')));
 app.use('/res', express.static(path.join(__dirname, '../..', 'www', 'res')));
 app.get('*', (_, res) => { res.sendFile(path.join(__dirname, '../..', 'www', 'index.html')); });
-
-
-// start the server
-console.log(app.get('port'));
-var server = app.listen(app.get('port'), function() {
-  // debug('Express server listening on port ' + server.address().port);
-});
 
 // logs errors
 process.on('uncaughtException', function (err) {

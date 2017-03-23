@@ -62,6 +62,7 @@ class Scheduler extends Component {
 			showModal: false
     };
 
+		this.socket = io();
 		this.addClass = this.addClass.bind(this);
 		this.removeClass = this.removeClass.bind(this);
 		this.enableClass = this.enableClass.bind(this);
@@ -82,6 +83,7 @@ class Scheduler extends Component {
 		this.setHover = this.setHover.bind(this);
 		this.closeModal = this.closeModal.bind(this);
 		this.openUpgrade = this.openUpgrade.bind(this);
+		this.downloadNewData = this.downloadNewData.bind(this);
   }
 
 	componentWillMount() {
@@ -111,6 +113,16 @@ class Scheduler extends Component {
 
 	componentDidMount() {
 		document.addEventListener('keydown', this.keyboardCommands, false);
+
+		let { courses } = this.state;
+		let { downloadNewData, generate } = this;
+
+		this.socket.on('receive:courseData', function (courseId) {
+      if (courseId in courses) {
+				downloadNewData();
+				generate();
+			}
+    });
 	}
 
 	initialize() {
@@ -127,25 +139,32 @@ class Scheduler extends Component {
 				anchors = _.mapValues(anchors, (value, key) => {
 					return Object.keys(value);
 				});
-				this.setState({ courses, anchors, blocks }, this.generate);
-
-				for (let courseId in courses) {
-					// grab course data
-					api.get(api.course.data(courseId))
-						.then((courseData) => {
-							coursesData[courseId] = courseData;
-							this.setState({ coursesData });
-						});
-
-					// grab course sections
-					api.get(api.course.sections(courseId))
-						.then((courseSections) => {
-							coursesSections[courseId] = courseSections;
-							this.setState({ coursesSections });
-						});
-				}
+				this.setState({ courses, anchors, blocks }, () => {
+					this.downloadNewData();
+					this.generate();
+				});
 
 			});
+	}
+
+	downloadNewData() {
+		let { courses, coursesData, coursesSections } = this.state;
+
+		for (let courseId in courses) {
+			// grab course data
+			api.get(api.course.data(courseId))
+				.then((courseData) => {
+					coursesData[courseId] = courseData;
+					this.setState({ coursesData });
+				});
+
+			// grab course sections
+			api.get(api.course.sections(courseId))
+				.then((courseSections) => {
+					coursesSections[courseId] = courseSections;
+					this.setState({ coursesSections });
+				});
+		}
 	}
 
   render() {
@@ -464,7 +483,7 @@ class Scheduler extends Component {
   }
 
   updateIndex(i) {
-		if (this.state.paid || i < 20) {
+		if (this.state.paid || i < 25) {
 	    this.setState({ index: i });
 		} else {
 			this.openUpgrade();
@@ -488,7 +507,7 @@ class Scheduler extends Component {
   goPrev() {
 		let { index } = this.state;
 
-    if (index > 0 && (this.state.paid || index < 20)) {
+    if (index > 0 && (this.state.paid || index < 25)) {
       this.setState({ index: index - 1 });
     }
   }
@@ -497,7 +516,7 @@ class Scheduler extends Component {
 		let { index, combinations } = this.state;
 
 		let max = combinations.length;
-		if (!this.state.paid) max = 20;
+		if (!this.state.paid) max = 25;
 
     if (index < max - 1) {
       this.setState({ index: index + 1 });

@@ -27,20 +27,21 @@ class UserPaymentModal extends Component {
 		let { email } = this.props;
 		let { errorMessage, paymentInProgress } = this.state;
 		return <section className={classNames('modal')}>
-			<h1>A Cup of Cold Brew for Andrew ($3)</h1>
+			<h1>Upgrade For More Features: $2</h1>
 			<div style={{ maxWidth: 500, fontSize: 16, textAlign: 'left' }}>
 				Hosting and maintaining this service is expensive.
-				Please help me offset the server and maintainence costs by buying me a cup of coffee!
+				I need your help to offset the costs of building and running this app.
+				$2 bucks is basically the same as buying me half a cup of coffee to save you a lot of time!
 				In return, you'll get these features:
 			</div>
 			<div style={{ textAlign: 'left', maxWidth: 500, fontSize: 14, textAlign: 'left' }}>
 				<ol>
-					<li>See more than the first 20 options</li>
+					<li>See more than the first 25 options</li>
 					<li><b>Anchor</b> the sections that you will definitely take</li>
 					<li><b>Block</b> out time that you don't want classes</li>
 					<li><b>Enable and disable classes</b> to see combinations works</li>
-					<li><b>Optimize</b> for time and/or compactness (w.i.p.)</li>
-					<li>Shuffle between options in the same time block (w.i.p.)</li>
+					<li><b>Optimize</b> for time and/or compactness (work in progress)</li>
+					<li>Shuffle between options in the same time block (work in progress)</li>
 				</ol>
 			</div>
 
@@ -48,9 +49,9 @@ class UserPaymentModal extends Component {
 				<StripeCheckout
 					token={this.onToken}
 					stripeKey={this.stripeKey}
-					name="A Cup of Cold Brew for Andrew"
+					name="1/2 Cup of Coffee for Andrew"
 					description="HackSChedule"
-					amount={300}
+					amount={200}
 					currency="USD"
 					allowRememberMe={false}
 					email={email}
