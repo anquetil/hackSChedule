@@ -151,6 +151,30 @@ user.pay = function (req, res) {
 	});
 }
 
+user.venmoWebook = function (req, res) {
+	var body = req.body;
+	if (body.hasOwnProperty('data')) {
+		var data = body.data;
+		var action = data.action;
+		var note = data.note.toLowerCase();
+		var status = data.status;
+		var amount = data.amount;
+		var userName = '';
+		for (var token of note.split(' ')) {
+			if (token.indexOf('hackschedule_id:') > -1) {
+				userName = getUserName(token.split(':')[1] || '');
+				break;
+			}
+		}
+
+		if (amount >= 2 && action == 'pay' && status == 'settled' && userName != '') {
+			usersRef.child(userName).child('paid').set(true);
+		}
+	}
+	res.status(200);
+  res.send();
+}
+
 // get: /user/:user_email
 // grabs user data, if pin is correct
 user.getUser = function (req, res) {

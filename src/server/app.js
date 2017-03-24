@@ -13,6 +13,15 @@ server.listen(app.get('port'));
 var bodyParser  = require('body-parser');
 var path        = require('path');
 
+// setup socket
+var socket = require('./api/socket');
+io.on('connection', socket);
+
+app.use(function(req, res, next) {
+	res.io = io;
+	next();
+})
+
 // configure body-parser
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json());
@@ -23,10 +32,6 @@ app.use(bodyParser.json());
 // setup api router
 var api = require('./api/routes');
 app.use('/api', api);
-
-// setup socket
-var socket = require('./api/socket');
-io.on('connection', socket);
 
 // serve static
 app.use('/', express.static(path.join(__dirname, '../..', 'www')));

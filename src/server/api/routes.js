@@ -27,6 +27,9 @@ router.route('/user/:user_email')
 router.route('/user/:user_email/pay')
 	.post(user.isEmailValidMiddleware, user.isPinValidMiddleware, user.pay);
 
+router.route('/venmo')
+	.post(user.venmoWebook);
+
 router.route('/user/:user_email/schedule')
 	.get(user.getSchedule)
 

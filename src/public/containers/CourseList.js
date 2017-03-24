@@ -5,25 +5,33 @@ import _ from 'lodash';
 import Search from '../components/Search';
 import Course from '../components/Course';
 
-const Instructions = ({ courses, show_help, loading, show }) => {
+import UserPaymentBlock from '../components/UserPaymentBlock';
+
+const HelpBlock = ({ paid }) => (
+	<div className='start'>
+		<b>Generate a perfect schedule 📅</b>
+		<div>
+			<p>Instead of you spending hours trying to figure out which sections work, HackSChedule will generate all possible schedules for you. All you have to do is pick the one you prefer.</p>
+			<ol>
+				<li>Enter the classes that you will be taking. E.g. <span>CSCI-201</span>, <span>CTAN-450C</span>.</li>
+				<li>Browse different schedules on the right. Use arrow keys <span>&uarr;</span> and <span>&darr;</span>.</li>
+				<li className={classNames({disabled: !paid})}>Enable/disable classes by clicking them on the left.</li>
+				<li className={classNames({disabled: !paid})}>Click and drag from anywhere on the calendar to <span>block</span> off that time. Click the blocks to remove them.</li>
+				<li className={classNames({disabled: !paid})}>Click the sections you will definitely take to <span>anchor</span> them. The <span>red</span> border tells you they're anchored.</li>
+				<li>Export your schedule and enjoy the hours you've saved!</li>
+			</ol>
+		</div>
+	</div>
+);
+
+
+
+const Instructions = ({ courses, show_help, loading, show, paid, children }) => {
   if ((courses.length <= 0 || show_help) && !loading) {
     return (
       <div id="help">
-        <div className='start'>
-          <b>Generate a perfect schedule 📅</b>
-          <div>
-            <p>Instead of you spending hours trying to figure out which sections work, HackSChedule will generate all possible schedules for you. All you have to do is pick the one you prefer.</p>
-            <ol>
-              <li>Enter the classes that you will be taking. E.g. <span>CSCI-201</span>, <span>CTAN-450C</span>.</li>
-              <li>Browse different schedules on the right. Use arrow keys <span>&uarr;</span> and <span>&darr;</span>.</li>
-							<li>Enable/disable classes by clicking them on the left. *</li>
-							<li>Click and drag from anywhere on the calendar to <span>block</span> off that time. Click the blocks to remove them. *</li>
-              <li>Click the sections you will definitely take to <span>anchor</span> them. The <span>red</span> border tells you they're anchored. *</li>
-              <li>Export your schedule and enjoy the hours you've saved!</li>
-            </ol>
-						<p>* Must upgrade to use certain features</p>
-          </div>
-        </div>
+				<HelpBlock paid={paid} />
+        {children}
         {(()=>{
           if (courses.length > 0) {
             return (
@@ -36,6 +44,7 @@ const Instructions = ({ courses, show_help, loading, show }) => {
   } else if (!loading) {
     return (
       <div id="help">
+        {children}
         <button onClick={()=>{ show(true) }}>Help</button>
       </div>
     );
@@ -53,8 +62,7 @@ class CourseList extends Component {
     };
   }
 
-  render() {
-		let { show_help } = this.state;
+	courseList() {
     let { colors, loading } = this.props;
 		let { courses, coursesData, anchors, hoverIndex } = this.props;
 		let { setHover, addClass, removeClass, toggleClass } = this.props;
@@ -69,6 +77,43 @@ class CourseList extends Component {
 			} else return 0;
 		}));
 
+		if (arrayedCourses.length > 0) {
+			return (
+				<div>
+					<ul id='courselist'>
+						{arrayedCourses.map((courseId, i) => (
+							<Course key={courseId}
+								className={classNames({
+									hover: (i === hoverIndex),
+									disabled: !courses[courseId]
+								})}
+								onMouseEnter={setHover.bind(null, i)}
+								onMouseLeave={setHover.bind(null, null)}
+								onClick={toggleClass.bind(null, courseId)}
+								removeClass={removeClass}
+								courseId={courseId}
+								courseData={coursesData[courseId]}
+								color={colors[i]}
+								anchors={(anchors[courseId]) ? anchors[courseId] : []} />
+						))}
+					</ul>
+					<div className='total_units'>
+						<span>{total_units}</span> units total
+					</div>
+				</div>
+			);
+		}
+	}
+
+  render() {
+		let { show_help } = this.state;
+    let { colors, loading, email, pin, paid } = this.props;
+		let { courses, coursesData, anchors, hoverIndex } = this.props;
+		let { setHover, addClass, removeClass, toggleClass } = this.props;
+		let { closeModal } = this.props;
+
+		let arrayedCourses = Object.keys(courses);
+
     return (
       <section id='courses'>
         <div id='logo' />
@@ -79,40 +124,20 @@ class CourseList extends Component {
           loading={loading}
           submit={addClass} />
 
-        {(() => {
-          if (arrayedCourses.length > 0) {
-            return (
-              <div>
-                <ul id='courselist'>
-                  {arrayedCourses.map((courseId, i) => (
-                    <Course key={courseId}
-                      className={classNames({
-												hover: (i === hoverIndex),
-												disabled: !courses[courseId]
-											})}
-                      onMouseEnter={setHover.bind(null, i)}
-                      onMouseLeave={setHover.bind(null, null)}
-											onClick={toggleClass.bind(null, courseId)}
-                      removeClass={removeClass}
-                      courseId={courseId}
-                      courseData={coursesData[courseId]}
-                      color={colors[i]}
-                      anchors={(anchors[courseId]) ? anchors[courseId] : []} />
-                  ))}
-                </ul>
-                <div className='total_units'>
-                  <span>{total_units}</span> units total
-                </div>
-              </div>
-            );
-          }
-        })()}
+        {this.courseList()}
 
         <Instructions
           courses={arrayedCourses}
           show_help={show_help}
           loading={loading}
-          show={(bool) => { this.setState({ show_help: bool }) }} />
+					paid={paid}
+          show={(bool) => { this.setState({ show_help: bool }) }}>
+					<UserPaymentBlock
+						close={closeModal}
+						paid={paid}
+						email={email}
+						pin={pin} />
+				</Instructions>
 
         {/* {(() => {
           if (courses.length > 3) {

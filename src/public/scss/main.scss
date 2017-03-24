@@ -17,6 +17,12 @@ $font-lg: 16px;
 $white: #FFF;
 $red1: #e93432;
 $red2: #ce1a1a;
+$blue1: #29B6F6;
+$blue2: #039BE5;
+
+.red {
+	color: $red1;
+}
 
 @import 'normalize';
 @import 'boilerplate';

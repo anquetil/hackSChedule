@@ -188,6 +188,10 @@ class Scheduler extends Component {
 	          addClass={this.addClass}
 	          removeClass={this.removeClass}
 						toggleClass={this.toggleClass}
+						closeModal={this.closeModal}
+
+						email={email}
+						pin={pin}
 						paid={paid}
 	        />
 	        <Calendar
