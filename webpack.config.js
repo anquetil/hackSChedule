@@ -14,6 +14,11 @@ var jsx_loader = {
   }
 };
 
+var json_loader = {
+	test: /\.json$/,
+	loader: 'json-loader'
+};
+
 module.exports = {
 	devtool: 'source-map',
   entry: [
@@ -25,7 +30,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: [jsx_loader]
+    loaders: [jsx_loader, json_loader]
   },
 	plugins: [
 		new webpack.HotModuleReplacementPlugin()

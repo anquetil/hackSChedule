@@ -55,4 +55,6 @@ export default {
 	autocomplete: {
 		search: (text) => ('/autocomplete/' + text),
 	},
+
+	rmp: () => ('/rmp'),
 };

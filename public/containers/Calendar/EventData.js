@@ -1,7 +1,8 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
 import has from 'has';
 import _ from 'lodash';
+import api from '../../utils/api-interface';
 
 import { convertMinToTime } from '../../utils/convertTime';
 
@@ -9,57 +10,101 @@ const Tag = ({ children, className, ...other }) => (
 	<span className={classnames('tag', className)} {...other}>{children}</span>
 );
 
-const EventData = ({
-	className,
-	courseId,
-	sectionId,
-	sectionData,
-	blockData,
-	...other
-}) => {
+class EventData extends Component {
 
-	// update className
-	className = classnames('event-data', className);
+	constructor(props) {
+		super(props);
 
-	// unravel data
-	const {
-		title: sectionTitle,
-		type: sectionType,
-		number_registered,
-		spaces_available,
-		instructor
-	} = sectionData;
-	const numberRegistered = parseInt(number_registered);
-	const spacesAvailable = parseInt(spaces_available);
-	const { location, start, end } = blockData;
-	const instructors = !(instructor) ? [] : _.isArray(instructor) ? instructor : [instructor];
-	const full = numberRegistered >= spacesAvailable;
+		this.state = {
+			rmp: {}
+		};
 
-	// create tags
-	let TitleTag = has(sectionData, 'section_title') ? <Tag>{sectionTitle}</Tag> : null;
-	let TypeTag = <Tag>{sectionType}</Tag>;
-	let TimeTag = <Tag>{convertMinToTime(start)}—{convertMinToTime(end)}</Tag>;
-	let LocationTag = has(sectionData, 'location') ? <Tag>{location}</Tag> : null;
-	let SpacesAvailableTag = <Tag className={classnames({ full })}>{full ? 'FULL' : numberRegistered} / {spacesAvailable}</Tag>;
-	let InstructorTags = instructors.map((o = {}, i) => (
-		<Tag key={i}>{o.first_name || null} {o.last_name || null}</Tag>
-	));
+		this.addRmp = this.addRmp.bind(this);
+	}
 
-	return <div className={className} {...other}>
-		<div>
-			<span className="courseid">{courseId}</span>
-			<span className="sectionid">{sectionId}</span>
-		</div>
-		<div>
-			{TitleTag}
-			{TypeTag}
-			{TimeTag}
-			{LocationTag}
-			{SpacesAvailableTag}
-			{InstructorTags}
-		</div>
-	</div>;
-};
+	componentWillMount() {
+		this.getRmp(this.props);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.sectionId === this.props.sectionId) return;
+		this.getRmp(nextProps);
+	}
+
+	getRmp(nextProps) {
+		const { sectionData } = nextProps;
+		const { instructor } = sectionData;
+		const instructors = !(instructor) ? [] : _.isArray(instructor) ? instructor : [instructor];
+
+		for (let person of instructors) {
+			const { first_name, last_name } = person;
+			api.get(api.rmp(), { first_name, last_name })
+				.then(professor => {
+					if (professor === null) return;
+					const key = first_name+last_name;
+					this.addRmp(key, professor.quality);
+				});
+		}
+	}
+
+	addRmp(key, quality) {
+		this.setState({ rmp: {
+			...this.state.rmp,
+			[key]: quality,
+		}});
+	}
+
+	render() {
+		const {
+			className,
+			courseId,
+			sectionId,
+			sectionData,
+			blockData,
+			...other
+		} = this.props;
+
+		const { rmp } = this.state;
+
+		// update className
+		const newClassName = classnames('event-data', className);
+
+		// unravel data
+		const {
+			title: sectionTitle,
+			type: sectionType,
+			number_registered,
+			spaces_available,
+			instructor
+		} = sectionData;
+		const numberRegistered = parseInt(number_registered);
+		const spacesAvailable = parseInt(spaces_available);
+		const { location, start, end } = blockData;
+		const instructors = !(instructor) ? [] : _.isArray(instructor) ? instructor : [instructor];
+		const full = numberRegistered >= spacesAvailable;
+
+		return <div className={newClassName} {...other}>
+			<div>
+				<span className="courseid">{courseId}</span>
+				<span className="sectionid">{sectionId}</span>
+			</div>
+			<div>
+				{has(sectionData, 'section_title') ? <Tag>{sectionTitle}</Tag> : null}
+				<Tag>{sectionType}</Tag>
+				<Tag>{convertMinToTime(start)}—{convertMinToTime(end)}</Tag>
+				{has(sectionData, 'location') ? <Tag>{location}</Tag> : null}
+				<Tag className={classnames({ full })}>{full ? 'FULL' : numberRegistered} / {spacesAvailable}</Tag>
+				{instructors.map((o = {}, i) => {
+					const key = o.first_name + o.last_name;
+					const rating = (rmp[key]) ? <span>, <b>{rmp[key]}</b></span> : null;
+					return <Tag key={i}>{o.first_name || null} {o.last_name || null}{rating}</Tag>;
+				})}
+			</div>
+		</div>;
+
+	}
+
+}
 
 EventData.propTypes = {
 	// html metadata

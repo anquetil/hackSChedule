@@ -15,6 +15,11 @@ var jsx_loader = {
   }
 };
 
+var json_loader = {
+	test: /\.json$/,
+	loader: 'json-loader'
+};
+
 module.exports = {
   entry: PUBLIC_DIR + '/index.js',
   output: {
@@ -22,7 +27,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: [jsx_loader]
+    loaders: [jsx_loader, json_loader]
   },
 	plugins: [
 		new webpack.DefinePlugin({ //<--key to reduce React's size

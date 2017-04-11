@@ -80,11 +80,14 @@ router.route('/course/:course_id/sections')
 router.route('/course/:course_id/section/:section_id')
 	.get(course.getCourseSection)
 
-	router.route('/autocomplete')
-	  .get(course.autocompleteDefault);
+router.route('/autocomplete')
+  .get(course.autocompleteDefault);
 
-	router.route('/autocomplete/:text')
-	  .get(course.autocomplete);
+router.route('/autocomplete/:text')
+  .get(course.autocomplete);
+
+router.route('/rmp')
+	.get(course.rmp);
 
 
 // ==================

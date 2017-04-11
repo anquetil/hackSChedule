@@ -1,6 +1,7 @@
 var TROJAN = require('trojan-course-api');
 var _ = require('lodash');
 var database = require('./database');
+var rmp = require('../lib/rmp-api');
 var term = database.term;
 var coursesRef = database.coursesRef;
 var sectionsRef = database.sectionsRef;
@@ -59,11 +60,11 @@ course.autocompleteDefault = function (req, res) {
 }
 
 course.autocomplete = function (req, res) {
-  var text = req.params.text;
-  text = text.toUpperCase();
+  var text = req.params.text.toUpperCase();
+	var courseId = TROJAN.parseCourseId(text).course_id;
   coursesRef
     .orderByKey()
-    .startAt(text)
+    .startAt(courseId)
     .limitToFirst(8)
     .once('value')
     .then(function (snap) {
@@ -152,6 +153,15 @@ course.updateAllCourses = function (req, res) {
 				console.log('database updated');
 			}
 		});
+	});
+}
+
+course.rmp = function (req, res) {
+	var fname = req.query.first_name || '',
+			lname = req.query.last_name || '';
+	var usc = rmp("University of Southern California");
+	usc.get(fname + ' ' + lname, function (professor) {
+		res.json(professor);
 	});
 }
 
