@@ -23,6 +23,13 @@ class CalendarContainer extends Component {
 
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			rmp: {}
+		};
+
+		this.getRmp = this.getRmp.bind(this);
+		this.addRmp = this.addRmp.bind(this);
 		this.getEvents = this.getEvents.bind(this);
 		this.toggleAnchor = this.toggleAnchor.bind(this);
 		this.addAnchor = this.addAnchor.bind(this);
@@ -30,6 +37,45 @@ class CalendarContainer extends Component {
 		this.getBlocks = this.getBlocks.bind(this);
 		this.createBlock = this.createBlock.bind(this);
 		this.removeBlock = this.removeBlock.bind(this);
+	}
+
+	componentWillReceiveProps() {
+		this.getRmp(this.props.coursesSections);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (Object.keys(nextProps.coursesSections).length !== Object.keys(this.props.coursesSections).length)
+			this.getRmp(nextProps.coursesSections);
+	}
+
+	getRmp(coursesSections) {
+		const { rmp } = this.state;
+		for (let courseId in coursesSections) {
+			const sectionsData = coursesSections[courseId];
+			for (let sectionId in sectionsData) {
+				const sectionData = sectionsData[sectionId];
+				const { instructor } = sectionData;
+				const instructors = !(instructor) ? [] : _.isArray(instructor) ? instructor : [instructor];
+
+				for (let person of instructors) {
+					const { first_name, last_name } = person;
+					const key = first_name+last_name;
+					if (rmp[key]) continue;
+					api.get(api.rmp(), { first_name, last_name })
+						.then(professor => {
+							if (professor === null) return;
+							this.addRmp(key, professor);
+						});
+				}
+			}
+		}
+	}
+
+	addRmp(key, data) {
+		this.setState({ rmp: {
+			...this.state.rmp,
+			[key]: data,
+		}});
 	}
 
 	/* generates events and ghost */
@@ -47,6 +93,7 @@ class CalendarContainer extends Component {
 			combinationGhostIndex,
 			colors
 		} = this.props;
+		const { rmp } = this.state;
 		const { toggleAnchor } = this;
 
 		const combination = !ghost ? combinations[combinationIndex] : combinations[combinationGhostIndex];
@@ -139,6 +186,7 @@ class CalendarContainer extends Component {
 							end: blockEnd,
 							location: sectionsData[sectionId].blocks[blockKey].location
 						}}
+						rmp={rmp}
 					/>
 				</EventBlock>)}
 			</EventStack>;

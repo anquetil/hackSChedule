@@ -52,9 +52,6 @@ export default {
 		section: (courseId, sectionId) => ('/course/' + courseId + '/section/' + sectionId),
 	},
 
-	autocomplete: {
-		search: (text) => ('/autocomplete/' + text),
-	},
-
+	autocomplete: (text) => ('/autocomplete/' + text),
 	rmp: () => ('/rmp'),
 };

@@ -31,6 +31,12 @@ var api = require('./api/routes');
 app.use('/api', api);
 
 // serve static
+app.get('*.js', function (req, res, next) {
+	if (process.env.NODE_ENV !== 'production') return next();
+  req.url = req.url + '.gz';
+  res.set('Content-Encoding', 'gzip');
+  next();
+});
 app.use('/', express.static(path.join(__dirname, '..', 'build')));
 app.get('*', (_, res) => { res.sendFile(path.join(__dirname, '..', 'build', 'index.html')); });
 

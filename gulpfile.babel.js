@@ -9,21 +9,23 @@ let _public = './public';
 
 /* ————— REACT ————— */
 
+import webpack from 'webpack';
 import WebpackStream from 'webpack-stream';
 import CompressionPlugin from 'compression-webpack-plugin';
 
 gulp.task('build:dev', () => {
 	var entries = _public + '/index.js';
 	return gulp.src(entries)
-		.pipe(WebpackStream(require('./webpack.config')))
+		.pipe(WebpackStream(require('./webpack.config'), webpack))
 		.pipe(gulp.dest(_build))
 		.pipe(browserSync.stream());
 });
 
 gulp.task('build:prod', () => {
+	process.env.NODE_ENV = 'production';
 	var entries = _public + '/index.js';
 	return gulp.src(entries)
-		.pipe(WebpackStream(require('./webpack.config.prod')))
+		.pipe(WebpackStream(require('./webpack.config.prod'), webpack))
 		.pipe(gulp.dest(_build));
 });
 
